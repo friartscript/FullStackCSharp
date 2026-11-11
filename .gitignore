@@ -1,0 +1,114 @@
+# ==========================================
+# Fichiers de cadrage local / personnel
+# ==========================================
+PROJET.md
+ETAPES.md
+Livret/compiler_livret.py
+Livret/etapes/
+
+# ==========================================
+# Dossier personnalisé spécifié par l'utilisateur
+# ==========================================
+[Vv]idéos/
+[Vv]ideos/
+*.mp4
+*.mkv
+*.avi
+*.mov
+
+# ==========================================
+# Fichiers de compilation et caches .NET / C#
+# ==========================================
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rms/
+[Aa]rm64/
+build/
+
+# Fichiers temporaires générés par MSBuild et Roslyn
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.pidb
+*.booproj.user
+
+# ==========================================
+# Environnements de développement (IDE)
+# ==========================================
+# Visual Studio
+.vs/
+.vsconfig
+Generated\ Files/
+AppPackages/
+BundleArtifacts/
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# ==========================================
+# Packages & Dépendances
+# ==========================================
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+project.lock.json
+project.assets.json
+
+# ==========================================
+# Tests & Couverture de code
+# ==========================================
+[Tt]est[Rr]esult*/
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# ==========================================
+# Fichiers temporaires LaTeX
+# ==========================================
+*.aux
+*.toc
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# ==========================================
+# Logs, crash dumps et fichiers temporaires
+# ==========================================
+*.log
+*.tlog
+*.tmp
+*.temp
+*.swp
+*.bak
+*.crash
+*.dmp
+*.mdmp
+
+# ==========================================
+# Fichiers système OS
+# ==========================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
