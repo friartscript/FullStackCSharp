@@ -6,7 +6,9 @@
 \usepackage{lmodern}
 \usepackage{amssymb}
 \usepackage{geometry}
-\geometry{a4paper, margin=2cm, top=2.5cm, bottom=2.5cm}
+\geometry{a4paper, margin=1.8cm, top=2.2cm, bottom=2.2cm}
+\usepackage{parskip}
+\raggedbottom
 
 \usepackage{xcolor}
 \usepackage{colortbl}
@@ -33,16 +35,17 @@
 \definecolor{cardbg}{RGB}{248, 250, 252}       % Slate 50 (Fonds alternés)
 \definecolor{borderlight}{RGB}{226, 232, 240}  % Slate 200 (Bordures douces)
 
-% Boîtes d'Enseignement Didactiques
+% Boîtes d'Enseignement Didactiques Sécables (Breakable)
 \newtcolorbox{conceptbox}[1]{
     enhanced,
+    breakable,
     colback=blue!3!white,
     colframe=secondary,
     fonttitle=\bfseries\color{white},
     title=$\blacktriangleright$~Concept Clé d'Architecture : #1,
-    arc=2.5mm,
-    boxrule=1pt,
-    left=4mm,right=4mm,top=3mm,bottom=3mm
+    arc=2mm,
+    boxrule=0.9pt,
+    left=3.5mm,right=3.5mm,top=2.5mm,bottom=2.5mm
 }
 
 \newtcolorbox{schemabox}[1]{
@@ -51,53 +54,63 @@
     colframe=schemaframe,
     fonttitle=\bfseries\color{white},
     title=$\blacktriangleright$~Schéma Conceptuel \& Flux : #1,
-    arc=2.5mm,
-    boxrule=1pt,
-    left=4mm,right=4mm,top=3mm,bottom=3mm
+    arc=2mm,
+    boxrule=0.9pt,
+    left=3.5mm,right=3.5mm,top=2.5mm,bottom=2.5mm
 }
 
 \newtcolorbox{bestpracticebox}[1]{
     enhanced,
+    breakable,
     colback=green!3!white,
     colframe=emerald!80!black,
     fonttitle=\bfseries\color{white},
     title=$\blacktriangleright$~Règle d'Ingénierie \& Bonne Pratique : #1,
-    arc=2.5mm,
-    boxrule=1pt,
-    left=4mm,right=4mm,top=3mm,bottom=3mm
+    arc=2mm,
+    boxrule=0.9pt,
+    left=3.5mm,right=3.5mm,top=2.5mm,bottom=2.5mm
 }
 
 \newtcolorbox{faqbox}[1]{
     enhanced,
+    breakable,
     colback=teal!3!white,
     colframe=teal!80!black,
     fonttitle=\bfseries\color{white},
     title=$\blacktriangleright$~Questions Fréquentes du Débutant : #1,
-    arc=2.5mm,
-    boxrule=1pt,
-    left=4mm,right=4mm,top=3mm,bottom=3mm
+    arc=2mm,
+    boxrule=0.9pt,
+    left=3.5mm,right=3.5mm,top=2.5mm,bottom=2.5mm
 }
 
 \newtcolorbox{notebox}{
     enhanced,
+    breakable,
     colback=accent!4!white,
     colframe=accent,
     fonttitle=\bfseries\color{white},
     title=$\blacktriangleright$~Directive Didactique du Livret,
-    arc=2.5mm,
-    boxrule=1pt,
-    left=4mm,right=4mm,top=3mm,bottom=3mm
+    arc=2mm,
+    boxrule=0.9pt,
+    left=3.5mm,right=3.5mm,top=2.5mm,bottom=2.5mm
 }
 
-% En-têtes et Pieds de Page
+% Commandes d'Agencement Pédagogique Fluide (Sans Blocs Monolithiques)
+\newcommand{\faqitem}[2]{%
+    \par\vspace{0.25cm}%
+    \noindent{\bfseries\color{secondary!90!black}\large $\blacktriangleright$~Q : #1}\par\nopagebreak[4]%
+    \vspace{0.1cm}%
+    \noindent\textbf{Réponse :} #2\par%
+}
+
+% En-têtes et Absence de Pied de Page (Marge de sécurité propre)
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small\textbf{\color{secondary}FullStackCSharp} \textit{— Guide d'Architecture}}
 \fancyhead[R]{\small\color{gray}\thepage}
-\fancyfoot[L]{\scriptsize\color{gray}Conçu \& développé par \textbf{Kevin Friart}}
-\fancyfoot[R]{\scriptsize\color{gray}.NET 8 Fullstack C\#}
+\fancyfoot{}
 \renewcommand{\headrulewidth}{0.6pt}
-\renewcommand{\footrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0pt}
 \setlength{\headheight}{15pt}
 
 \hypersetup{
@@ -112,56 +125,261 @@
 
 \begin{document}
 
-% Page de Titre Haute Qualité
+% Page de Titre Haute Qualité Professionnelle & Équilibrée
 \begin{titlepage}
 \begin{center}
-    \vspace*{0.5cm}
+    \vspace*{1.2cm}
     
-    {\Huge\bfseries\color{primary} FullStackCSharp}\\[0.4cm]
-    {\Large\bfseries\color{secondary} Guide d'Architecture \& Conception Logicielle Fullstack}\\[0.2cm]
-    {\large\color{gray!80!black} .NET MAUI + ASP.NET Core Minimal APIs (.NET 8 LTS)}\\[0.8cm]
+    {\scshape\large\bfseries\color{secondary} Guide de Référence \& Architecture Systèmes}\\[0.3cm]
+    {\footnotesize\color{gray!80!black} Conception d'Applications d'Entreprise C\# Modernes}
     
-    \begin{tcolorbox}[enhanced,colback=secondary!6!white,colframe=secondary,arc=2mm,boxrule=0.8pt,width=0.9\textwidth]
-        \centering\small\itshape
-        Comprendre les rouages d'une application professionnelle C\# à travers des schémas de flux, des diagrammes d'architecture et des fiches ultra-granulaires par action.
-    \end{tcolorbox}
+    \vfill
     
-    \vspace{1.5cm}
+    {\fontsize{40}{48}\selectfont\bfseries\color{primary} FullStackCSharp}\\[0.4cm]
+    {\color{secondary}\rule{9cm}{1.5pt}}\\[0.6cm]
+    {\LARGE\bfseries\color{secondary} Guide de Conception \& d'Ingénierie Fullstack}\\[0.3cm]
+    {\large\color{gray!85!black} C\# 12 $\bullet$ .NET MAUI $\bullet$ ASP.NET Core Minimal APIs (.NET 8 LTS)}
     
-    \begin{tcolorbox}[enhanced,colback=white,colframe=borderlight,arc=3mm,boxrule=1pt,width=0.75\textwidth,drop fuzzy shadow=black!12]
-        \centering
-        \vspace{0.2cm}
-        {\footnotesize\scshape Auteur \& Concepteur du Projet}\\[0.2cm]
-        {\LARGE\bfseries\color{primary} Kevin Friart}\\[0.2cm]
-        {\small Ingénierie Logicielle \& Architecture Systèmes .NET}
-        \vspace{0.2cm}
+    \vfill
+    
+    \begin{tcolorbox}[enhanced,colback=secondary!4!white,colframe=secondary!35!white,arc=3mm,boxrule=0.9pt,width=0.88\textwidth,top=5mm,bottom=5mm,left=6mm,right=6mm]
+        \centering\normalsize\itshape\color{primary}
+        Comprendre, concevoir et bâtir un écosystème logiciel d'entreprise complet :\\
+        de l'autorité centrale des contrats jusqu'au client multiplateforme natif,\\
+        à travers des diagrammes de flux et des micro-fiches ultra-granulaires.
     \end{tcolorbox}
     
     \vfill
     
-    {\footnotesize\color{gray} \today}
+    \begin{tcolorbox}[enhanced,colback=white,colframe=borderlight,arc=3.5mm,boxrule=1.1pt,width=0.75\textwidth,drop fuzzy shadow=black!10,top=6mm,bottom=6mm]
+        \centering
+        {\footnotesize\scshape\bfseries\color{secondary} Auteur \& Concepteur du Projet}\\[0.3cm]
+        {\huge\bfseries\color{primary} Kevin Friart}\\[0.25cm]
+        {\normalsize\color{gray!85!black} Ingénierie Logicielle \& Architecture Systèmes .NET}
+    \end{tcolorbox}
+    
+    \vfill
+    
+    {\small\color{gray} .NET 8 LTS $\bullet$ Architecture 3 Tiers $\bullet$ \today}
+    
+    \vspace*{0.8cm}
 \end{center}
 \end{titlepage}
 
 \tableofcontents
 \newpage
 
+\chapter*{Introduction Générale : Vision \& Architecture du Projet}
+\addcontentsline{toc}{chapter}{Introduction Générale : Vision \& Architecture du Projet}
+
+Bienvenue dans le guide de conception et d'architecture du projet \textbf{\texttt{FullStackCSharp}}, conçu et développé par \textbf{Kevin Friart}.
+
+L'objectif de cet ouvrage et de cette réalisation logicielle est de construire un système Fullstack professionnel complet, robuste et \textbf{100\% fonctionnel}, en exploitant la puissance du langage \textbf{C\# 12} et de la plateforme unifiée \textbf{.NET 8 LTS} de bout en bout : du terminal serveur jusqu'à l'écran mobile de l'utilisateur.
+
+Le cas d'usage concret servant de fil rouge applicatif est une solution complète de commande en ligne pour une boutique artisanale de glaces (\textit{Gelato Artisan}) :
+\begin{itemize}
+    \item \textbf{Exploration du catalogue} : Produits, descriptions et options de personnalisation (parfums, nappages, formats).
+    \item \textbf{Panier d'achat local \& persistant} : Gestion autonome côté client via une base SQLite embarquée.
+    \item \textbf{Sécurité \& Authentification} : Inscription, connexion, hachage cryptographique et émission de jetons \textbf{JWT}.
+    \item \textbf{Passage de commande} : Validation des règles de cohérence monétaire et transmission transactionnelle.
+    \item \textbf{Console d'Observabilité Native} : Suivi en direct dans le terminal du trafic HTTP, SQL et anti-fraude sans simulateur.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{schemabox}{Architecture Globale du Système \& Flux d'Échange}
+\begin{center}
+\begin{tikzpicture}[
+    boxshared/.style={
+        rectangle, 
+        draw=cyanproj!90!black, 
+        fill=cyanproj!7!white, 
+        rounded corners=2.5mm, 
+        minimum width=14.8cm, 
+        minimum height=1.1cm, 
+        inner ysep=2mm,
+        align=center, 
+        line width=1.1pt
+    },
+    boxfront/.style={
+        rectangle, 
+        draw=indigo, 
+        fill=indigo!6!white, 
+        rounded corners=2.5mm, 
+        minimum width=5.6cm, 
+        minimum height=2.1cm, 
+        inner ysep=3mm,
+        align=center, 
+        line width=0.9pt
+    },
+    boxback/.style={
+        rectangle, 
+        draw=secondary, 
+        fill=secondary!6!white, 
+        rounded corners=2.5mm, 
+        minimum width=5.6cm, 
+        minimum height=2.1cm, 
+        inner ysep=3mm,
+        align=center, 
+        line width=0.9pt
+    },
+    boxmiddle/.style={
+        rectangle, 
+        draw=accent, 
+        fill=accent!6!white, 
+        rounded corners=2mm, 
+        minimum width=2.4cm, 
+        minimum height=1.1cm, 
+        inner ysep=1.5mm,
+        align=center, 
+        line width=0.8pt
+    },
+    boxconsole/.style={
+        rectangle, 
+        draw=primary, 
+        fill=primary!95!black, 
+        rounded corners=2.5mm, 
+        minimum width=14.8cm, 
+        minimum height=1.1cm, 
+        inner ysep=2mm,
+        align=center, 
+        line width=1pt
+    },
+    deparrow/.style={
+        -{Stealth[length=2.8mm]}, 
+        very thick, 
+        color=cyanproj!90!black
+    },
+    httparrow/.style={
+        {Stealth[length=2.2mm]}-{Stealth[length=2.2mm]}, 
+        thick, 
+        color=secondary
+    },
+    obsarrow/.style={
+        -{Stealth[length=3mm]}, 
+        very thick, 
+        color=emerald!80!black
+    }
+]
+
+% Top: Shared Contract Authority (y = 3.8)
+\node[boxshared] (shared) at (0, 3.8) {
+    \textbf{\normalsize 1. Contrats \& Modèles d'Échange Communs — \texttt{FullStackCSharp.Shared}}\\[1pt]
+    \footnotesize DTOs immuables (\texttt{record}) $\bullet$ Requêtes \& Réponses $\bullet$ Énumérations $\bullet$ Zéro dépendance
+};
+
+% Middle Row (y = 0.9)
+\node[boxfront] (front) at (-4.7, 0.9) {
+    \textbf{\normalsize 2. Client .NET MAUI}\\[2pt]
+    {\color{indigo!70!black}\rule{4.8cm}{0.4pt}}\\[2pt]
+    \scriptsize \textbf{Application Mobile \& Desktop}\\[1pt]
+    \tiny Interface XAML native (iOS, Android, Windows)\\
+    \tiny Client HTTP Refit typé $\bullet$ Architecture MVVM\\
+    \tiny Panier local persistant (SQLite mobile)
+};
+
+\node[boxback] (back) at (4.7, 0.9) {
+    \textbf{\normalsize 3. API ASP.NET Core}\\[2pt]
+    {\color{secondary!70!black}\rule{4.8cm}{0.4pt}}\\[2pt]
+    \scriptsize \textbf{Serveur Kestrel \& Base SQLite}\\[1pt]
+    \tiny Minimal APIs performantes (.NET 8 LTS)\\
+    \tiny Authentification JWT $\bullet$ Rôles \& Anti-Fraude\\
+    \tiny Entity Framework Core 8 \& SQLite serveur
+};
+
+% Middle Center: HTTP Transport
+\node[boxmiddle] (network) at (0, 0.9) {
+    \scriptsize\bfseries Réseau HTTP\\[1pt]
+    \tiny REST / JSON\\
+    \tiny DTOs partagés
+};
+
+\draw[httparrow] (front.east) -- (network.west);
+\draw[httparrow] (network.east) -- (back.west);
+
+% Dependency arrows with ample vertical clearance
+\draw[deparrow] (shared.south -| front.north) -- (front.north)
+    node[midway, left=5pt, font=\scriptsize\bfseries\color{cyanproj!90!black}] {Référence binaire};
+
+\draw[deparrow] (shared.south -| back.north) -- (back.north)
+    node[midway, right=5pt, font=\scriptsize\bfseries\color{cyanproj!90!black}] {Référence binaire};
+
+% Bottom: Native Observability Console (y = -1.9)
+\node[boxconsole] (console) at (0, -1.9) {
+    \color{white}\textbf{\normalsize 4. Console d'Observabilité Native (Serveur Kestrel)}\\[1pt]
+    \footnotesize\color{emerald!30!white}\texttt{[HTTP] GET /catalog/icecreams} $\bullet$ \color{cyanproj!30!white}\texttt{[SQL] SELECT * FROM Products} $\bullet$ \color{accent!30!white}\texttt{[AUTH] JWT vérifié}
+};
+
+% Clean straight vertical arrow from back.south to console.north
+\draw[obsarrow] (back.south) -- (console.north -| back.south)
+    node[midway, left=6pt, font=\scriptsize\bfseries\color{emerald!80!black}] {Flux de télémétrie ANSI en direct};
+
+\end{tikzpicture}
+\end{center}
+\end{schemabox}
+
+\newpage
+
+\subsection*{Les 4 Piliers Fondamentaux du Système}
+
+Le système est structuré autour de quatre briques coordonnées, chacune délimitée par une responsabilité unique et étanche :
+
+\begin{description}
+    \item[\color{cyanproj!90!black}1. Contrats (\texttt{FullStackCSharp.Shared})] : Bibliothèque neutre (.NET 8 \texttt{classlib}) définissant l'autorité unique des DTOs (\texttt{record}) et des requêtes d'échange, sans logique serveur ni interface utilisateur.
+    \item[\color{secondary}2. Backend (\texttt{FullStackCSharp.Back})] : Serveur web Kestrel hébergeant les Minimal APIs, la persistance relationnelle SQLite via EF Core 8 et le moteur de sécurité JWT.
+    \item[\color{indigo}3. Client (\texttt{FullStackCSharp.Front})] : Interface utilisateur riche et multiplateforme .NET MAUI (XAML / C\#) avec gestion de panier local persistant.
+    \item[\color{emerald!80!black}4. Observabilité (Console Kestrel)] : Affichage en direct du trafic réseau, du SQL et de la sécurité dans la console standard, sans simulateur artificiel.
+\end{description}
+
+\vspace{0.15cm}
+
+\subsection*{Règles d'Or d'Ingénierie du Projet}
+
+Pour garantir un niveau d'exigence digne des standards de l'industrie, le projet applique quatre règles fondamentales :
+\begin{itemize}
+    \item \textbf{Plafond strict $< 300$ lignes} : Aucun fichier source ne doit dépasser 300 lignes (cible : 80 à 250 lignes).
+    \item \textbf{Zéro commentaire} : Le code C\# ne contient aucun commentaire (\texttt{//}, \texttt{/*}, \texttt{///}). Il est auto-porteur.
+    \item \textbf{Zéro simulation} : Tout le code compile et s'exécute réellement (.NET 8, SQLite, JWT, MAUI).
+    \item \textbf{Conception Contract-First} : Les contrats d'échange (\texttt{Shared}) sont validés avant tout code client ou serveur.
+\end{itemize}
+
+\vspace{0.15cm}
+
+\subsection*{Questions Fréquentes du Débutant}
+
+\faqitem{Qu'allons-nous construire concrètement de A à Z dans ce projet ?}{
+    Un système complet de commerce électronique : un serveur d'API sécurisé gérant utilisateurs, catalogue et commandes en base SQLite, accompagné d'une application client mobile et desktop dotée d'un panier d'achat local et d'un flux de commande transactionnel.
+}
+
+\faqitem{Pourquoi utiliser le C\# à la fois pour le serveur et pour le client ?}{
+    L'unification technologique en C\# permet le \textbf{partage direct de modèles fortement typés}. Toute modification dans un DTO partagé est vérifiée par le compilateur des deux côtés, éliminant à la racine les erreurs d'incohérence JSON entre le client et l'API.
+}
+
+\faqitem{Pourquoi le Backend est-il développé et validé avant le client mobile ?}{
+    C'est la règle d'or industrielle : on ne connecte une interface graphique qu'à un serveur dont les endpoints sont déjà opérationnels, testables et stables. En validant l'API en amont, nous nous assurons de la fiabilité du réseau avant de concevoir les écrans XAML.
+}
+
+\faqitem{Comment aborder la lecture de ce livret ?}{
+    Ce livret est découpé en \textbf{micro-fiches modulaires} (une fiche par action concrète). Chaque fiche se lit en 2 minutes et aborde un concept unique, illustré d'un schéma vectoriel et de questions/réponses claires pour progresser pas à pas avec sérénité.
+}
+
+
+\newpage
+
 \chapter{Jalon 1 : Socle Technique \& Initialisation}
 
 \section{Action 1.1 : Création de la Solution \& Rôle du Fichier .sln}
 
-\begin{conceptbox}{Qu'est-ce qu'une Solution .NET (.sln) ?}
 Dans l'écosystème .NET, une \textbf{Solution} n'est ni un binaire exécutable, ni une bibliothèque de code. Il s'agit d'un \textbf{conteneur d'orchestration} textuel qui référence et coordonne plusieurs projets indépendants (\texttt{.csproj}).
 
-Le fichier \texttt{.sln} remplit trois fonctions fondamentales pour les outils d'ingénierie (CLI \texttt{dotnet}, Visual Studio, Rider, serveurs de CI/CD) :
-\begin{enumerate}
+Le fichier \texttt{.sln} remplit trois fonctions fondamentales pour les outils d'ingénierie (CLI \texttt{dotnet}, Visual Studio, Rider, serveurs d'intégration continue) :
+\begin{itemize}
     \item \textbf{Graphe de dépendances} : Il référence l'emplacement physique de chaque projet sur le disque et permet à MSBuild de déterminer l'ordre logique de compilation.
-    \item \textbf{Configurations cibles} : Il synchronise les matrices de compilation (\texttt{Debug} ou \texttt{Release}, architectures \texttt{Any CPU}, \texttt{x64}, etc.) pour l'ensemble des projets d'un seul bloc.
+    \item \textbf{Configurations cibles} : Il synchronise les matrices de compilation (\texttt{Debug} ou \texttt{Release}, architectures matérielles) pour l'ensemble des projets d'un seul bloc.
     \item \textbf{Point d'entrée unique} : Il permet au développeur d'exécuter \texttt{dotnet build} ou \texttt{dotnet test} à la racine sans avoir à parcourir chaque sous-répertoire manuellement.
-\end{enumerate}
-\end{conceptbox}
+\end{itemize}
 
-\vspace{0.4cm}
+\vspace{0.3cm}
 
 \begin{schemabox}{L'Orchestration par la Solution dans l'Architecture}
 \begin{center}
@@ -172,7 +390,8 @@ Le fichier \texttt{.sln} remplit trois fonctions fondamentales pour les outils d
         fill=accent!6!white, 
         rounded corners=3mm, 
         minimum width=15cm, 
-        minimum height=1.3cm, 
+        minimum height=1.2cm, 
+        inner ysep=2.5mm,
         align=center, 
         line width=1pt
     },
@@ -183,6 +402,7 @@ Le fichier \texttt{.sln} remplit trois fonctions fondamentales pour les outils d
         rounded corners=2.5mm, 
         minimum width=4.6cm, 
         minimum height=1.9cm, 
+        inner ysep=3mm,
         align=center, 
         line width=0.8pt
     },
@@ -193,6 +413,7 @@ Le fichier \texttt{.sln} remplit trois fonctions fondamentales pour les outils d
         rounded corners=2.5mm, 
         minimum width=4.6cm, 
         minimum height=1.9cm, 
+        inner ysep=3mm,
         align=center, 
         line width=0.8pt
     },
@@ -203,6 +424,7 @@ Le fichier \texttt{.sln} remplit trois fonctions fondamentales pour les outils d
         rounded corners=2.5mm, 
         minimum width=4.6cm, 
         minimum height=1.9cm, 
+        inner ysep=3mm,
         align=center, 
         line width=0.8pt
     },
@@ -212,7 +434,8 @@ Le fichier \texttt{.sln} remplit trois fonctions fondamentales pour les outils d
         fill=primary!5!white, 
         rounded corners=3mm, 
         minimum width=13cm, 
-        minimum height=1.2cm, 
+        minimum height=1.1cm, 
+        inner ysep=2.5mm,
         align=center, 
         line width=0.9pt
     },
@@ -229,28 +452,28 @@ Le fichier \texttt{.sln} remplit trois fonctions fondamentales pour les outils d
     }
 ]
 
-% Solution Container
-\node[cardsln] (sln) at (0, 4.3) {
+% Solution Container (y = 4.0)
+\node[cardsln] (sln) at (0, 4.0) {
     \textbf{\large FullStackCSharp.sln}\\[2pt]
     \small \textit{Solution Maître d'Orchestration — Fichier racine de coordination MSBuild}
 };
 
-% Projects (3 distinct cards with 6mm space between each)
-\node[cardshared] (shared) at (-5.2, 1.8) {
+% Projects (y = 1.7)
+\node[cardshared] (shared) at (-5.2, 1.7) {
     \textbf{\normalsize FullStackCSharp.Shared}\\[2pt]
     {\color{cyanproj}\rule{4cm}{0.4pt}}\\[3pt]
     \scriptsize \textbf{Contrats \& DTOs Communs}\\
     \tiny Type : Bibliothèque (\texttt{classlib}) $\bullet$ \texttt{net8.0}
 };
 
-\node[cardback] (back) at (0, 1.8) {
+\node[cardback] (back) at (0, 1.7) {
     \textbf{\normalsize FullStackCSharp.Back}\\[2pt]
     {\color{secondary}\rule{4cm}{0.4pt}}\\[3pt]
     \scriptsize \textbf{Serveur Kestrel \& APIs}\\
     \tiny Type : Web API Minimal $\bullet$ \texttt{net8.0}
 };
 
-\node[cardfront] (front) at (5.2, 1.8) {
+\node[cardfront] (front) at (5.2, 1.7) {
     \textbf{\normalsize FullStackCSharp.Front}\\[2pt]
     {\color{indigo}\rule{4cm}{0.4pt}}\\[3pt]
     \scriptsize \textbf{Client Mobile \& Desktop}\\
@@ -258,11 +481,11 @@ Le fichier \texttt{.sln} remplit trois fonctions fondamentales pour les outils d
 };
 
 % Links from sln to projects
-\draw[arrowsln] (-5.2, 3.65) -- (shared.north) node[midway, right, font=\tiny\bfseries\color{accent!80!black}] {référence};
-\draw[arrowsln] (0, 3.65) -- (back.north) node[midway, right, font=\tiny\bfseries\color{accent!80!black}] {référence};
-\draw[arrowsln] (5.2, 3.65) -- (front.north) node[midway, right, font=\tiny\bfseries\color{accent!80!black}] {référence};
+\draw[arrowsln] (-5.2, 3.4) -- (shared.north) node[midway, right=2pt, font=\tiny\bfseries\color{accent!80!black}] {référence};
+\draw[arrowsln] (0, 3.4) -- (back.north) node[midway, right=2pt, font=\tiny\bfseries\color{accent!80!black}] {référence};
+\draw[arrowsln] (5.2, 3.4) -- (front.north) node[midway, right=2pt, font=\tiny\bfseries\color{accent!80!black}] {référence};
 
-% Compilation Engine
+% Compilation Engine (y = -0.9)
 \node[cardbuild] (msbuild) at (0, -0.9) {
     \textbf{\normalsize Moteur MSBuild \& Outils CLI .NET}\\[2pt]
     \footnotesize Résolution du graphe de dépendances $\longrightarrow$ Compilation parallèle optimisée
@@ -277,76 +500,63 @@ Le fichier \texttt{.sln} remplit trois fonctions fondamentales pour les outils d
 \end{center}
 \end{schemabox}
 
-\vspace{0.4cm}
-
-\subsection*{Distinction Conceptuelle : Solution vs Projet vs Package}
-
-\begin{center}
-\small
-\renewcommand{\arraystretch}{1.4}
-\begin{tabularx}{\textwidth}{>{\bfseries}l p{4.2cm} p{4cm} >{\raggedright\arraybackslash}X}
-\toprule
-\rowcolor{tableheader}
-\color{white}\textbf{Niveau} & \color{white}\textbf{Rôle Principal} & \color{white}\textbf{Fichier Source} & \color{white}\textbf{Produit de Sortie} \\
-\midrule
-\rowcolor{cardbg}
-Solution & Orchestration multi-projets, point d'entrée outillage. & \texttt{FullStackCSharp.sln} & Aucun binaire (graphe logique). \\
-Projet & Unité de compilation élémentaire contenant le code C\#. & \texttt{*.csproj} & Assembly (\texttt{.dll}) ou Exécutable (\texttt{.exe}). \\
-\rowcolor{cardbg}
-Package & Composant réutilisable redistribué (dépendance). & \texttt{*.nupkg} (via NuGet) & Archive binaire versionnée. \\
-\bottomrule
-\end{tabularx}
-\end{center}
-
 \vspace{0.3cm}
+
+\subsection*{Distinction Conceptuelle : Solution, Projet et Package}
+
+Pour appréhender sereinement l'outillage .NET, il convient de distinguer clairement les trois niveaux d'abstraction :
+
+\begin{description}
+    \item[\color{secondary}La Solution (\texttt{.sln})] : Conteneur purement logique et textuel. Elle ne contient aucune ligne de code C\# et ne produit aucun binaire. Son rôle unique est d'orchestrer la compilation multi-projets et de servir de point d'entrée pour les environnements de développement et les outils CLI.
+    \item[\color{cyanproj!90!black}Le Projet (\texttt{.csproj})] : Unité de compilation fondamentale contenant le code source C\#, les déclarations de dépendances et les paramètres du compilateur. Chaque projet produit un artefact binaire concret : une bibliothèque partagée (\texttt{.dll}) ou un exécutable (\texttt{.exe}).
+    \item[\color{accent}Le Package NuGet (\texttt{.nupkg})] : Archive binaire versionnée contenant une bibliothèque précompilée et ses métadonnées, distribuée via un registre de paquets pour être réutilisée entre différentes solutions.
+\end{description}
+
+\vspace{0.2cm}
 
 \begin{bestpracticebox}{Format .sln vs .slnx en .NET 8 / .NET 10}
 À partir du SDK .NET 9/10, la commande \texttt{dotnet new sln} génère par défaut un nouveau format expérimental au format XML (\texttt{.slnx}). 
 
-Cependant, dans un contexte professionnel de production ciblant \textbf{.NET 8 LTS}, il est recommandé de forcer le format standard éprouvé via le paramètre :
+Cependant, dans un contexte professionnel ciblant \textbf{.NET 8 LTS}, il est vivement recommandé de forcer le format standard éprouvé via le paramètre :
 \begin{center}
 \texttt{dotnet new sln -n FullStackCSharp --format sln}
 \end{center}
-Cette rigueur garantit une interopérabilité sans faille avec l'ensemble des environnements de développement (Visual Studio 2022, JetBrains Rider, VS Code et les agents d'intégration continue Linux/Windows).
+Cette rigueur garantit une interopérabilité sans faille avec l'ensemble des environnements de développement (Visual Studio 2022, JetBrains Rider, VS Code et les agents d'intégration continue).
 \end{bestpracticebox}
 
-\vspace{0.4cm}
+\vspace{0.3cm}
 
-\begin{faqbox}{Questions Fondamentales \& Réponses Pédagogiques}
-\begin{enumerate}
-    \item \textbf{Où se trouve la console ? Pourquoi n'y a-t-il pas de projet \texttt{FullStackCSharp.Console} dans la solution ?}
-    
-    \textbf{Réponse :} En .NET moderne, une API Web ASP.NET Core (\texttt{FullStackCSharp.Back}) \textbf{est elle-même nativement une application console} (\texttt{<OutputType>Exe</OutputType>}). Lorsque vous lancez le serveur avec la commande \texttt{dotnet run}, une véritable fenêtre console s'ouvre dans votre terminal. C'est le serveur Kestrel lui-même qui agit directement comme console d'observabilité en affichant en temps réel les requêtes HTTP, le code SQL exécuté et les jetons JWT. Il n'y a donc aucun besoin d'ajouter un 4\ieme{} projet artificiel.
-    
-    \item \textbf{Pourquoi créer un fichier \texttt{.sln} au lieu de juste ouvrir le dossier dans l'éditeur ?}
-    
-    \textbf{Réponse :} Ouvrir un dossier permet d'éditer du texte brut, mais le compilateur MSBuild est incapable de deviner automatiquement l'ordre dans lequel compiler vos composants. Le fichier \texttt{.sln} fournit à l'outillage la carte officielle du système : il indique formellement que \texttt{Shared} doit être compilé avant \texttt{Back} et \texttt{Front}, et synchronise les options de compilation (\texttt{Debug}/\texttt{Release}) pour l'ensemble des projets d'un seul bloc.
-    
-    \item \textbf{Pourquoi séparer la solution en 3 projets plutôt que de tout coder dans un seul ?}
-    
-    \textbf{Réponse :} C'est la règle d'or de la \textbf{séparation des responsabilités} et de la sécurité. Le client mobile ne doit jamais charger les bibliothèques du serveur ni accéder directement à la base de données SQLite centrale. De son côté, le serveur n'a pas à charger le moteur graphique XAML. Seul le projet \texttt{Shared} (qui ne contient que des modèles de données DTOs purs et légers) sert de passerelle commune.
-\end{enumerate}
-\end{faqbox}
+\subsection*{Questions Fréquentes du Débutant}
+
+\faqitem{Où se trouve la console ? Pourquoi n'y a-t-il pas de projet \texttt{FullStackCSharp.Console} ?}{
+    En .NET moderne, une API Web ASP.NET Core (\texttt{FullStackCSharp.Back}) \textbf{est elle-même nativement une application console} (\texttt{<OutputType>Exe</OutputType>}). Lorsque vous lancez le serveur avec la commande \texttt{dotnet run}, une véritable fenêtre console s'ouvre dans votre terminal. C'est le serveur Kestrel lui-même qui agit directement comme console d'observabilité en affichant en temps réel les requêtes HTTP, le code SQL exécuté et les jetons JWT. Il n'y a donc aucun besoin d'ajouter un 4\ieme{} projet artificiel.
+}
+
+\faqitem{Pourquoi créer un fichier \texttt{.sln} au lieu de juste ouvrir le dossier dans l'éditeur ?}{
+    Ouvrir un simple dossier permet d'éditer du texte brut, mais le compilateur MSBuild est incapable de deviner automatiquement l'ordre dans lequel compiler vos composants. Le fichier \texttt{.sln} fournit à l'outillage la carte officielle du système : il indique formellement que \texttt{Shared} doit être compilé avant \texttt{Back} et \texttt{Front}, et synchronise les options de compilation (\texttt{Debug}/\texttt{Release}) pour l'ensemble des projets d'un seul bloc.
+}
+
+\faqitem{Pourquoi séparer la solution en 3 projets plutôt que de tout coder dans un seul ?}{
+    C'est la règle d'or de la \textbf{séparation des responsabilités} et de la sécurité. Le client mobile ne doit jamais charger les bibliothèques du serveur ni accéder directement à la base de données SQLite centrale. De son côté, le serveur n'a pas à charger le moteur graphique XAML. Seul le projet \texttt{Shared} (qui ne contient que des modèles de données DTOs purs et légers) sert de passerelle commune.
+}
 
 
 \newpage
 
 \section{Action 1.2 : Le Projet de Bibliothèque de Classes (Shared)}
 
-\begin{conceptbox}{Le Rôle d'une Bibliothèque de Classes (\texttt{classlib}) Agnostique}
 Le premier projet créé dans notre solution est \textbf{\texttt{FullStackCSharp.Shared}}. 
 
 Contrairement aux applications exécutables, une bibliothèque de classes (\texttt{classlib}) ne dispose pas de méthode d'entrée \texttt{Main()} et ne produit aucun fichier \texttt{.exe} : elle est compilée sous la forme d'un assemblage binaire \textbf{\texttt{.dll}} (\textit{Dynamic Link Library}) réutilisable.
 
 Dans notre architecture, ce projet occupe une fonction stratégique :
-\begin{enumerate}
+\begin{itemize}
     \item \textbf{Agnosticisme technologique} : Il est 100\% neutre. Il ne dépend ni des bibliothèques graphiques de l'application cliente (.NET MAUI, XAML), ni du serveur web (ASP.NET Core, Kestrel), ni de la base de données.
     \item \textbf{Langage commun universel} : Il contient l'ensemble des \textbf{DTOs} (\textit{Data Transfer Objects}), des requêtes, des réponses et des énumérations échangées entre le Front et le Back.
     \item \textbf{Sécurité à la compilation} : En partageant le même contrat immuable, si un champ est renommé dans \texttt{Shared}, le compilateur génère immédiatement une erreur de compilation dans le Front et dans le Back, empêchant tout bug de communication en production.
-\end{enumerate}
-\end{conceptbox}
+\end{itemize}
 
-\vspace{0.4cm}
+\vspace{0.3cm}
 
 \begin{schemabox}{Shared : L'Autorité Centrale des Contrats d'Échange}
 \begin{center}
@@ -356,8 +566,9 @@ Dans notre architecture, ce projet occupe une fonction stratégique :
         draw=cyanproj!90!black, 
         fill=cyanproj!7!white, 
         rounded corners=3mm, 
-        minimum width=8.6cm, 
-        minimum height=1.9cm, 
+        minimum width=8.8cm, 
+        minimum height=1.8cm, 
+        inner ysep=3mm,
         align=center, 
         line width=1.1pt
     },
@@ -366,8 +577,9 @@ Dans notre architecture, ce projet occupe une fonction stratégique :
         draw=#1, 
         fill=#1!6!white, 
         rounded corners=2.5mm, 
-        minimum width=4.6cm, 
+        minimum width=4.8cm, 
         minimum height=2.1cm, 
+        inner ysep=3mm,
         align=center, 
         line width=0.9pt
     },
@@ -377,8 +589,9 @@ Dans notre architecture, ce projet occupe une fonction stratégique :
         fill=white,
         rounded corners=2mm,
         minimum width=3.4cm,
-        minimum height=0.95cm,
-        align=center,
+        minimum height=0.9cm,
+        inner ysep=2mm,
+        align=center, 
         line width=0.8pt
     },
     pillforbid/.style={
@@ -387,8 +600,9 @@ Dans notre architecture, ce projet occupe une fonction stratégique :
         fill=red!4!white,
         rounded corners=2mm,
         minimum width=3.4cm,
-        minimum height=0.95cm,
-        align=center,
+        minimum height=0.9cm,
+        inner ysep=2mm,
+        align=center, 
         line width=0.8pt,
         densely dashed
     },
@@ -409,16 +623,16 @@ Dans notre architecture, ce projet occupe une fonction stratégique :
     }
 ]
 
-% Top: Shared (Centered at y = 3.5)
-\node[cardshared] (shared) at (0, 3.5) {
-    \textbf{\large FullStackCSharp.Shared}\\[3pt]
+% Top: Shared (Centered at y = 3.6)
+\node[cardshared] (shared) at (0, 3.6) {
+    \textbf{\large FullStackCSharp.Shared}\\[2pt]
     {\color{cyanproj!80!black}\rule{7.2cm}{0.4pt}}\\[3pt]
     \footnotesize \textbf{Autorité Centrale des Contrats \& DTOs Communs}\\
     \tiny Assembly binaire : \texttt{FullStackCSharp.Shared.dll} $\bullet$ Cible : \texttt{net8.0}
 };
 
-% Bottom Left: Front & Bottom Right: Back
-\node[cardapp=indigo] (front) at (-5.2, 0) {
+% Bottom Left: Front & Bottom Right: Back (y = 0.2)
+\node[cardapp=indigo] (front) at (-5.2, 0.2) {
     \textbf{\normalsize FullStackCSharp.Front}\\[2pt]
     {\color{indigo!70!black}\rule{3.8cm}{0.4pt}}\\[3pt]
     \scriptsize Client Mobile \& Desktop (.NET MAUI)\\[2pt]
@@ -426,7 +640,7 @@ Dans notre architecture, ce projet occupe une fonction stratégique :
     \tiny Ne contient aucune logique serveur
 };
 
-\node[cardapp=secondary] (back) at (5.2, 0) {
+\node[cardapp=secondary] (back) at (5.2, 0.2) {
     \textbf{\normalsize FullStackCSharp.Back}\\[2pt]
     {\color{secondary!70!black}\rule{3.8cm}{0.4pt}}\\[3pt]
     \scriptsize Serveur ASP.NET Core (Kestrel)\\[2pt]
@@ -444,92 +658,79 @@ Dans notre architecture, ce projet occupe une fonction stratégique :
     (shared.east);
 
 % Center: Allowed HTTP Data Flow (Horizontal)
-\node[pillhttp] (http) at (0, 0.5) {
-    \scriptsize\bfseries\color{secondary!90!black} Flux Réseau HTTP / REST\\[2pt]
+\node[pillhttp] (http) at (0, 0.7) {
+    \scriptsize\bfseries\color{secondary!90!black} Flux Réseau HTTP / REST\\[1pt]
     \tiny Transport JSON exclusif des DTOs
 };
-\draw[httparrow] (-2.9, 0.5) -- (http.west);
-\draw[httparrow] (http.east) -- (2.9, 0.5);
+\draw[httparrow] (-2.8, 0.7) -- (http.west);
+\draw[httparrow] (http.east) -- (2.8, 0.7);
 
 % Center: Prohibited Direct Coupling (Horizontal)
-\node[pillforbid] (forbid) at (0, -0.6) {
-    \scriptsize\bfseries\color{red!80!black} $\times$~Isolation Stricte\\[2pt]
+\node[pillforbid] (forbid) at (0, -0.4) {
+    \scriptsize\bfseries\color{red!80!black} $\times$~Isolation Stricte\\[1pt]
     \tiny Référence directe interdite
 };
-\draw[forbidarrow] (-2.9, -0.6) -- (forbid.west);
-\draw[forbidarrow] (forbid.east) -- (2.9, -0.6);
+\draw[forbidarrow] (-2.8, -0.4) -- (forbid.west);
+\draw[forbidarrow] (forbid.east) -- (2.8, -0.4);
 
 \end{tikzpicture}
 \end{center}
 \end{schemabox}
 
-\vspace{0.4cm}
-
-\subsection*{Comparaison des Types de Projets dans la Solution}
-
-\begin{center}
-\small
-\renewcommand{\arraystretch}{1.4}
-\begin{tabularx}{\textwidth}{>{\bfseries}l p{3.8cm} p{3.5cm} >{\raggedright\arraybackslash}X}
-\toprule
-\rowcolor{tableheader}
-\color{white}Projet & \color{white}Type de Sortie & \color{white}Dépendances Cibles & \color{white}Rôle dans le Système \\
-\midrule
-\rowcolor{cardbg}
-Shared & \texttt{.dll} (\textit{Library}) & Aucune (pur .NET 8) & Contrats d'échange, DTOs, requêtes, enums. \\
-Back & \texttt{.exe} (\textit{Executable}) & Shared, EF Core, Kestrel & API REST, logique d'affaires, persistance. \\
-\rowcolor{cardbg}
-Front & \texttt{.exe} / Package OS & Shared, Refit, MAUI & Interface graphique, interactions, panier local. \\
-\bottomrule
-\end{tabularx}
-\end{center}
-
-\vspace{0.3cm}
+\vspace{0.2cm}
 
 \begin{bestpracticebox}{Immutabilité et Pureté des Contrats}
-Pour conserver un projet \texttt{Shared} sain et durable tout au long du cycle de vie logiciel :
+Pour conserver un projet \texttt{Shared} sain et pérenne tout au long du cycle de vie du projet :
 \begin{itemize}
-    \item \textbf{Zéro dépendance lourde} : Ne jamais installer de package lié à la base de données (Entity Framework Core) ou à l'interface graphique dans \texttt{Shared}.
-    \item \textbf{Modélisation par \texttt{record}} : Les DTOs doivent être des types immuables (\texttt{public record ...}) garantissant qu'une donnée ne peut pas être altérée accidentellement en cours de transfert.
+    \item \textbf{Zéro dépendance d'infrastructure} : Ne jamais installer de package lié à la base de données (Entity Framework Core) ou à l'interface graphique (.NET MAUI) dans \texttt{Shared}.
+    \item \textbf{Modélisation par \texttt{record}} : Les DTOs doivent être des types immuables (\texttt{public record ...}) garantissant qu'une donnée ne peut pas être altérée de façon inattendue en transit.
 \end{itemize}
 \end{bestpracticebox}
 
-\vspace{0.4cm}
+\newpage
 
-\begin{faqbox}{Questions Fondamentales du Débutant}
-\begin{enumerate}
-    \item \textbf{Pourquoi ce projet ne produit-il pas de fichier \texttt{.exe} ? Comment s'exécute-t-il ?}
-    
-    \textbf{Réponse :} Une bibliothèque de classes (\texttt{classlib}) produit exclusivement un fichier \texttt{.dll}. Elle ne possède pas de point d'entrée et ne peut pas être « lancée » toute seule. Elle est conçue pour être chargée en mémoire par des projets exécutables (\texttt{Back} et \texttt{Front}) lors de leur propre démarrage.
-    
-    \item \textbf{Pourquoi appelle-t-on ce projet \texttt{Shared} plutôt que \texttt{Common} ou \texttt{Core} ?}
-    
-    \textbf{Réponse :} Le nom \texttt{Shared} indique sans ambiguïté qu'il s'agit du contrat \textbf{partagé} entre deux mondes distincts (client et serveur). Le terme \texttt{Core} désigne habituellement le cœur métier (entités de domaine, logique interne du serveur), tandis que \texttt{Common} est un nom souvent déconseillé car il devient rapidement un « dossier fourre-tout » de code désorganisé.
-    
-    \item \textbf{Pourquoi ne pas mettre Entity Framework Core et les tables de base de données dans \texttt{Shared} ?}
-    
-    \textbf{Réponse :} Ce serait une \textbf{faille architecturale et de sécurité majeure}. Si \texttt{Front} référençait les entités de base de données, l'application mobile embarquerait inutilement les pilotes SQL serveur et risquerait de tenter un accès direct aux données. Dans une application Fullstack professionnelle, le client mobile ne doit \textbf{jamais} connaître la base de données centrale : il ne dialogue avec le monde extérieur que via des requêtes HTTP transportant des DTOs.
-\end{enumerate}
-\end{faqbox}
+\subsection*{Les Trois Familles de Projets dans la Solution}
+
+Chaque projet de la solution répond à un rôle précis et engendre un type de binaire spécifique :
+
+\begin{description}
+    \item[\color{cyanproj!90!black}\texttt{FullStackCSharp.Shared} (\texttt{.dll})] : Bibliothèque de classes agnostique. Elle ne dépend d'aucun framework tiers et sert d'autorité de typage pour les DTOs, requêtes et réponses JSON.
+    \item[\color{secondary}\texttt{FullStackCSharp.Back} (\texttt{.exe})] : Application serveur autonome intégrant Kestrel, Entity Framework Core 8 et le moteur d'authentification JWT.
+    \item[\color{indigo}\texttt{FullStackCSharp.Front} (\texttt{.exe} / package d'application)] : Application cliente multiplateforme (.NET MAUI) consommant l'API via des contrats fortement typés et gérant l'expérience utilisateur.
+\end{description}
+
+\vspace{0.3cm}
+
+\subsection*{Questions Fréquentes du Débutant}
+
+\faqitem{Pourquoi ce projet ne produit-il pas de fichier \texttt{.exe} ? Comment s'exécute-t-il ?}{
+    Une bibliothèque de classes (\texttt{classlib}) produit exclusivement un fichier \texttt{.dll}. Elle ne possède pas de point d'entrée et ne peut pas être « lancée » toute seule. Elle est conçue pour être chargée en mémoire par des projets exécutables (\texttt{Back} et \texttt{Front}) lors de leur propre démarrage.
+}
+
+\faqitem{Pourquoi appelle-t-on ce projet \texttt{Shared} plutôt que \texttt{Common} ou \texttt{Core} ?}{
+    Le nom \texttt{Shared} indique sans ambiguïté qu'il s'agit du contrat \textbf{partagé} entre deux mondes distincts (client et serveur). Le terme \texttt{Core} désigne habituellement le cœur métier (entités de domaine, logique interne du serveur), tandis que \texttt{Common} est un nom souvent déconseillé car il devient rapidement un « dossier fourre-tout » de code désorganisé.
+}
+
+\faqitem{Pourquoi ne pas mettre Entity Framework Core et les tables de base de données dans \texttt{Shared} ?}{
+    Ce serait une \textbf{faille architecturale et de sécurité majeure}. Si \texttt{Front} référençait les entités de base de données, l'application mobile embarquerait inutilement les pilotes SQL serveur et risquerait de tenter un accès direct aux données. Dans une application Fullstack professionnelle, le client mobile ne doit \textbf{jamais} connaître la base de données centrale : il ne dialogue avec le monde extérieur que via des requêtes HTTP transportant des DTOs.
+}
 
 
 \newpage
 
 \section{Action 1.3 : Création de l'API Backend (ASP.NET Core Minimal API)}
 
-\begin{conceptbox}{Le Serveur Web Kestrel \& le Paradigme des Minimal APIs}
 Le deuxième projet créé dans notre solution est \textbf{\texttt{FullStackCSharp.Back}}. 
 
 Contrairement aux bibliothèques de classes, ce projet est configuré avec le SDK Web (\texttt{Microsoft.NET.Sdk.Web}) et compile directement vers un exécutable autonome (\textbf{\texttt{FullStackCSharp.Back.exe}}).
 
 Dans l'écosystème .NET moderne (.NET 8 LTS), la conception du Backend repose sur deux piliers majeurs :
-\begin{enumerate}
+\begin{itemize}
     \item \textbf{Serveur Kestrel intégré \& Console Native} : Kestrel est un serveur web HTTP asynchrone haute performance embarqué directement dans le binaire. L'application se lance en ligne de commande via \texttt{dotnet run} et ouvre instantanément une console d'observabilité diffusant en direct les requêtes réseau, les temps de réponse et les requêtes SQL.
     \item \textbf{Minimal APIs} : Introduit pour éliminer la lourdeur des contrôleurs MVC traditionnels, le modèle Minimal API permet de déclarer les routes HTTP directement via des lambdas typées (\texttt{app.MapGet}, \texttt{app.MapPost}) avec une allocation mémoire minimale et des performances brutes décuplées.
-\end{enumerate}
-\end{conceptbox}
+\end{itemize}
 
-\vspace{0.4cm}
+\vspace{0.3cm}
 
 \begin{schemabox}{L'Anatomie du Processus Exécutable \& la Console d'Observabilité}
 \begin{center}
@@ -541,6 +742,7 @@ Dans l'écosystème .NET moderne (.NET 8 LTS), la conception du Backend repose s
         rounded corners=3mm, 
         minimum width=15.4cm, 
         minimum height=3.6cm, 
+        inner ysep=3mm,
         align=center, 
         line width=1.1pt
     },
@@ -550,7 +752,8 @@ Dans l'écosystème .NET moderne (.NET 8 LTS), la conception du Backend repose s
         fill=#1!8!white, 
         rounded corners=2mm, 
         minimum width=3.8cm, 
-        minimum height=2.2cm, 
+        minimum height=2.0cm, 
+        inner ysep=2.5mm,
         align=center, 
         line width=0.8pt
     },
@@ -560,7 +763,8 @@ Dans l'écosystème .NET moderne (.NET 8 LTS), la conception du Backend repose s
         fill=primary!95!black, 
         rounded corners=2.5mm, 
         minimum width=15.4cm, 
-        minimum height=1.7cm, 
+        minimum height=1.3cm, 
+        inner ysep=2.5mm,
         align=center, 
         line width=1pt
     },
@@ -576,121 +780,418 @@ Dans l'écosystème .NET moderne (.NET 8 LTS), la conception du Backend repose s
     }
 ]
 
-% Main Container: The Executable Process
-\node[boxexe] (exe) at (0, 2.2) {};
-\node[anchor=north west, font=\small\bfseries\color{secondary!90!black}] at (-7.4, 3.8) {
+% Main Container: The Executable Process (y = 1.9)
+\node[boxexe] (exe) at (0, 1.9) {};
+\node[anchor=north west, font=\small\bfseries\color{secondary!90!black}] at (-7.3, 3.6) {
     Processus Exécutable Autonome : \texttt{FullStackCSharp.Back.exe} (Cible : \texttt{net8.0})
 };
 
-% 3 Internal Components with 3.8cm width
-\node[boxinternal=secondary] (kestrel) at (-5.2, 1.8) {
+% 3 Internal Components (y = 1.2 -> top is at 2.2, well clear of title at 3.6)
+\node[boxinternal=secondary] (kestrel) at (-5.0, 1.2) {
     \textbf{\normalsize Serveur Kestrel}\\[2pt]
-    {\color{secondary}\rule{3.0cm}{0.4pt}}\\[3pt]
+    {\color{secondary}\rule{3.0cm}{0.4pt}}\\[2pt]
     \scriptsize Moteur HTTP Autonome\\
     \tiny Écoute TCP (5000/7000)\\
     \tiny Multiplateforme natif
 };
 
-\node[boxinternal=indigo] (pipeline) at (0, 1.8) {
+\node[boxinternal=indigo] (pipeline) at (0, 1.2) {
     \textbf{\normalsize Pipeline HTTP}\\[2pt]
-    {\color{indigo}\rule{3.0cm}{0.4pt}}\\[3pt]
+    {\color{indigo}\rule{3.0cm}{0.4pt}}\\[2pt]
     \scriptsize Middlewares \& Endpoints\\
     \tiny Swagger OpenAPI / HTTPS\\
     \tiny Minimal API : \texttt{MapGet}
 };
 
-\node[boxinternal=cyanproj] (engine) at (5.2, 1.8) {
+\node[boxinternal=cyanproj] (engine) at (5.0, 1.2) {
     \textbf{\normalsize Logique \& Données}\\[2pt]
-    {\color{cyanproj}\rule{3.0cm}{0.4pt}}\\[3pt]
+    {\color{cyanproj}\rule{3.0cm}{0.4pt}}\\[2pt]
     \scriptsize Métier \& Persistance\\
     \tiny Entity Framework Core 8\\
     \tiny Base SQLite relationnelle
 };
 
 % Internal Flow Arrows
-\draw[flowarrow] (-3.3, 1.8) -- (-1.9, 1.8)
+\draw[flowarrow] (-3.1, 1.2) -- (-1.9, 1.2)
     node[midway, above=2pt, font=\tiny\bfseries\color{secondary!90!black}] {HTTP};
 
-\draw[flowarrow] (1.9, 1.8) -- (3.3, 1.8)
+\draw[flowarrow] (1.9, 1.2) -- (3.1, 1.2)
     node[midway, above=2pt, font=\tiny\bfseries\color{indigo!90!black}] {Métier};
 
-% Console Output Terminal
-\node[boxconsole] (console) at (0, -1.1) {
-    \color{white}\textbf{\normalsize Console d'Observabilité Native (Flux ANSI en Temps Réel)}\\[3pt]
+% Console Output Terminal (y = -1.8)
+\node[boxconsole] (console) at (0, -1.8) {
+    \color{white}\textbf{\normalsize Console d'Observabilité Native (Flux ANSI en Temps Réel)}\\[2pt]
     \footnotesize\color{emerald!30!white}\texttt{[INFO] HTTP GET /health --> 200 OK (3.2 ms)} $\bullet$ \color{cyanproj!30!white}\texttt{[SQL] SELECT * FROM Icecreams} $\bullet$ \color{accent!30!white}\texttt{[JWT] Token validé}
 };
 
 % Stream arrow from Back to Console
-\draw[streamarrow] (0, 0.4) -- (console.north)
-    node[midway, right=4pt, font=\scriptsize\bfseries\color{emerald!80!black}] {Télémétrie en temps réel (Console Standard stdout)};
+\draw[streamarrow] (0, 0.05) -- (console.north)
+    node[midway, right=6pt, font=\scriptsize\bfseries\color{emerald!80!black}] {Flux de télémétrie ANSI en direct (stdout)};
 
 \end{tikzpicture}
 \end{center}
 \end{schemabox}
 
-\vspace{0.4cm}
+\vspace{0.2cm}
 
-\subsection*{Comparatif d'Ingénierie : Minimal APIs vs Contrôleurs MVC}
+\begin{bestpracticebox}{Organisation Modulaire des Endpoints}
+Même avec les Minimal APIs, il ne faut jamais concentrer tous les endpoints dans un seul fichier \texttt{Program.cs} au risque de créer un monolithe confus. 
+Chaque groupe de routes métier doit être isolé dans une classe statique d'extension dédiée implémentant une méthode d'extension sur \texttt{IEndpointRouteBuilder} (ex: \texttt{app.MapCatalogEndpoints()}).
+\end{bestpracticebox}
 
-\begin{center}
-\small
-\renewcommand{\arraystretch}{1.4}
-\begin{tabularx}{\textwidth}{>{\bfseries}l p{4.5cm} >{\raggedright\arraybackslash}X}
-\toprule
-\rowcolor{tableheader}
-\color{white}Critère & \color{white}Contrôleurs MVC Classiques & \color{white}Minimal APIs (.NET 8 LTS) \\
-\midrule
-\rowcolor{cardbg}
-Style de déclaration & Classes dérivées de \texttt{ControllerBase} avec attributs & Fonctions lambdas directes (\texttt{app.MapGet}, etc.) \\
-Consommation mémoire & Plus élevée (réflexion, filtres, conventions) & Minimale (zéro instanciation de contrôleur par requête) \\
-\rowcolor{cardbg}
-Vitesse de démarrage & Chargement et scan d'assemblies au démarrage & Enregistrement immédiat dans le graphe de routage \\
-Plafond de code & Fichiers souvent verbeux ($> 300$ lignes) & Fichiers modulaires ultra-compacts ($< 100$ lignes) \\
-\rowcolor{cardbg}
-Documentation OpenAPI & Nécessite de nombreux attributs décoratifs & Intégration fluide avec \texttt{.WithOpenApi()} et TypedResults \\
-\bottomrule
-\end{tabularx}
-\end{center}
+\newpage
+
+\subsection*{Pourquoi Choisir les Minimal APIs Face aux Contrôleurs MVC ?}
+
+L'adoption des Minimal APIs en .NET 8 apporte trois bénéfices d'ingénierie majeurs :
+
+\begin{description}
+    \item[\color{secondary}Empreinte Mémoire Minimale] : Élimine la réflexion lourde et l'instanciation récurrente d'un objet contrôleur à chaque requête HTTP. Les lambdas d'endpoints sont compilées directement en délégués ultra-rapides.
+    \item[\color{cyanproj!90!black}Démarrage Instantané] : Aucun balayage au démarrage pour localiser des attributs. Le routage s'enregistre immédiatement dans le moteur HTTP de Kestrel.
+    \item[\color{accent}Modularité \& Règle des 300 Lignes] : Au lieu d'accumuler les méthodes dans un contrôleur volumineux, les endpoints sont organisés par domaine d'activité au sein de modules d'extension dédiés (\texttt{CatalogEndpoints.cs}, \texttt{AuthEndpoints.cs}, \texttt{OrderEndpoints.cs}), restant chacun sous la barre des 100 lignes.
+\end{description}
 
 \vspace{0.3cm}
 
-\begin{bestpracticebox}{Organisation Modulaire \& Règle des 300 Lignes}
-Même avec les Minimal APIs, il ne faut jamais accumuler tous les endpoints dans un seul fichier \texttt{Program.cs} sous peine de créer un fichier géant ingérable.
+\subsection*{Questions Fréquentes du Débutant}
 
-Dans notre architecture, nous appliquons deux règles d'ingénierie strictes :
-\begin{itemize}
-    \item \textbf{Fichiers d'extensions dédiés} : Chaque domaine métier dispose de son propre fichier statique d'extension (ex : \texttt{CatalogEndpoints.cs}, \texttt{AuthEndpoints.cs}, \texttt{OrderEndpoints.cs}).
-    \item \textbf{Plafond strict de 300 lignes} : Chaque composant reste concis, lisible et focalisé sur une responsabilité unique.
-\end{itemize}
-\end{bestpracticebox}
+\faqitem{Pourquoi une API Web produit-elle un fichier \texttt{.exe} ? Où se trouve le serveur web ?}{
+    Contrairement aux anciennes technologies (comme ASP.NET sous IIS) où l'application était une bibliothèque hébergée dans un serveur tiers, ASP.NET Core moderne est \textbf{auto-hébergé} (\textit{self-hosted}). Le serveur Kestrel fait partie intégrante de votre application. Le fichier \texttt{.exe} est donc le serveur web lui-même : un simple double-clic ou la commande \texttt{dotnet run} démarre le serveur et commence à écouter les requêtes réseau.
+}
 
-\vspace{0.4cm}
-
-\begin{faqbox}{Questions Fondamentales du Débutant}
-\begin{enumerate}
-    \item \textbf{Pourquoi une API Web produit-elle un fichier \texttt{.exe} ? Où se trouve le serveur web ?}
-    
-    \textbf{Réponse :} Contrairement aux anciennes technologies (comme ASP.NET sous IIS) où l'application était une bibliothèque hébergée dans un serveur tiers, ASP.NET Core moderne est \textbf{auto-hébergé} (\textit{self-hosted}). Le serveur Kestrel fait partie intégrante de votre application. Le fichier \texttt{.exe} est donc le serveur web lui-même : un simple double-clic ou la commande \texttt{dotnet run} démarre le serveur et commence à écouter les requêtes réseau.
-    
-    \item \textbf{Pourquoi dit-on que le Back est aussi la « console d'observabilité » ?}
-    
-    \textbf{Réponse :} En lançant \texttt{dotnet run} dans le dossier \texttt{FullStackCSharp.Back}, la console de votre terminal devient un tableau de bord vivant. Grâce à la coloration ANSI native de .NET, vous voyez défiler en temps réel :
+\faqitem{Pourquoi dit-on que le Back est aussi la « console d'observabilité » ?}{
+    En lançant \texttt{dotnet run} dans le dossier \texttt{FullStackCSharp.Back}, la console de votre terminal devient un tableau de bord vivant. Grâce à la coloration ANSI native de .NET, vous voyez défiler en temps réel :
     \begin{itemize}
         \item Chaque requête HTTP entrante avec sa méthode, son URL et son code de retour (ex : \texttt{200 OK}, \texttt{401 Unauthorized}).
         \item Les requêtes SQL réelles exécutées par Entity Framework Core sur la base SQLite locale.
         \item Les étapes de validation des jetons de sécurité JWT et les contrôles anti-fraude.
     \end{itemize}
     Il n'y a donc pas besoin d'un projet console supplémentaire : le serveur Kestrel offre une transparence totale pour l'apprentissage.
-    
-    \item \textbf{Pourquoi utiliser les Minimal APIs plutôt que les Contrôleurs classiques ?}
-    
-    \textbf{Réponse :} Les Minimal APIs représentent le standard moderne recommandé par Microsoft pour les microservices et les APIs REST légères. Elles réduisent drastiquement le code superflu (\textit{boilerplate}), accélèrent le temps de réponse et permettent à un développeur débutant de comprendre le flux HTTP d'un seul coup d'œil sans se perdre dans la hiérarchie complexe de contrôleurs abstraits.
-    
-    \item \textbf{À quoi servent les adresses (comme \texttt{localhost:5000} ou \texttt{localhost:7000}) ? Comment le client mobile y accèdera-t-il ?}
-    
-    \textbf{Réponse :} Ces adresses définissent les ports TCP sur lesquels Kestrel écoute sur votre machine de développement. Sur un ordinateur, l'application mobile de bureau accède directement à \texttt{localhost}. Lorsque nous testerons sur un émulateur Android (dans un jalon ultérieur), l'émulateur utilise une passerelle réseau spéciale (\texttt{10.0.2.2}) pour joindre le serveur hôte.
-\end{enumerate}
-\end{faqbox}
+}
+
+\faqitem{Pourquoi utiliser les Minimal APIs plutôt que les Contrôleurs classiques ?}{
+    Les Minimal APIs représentent le standard moderne recommandé par Microsoft pour les microservices et les APIs REST légères. Elles réduisent drastiquement le code superflu (\textit{boilerplate}), accélèrent le temps de réponse et permettent à un développeur débutant de comprendre le flux HTTP d'un seul coup d'œil sans se perdre dans la hiérarchie complexe de contrôleurs abstraits.
+}
+
+\faqitem{À quoi servent les adresses (comme \texttt{localhost:5000} ou \texttt{localhost:7000}) ? Comment le client mobile y accèdera-t-il ?}{
+    Ces adresses définissent les ports TCP sur lesquels Kestrel écoute sur votre machine de développement. Sur un ordinateur, l'application mobile de bureau accède directement à \texttt{localhost}. Lorsque nous testerons sur un émulateur Android (dans un jalon ultérieur), l'émulateur utilise une passerelle réseau spéciale (\texttt{10.0.2.2}) pour joindre le serveur hôte.
+}
+
+
+\newpage
+
+\section{Action 1.4 : Création du Client Mobile \& Desktop (.NET MAUI)}
+
+Le troisième composant de notre solution est l'application cliente \textbf{\texttt{FullStackCSharp.Front}}. 
+
+Dans une architecture d'entreprise moderne, l'objectif est d'offrir une expérience utilisateur fluide, réactive et multiplateforme sans dupliquer le code métier entre les différents systèmes d'exploitation. C'est la raison d'être de \textbf{.NET MAUI} (\textit{.NET Multi-platform App UI}).
+
+Grâce au modèle moderne de projet unifié (\textit{Single Project}), une seule base de code C\# et XAML produit nativement les binaires pour chaque environnement cible :
+\begin{itemize}
+    \item \textbf{Interface utilisateur déclarative (XAML)} : Les vues sont décrites en XAML et s'appuient sur le patron de conception \textbf{MVVM} (\textit{Model-View-ViewModel}) pour séparer rigoureusement la présentation visuelle de la logique d'interaction.
+    \item \textbf{Compilation native sans compromis} : Contrairement aux technologies hybrides basées sur un navigateur web embarqué (\textit{WebView}), .NET MAUI compile vers de véritables contrôles d'interface natifs de chaque plateforme (WinUI 3 sur Windows, UIKit sur iOS/macOS, vues natives sur Android).
+    \item \textbf{Couplage étanche avec l'API} : Le client ne possède aucune connaissance de la persistance SQL serveur ; il consomme l'API de manière asynchrone en exploitant les contrats immuables du projet \texttt{Shared}.
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{schemabox}{Architecture Multiplateforme \& Modèle Unifié .NET MAUI}
+\begin{center}
+\begin{tikzpicture}[
+    boxapp/.style={
+        rectangle, 
+        draw=indigo!90!black, 
+        fill=indigo!7!white, 
+        rounded corners=2.5mm, 
+        minimum width=15.4cm, 
+        minimum height=1.2cm, 
+        inner ysep=2.5mm,
+        align=center, 
+        line width=1.1pt
+    },
+    boxcore/.style={
+        rectangle, 
+        draw=secondary!80!black, 
+        fill=secondary!5!white, 
+        rounded corners=2mm, 
+        minimum width=15.4cm, 
+        minimum height=1.3cm, 
+        inner ysep=2.5mm,
+        align=center, 
+        line width=0.9pt
+    },
+    boxtarget/.style={
+        rectangle, 
+        draw=#1!80!black, 
+        fill=#1!6!white, 
+        rounded corners=2mm, 
+        minimum width=3.5cm, 
+        minimum height=1.5cm, 
+        inner ysep=2.5mm,
+        align=center, 
+        line width=0.8pt
+    },
+    flowarrow/.style={
+        -{Stealth[length=2.8mm]}, 
+        thick, 
+        color=indigo!90!black
+    },
+    brancharrow/.style={
+        -{Stealth[length=2.5mm]}, 
+        thick, 
+        color=secondary!90!black
+    }
+]
+
+% Top: MAUI Single Project (y = 3.6)
+\node[boxapp] (app) at (0, 3.6) {
+    \textbf{\normalsize Projet Unifié Unique : \texttt{FullStackCSharp.Front}}\\[2pt]
+    \footnotesize Code C\# 12 unique $\bullet$ Vues XAML déclaratives $\bullet$ Injection de dépendances $\bullet$ Panier SQLite local
+};
+
+% Middle: MAUI Abstraction & MVVM Engine (y = 1.7)
+\node[boxcore] (core) at (0, 1.7) {
+    \textbf{\normalsize Couche d'Abstraction \& Moteur Graphique MAUI}\\[2pt]
+    \scriptsize Liaison de données bidirectionnelle (\textit{DataBinding}) $\bullet$ Navigation \texttt{AppShell} $\bullet$ DTOs fortement typés \texttt{Shared}
+};
+
+\draw[flowarrow] (0, 3.0) -- (0, 2.35)
+    node[midway, right=4pt, font=\tiny\bfseries\color{indigo!90!black}] {Compilation unifiée};
+
+% Bottom Row: 4 Native Targets (y = -0.6)
+\node[boxtarget=emerald] (android) at (-5.4, -0.6) {
+    \textbf{\scriptsize Android}\\[2pt]
+    \tiny Java / Kotlin native\\
+    \tiny Écran tactile mobile\\
+    \tiny Paquet : \texttt{.apk} / \texttt{.aab}
+};
+
+\node[boxtarget=secondary] (ios) at (-1.8, -0.6) {
+    \textbf{\scriptsize iOS (Apple)}\\[2pt]
+    \tiny Rendu UIKit natif\\
+    \tiny Interface tactile fluide\\
+    \tiny Paquet : \texttt{.ipa}
+};
+
+\node[boxtarget=indigo] (windows) at (1.8, -0.6) {
+    \textbf{\scriptsize Windows (WinUI 3)}\\[2pt]
+    \tiny Moteur Windows App SDK\\
+    \tiny Clavier / Souris / Écran large\\
+    \tiny Exécutable natif
+};
+
+\node[boxtarget=cyanproj] (macos) at (5.4, -0.6) {
+    \textbf{\scriptsize macOS (Catalyst)}\\[2pt]
+    \tiny Cocoa / AppKit natif\\
+    \tiny Expérience desktop Apple\\
+    \tiny Application universelle
+};
+
+% Branching arrows from core to targets
+\draw[brancharrow] (-5.4, 1.05) -- (android.north);
+\draw[brancharrow] (-1.8, 1.05) -- (ios.north);
+\draw[brancharrow] (1.8, 1.05) -- (windows.north);
+\draw[brancharrow] (5.4, 1.05) -- (macos.north);
+
+\end{tikzpicture}
+\end{center}
+\end{schemabox}
+
+\vspace{0.2cm}
+
+\begin{bestpracticebox}{L'Évitement des Assets Binaires Lourds}
+Dans une application moderne d'apprentissage, l'intégration d'images matricielles volumineuses (\texttt{.png}, \texttt{.jpg}) alourdit inutilement le dépôt Git et complique l'adaptation multi-résolution.
+Pour notre boutique de glaces, nous appliquons une règle stricte : \textbf{100\% vectoriel}. Les icônes et visuels s'appuient exclusivement sur des graphismes vectoriels SVG et des tracés géométriques XAML natifs, garantissant un rendu net quelle que soit la densité de pixels de l'écran.
+\end{bestpracticebox}
+
+\newpage
+
+\subsection*{Organisation des Fichiers Clés de l'Application Cliente}
+
+La structure d'un projet .NET MAUI unifié s'articule autour de quatre axes majeurs :
+
+\begin{description}
+    \item[\color{indigo}\texttt{App.xaml} \& \texttt{AppShell.xaml}] : Point d'ancrage du cycle de vie de l'application et gestionnaire global de navigation hiérarchique par onglets ou par menu volant (\textit{Flyout}).
+    \item[\color{secondary}\texttt{MauiProgram.cs}] : Configuration du constructeur d'hôte (\texttt{MauiAppBuilder}), déclaration des polices d'écriture vectorielles et enregistrement des services dans le conteneur d'injection de dépendances.
+    \item[\color{cyanproj!90!black}\texttt{Resources/}] : Répertoire centralisé hébergeant les polices, les icônes d'application (\texttt{appicon.svg}), les écrans de chargement (\texttt{splash.svg}) et les illustrations vectorielles redimensionnées dynamiquement par le compilateur.
+    \item[\color{emerald!80!black}\texttt{Platforms/}] : Répertoires ciblés permettant d'écrire, si nécessaire, du code spécifique à un système d'exploitation donné (permissions système, notifications push).
+\end{description}
+
+\vspace{0.3cm}
+
+\subsection*{Questions Fréquentes du Débutant}
+
+\faqitem{Pourquoi choisir .NET MAUI plutôt qu'une application web React ou Blazor ?}{
+    .NET MAUI produit une application \textbf{native installable} capable de fonctionner hors ligne, d'accéder au matériel du terminal (capteurs, stockage local SQLite, notifications) et d'offrir des animations à 60/120 images par seconde sans la latence d'un navigateur. Pour une boutique en ligne, cela permet une expérience utilisateur réactive où le panier est conservé même en cas de perte temporaire de réseau.
+}
+
+\faqitem{Comment un seul projet peut-il fonctionner à la fois sur Windows, Android et iOS ?}{
+    Grâce au mécanisme de \textbf{multi-ciblage} (\textit{multi-targeting}) de MSBuild : le fichier de projet \texttt{.csproj} spécifie plusieurs frameworks cibles (ex: \texttt{net8.0-android}, \texttt{net8.0-ios}, \texttt{net8.0-windows10...}). À la compilation, le SDK compile le code commun avec les bibliothèques d'interface adaptées à la plateforme sélectionnée.
+}
+
+\faqitem{Qu'est-ce que le patron MVVM et pourquoi est-il indispensable en MAUI ?}{
+    Le patron \textbf{MVVM} (\textit{Model-View-ViewModel}) découple l'écran (la Vue en XAML) de la logique métier (le ViewModel en C\#). La Vue ne sait pas comment calculer un panier : elle se contente d'afficher les propriétés du ViewModel grâce à la liaison de données (\textit{DataBinding}). Ce découpage permet de tester unitairement 100\% des flux applicatifs sans avoir à manipuler d'interface graphique.
+}
+
+
+
+\newpage
+
+\section{Action 1.5 : Rattachement des Projets à la Solution (dotnet sln add)}
+
+Après avoir initialisé indépendamment les trois briques du système (\texttt{Shared}, \texttt{Back} et \texttt{Front}), l'étape d'ingénierie consiste à les fédérer officiellement sous l'autorité de la solution racine \textbf{\texttt{FullStackCSharp.sln}}.
+
+Cette opération s'effectue via la commande en ligne de commande :
+\begin{center}
+\texttt{dotnet sln FullStackCSharp.sln add FullStackCSharp.Shared FullStackCSharp.Back FullStackCSharp.Front}
+\end{center}
+
+Loin d'être une simple commodité visuelle pour les environnements de développement, ce rattachement remplit trois fonctions capitales dans le cycle de vie logiciel :
+\begin{itemize}
+    \item \textbf{Indexation officielle des chemins relatifs} : La solution consigne le chemin de chaque fichier \texttt{.csproj} par rapport à la racine, permettant à tout développeur ou serveur d'intégration continue de cloner le dépôt et de compiler l'ensemble sans reconfiguration.
+    \item \textbf{Attribution des identifiants uniques (GUIDs)} : MSBuild assigne à chaque projet un identifiant machine immuable garantissant l'intégrité du graphe de dépendances.
+    \item \textbf{Unification de la matrice de build} : La solution projette les configurations globales (\texttt{Debug} et \texttt{Release}) ainsi que les architectures cibles sur chaque projet membre.
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{schemabox}{Topologie de Coordination par la Solution Fédératrice}
+\begin{center}
+\begin{tikzpicture}[
+    boxslnhub/.style={
+        rectangle, 
+        draw=accent!90!black, 
+        fill=accent!7!white, 
+        rounded corners=2.5mm, 
+        minimum width=15.4cm, 
+        minimum height=1.2cm, 
+        inner ysep=2.5mm,
+        align=center, 
+        line width=1.1pt
+    },
+    boxproj/.style={
+        rectangle, 
+        draw=#1!80!black, 
+        fill=#1!6!white, 
+        rounded corners=2mm, 
+        minimum width=4.7cm, 
+        minimum height=1.9cm, 
+        inner ysep=3mm,
+        align=center, 
+        line width=0.85pt
+    },
+    boxmatrix/.style={
+        rectangle, 
+        draw=primary, 
+        fill=primary!95!black, 
+        rounded corners=2.5mm, 
+        minimum width=15.4cm, 
+        minimum height=1.2cm, 
+        inner ysep=2.5mm,
+        align=center, 
+        line width=1pt
+    },
+    brancharrow/.style={
+        -{Stealth[length=2.8mm]}, 
+        thick, 
+        color=accent!90!black
+    },
+    matrixarrow/.style={
+        -{Stealth[length=2.8mm]}, 
+        thick, 
+        color=primary!80!white
+    }
+]
+
+% Top: Solution Root Hub (y = 3.6)
+\node[boxslnhub] (sln) at (0, 3.6) {
+    \textbf{\normalsize Orchestrateur Racine : \texttt{FullStackCSharp.sln}}\\[2pt]
+    \footnotesize Indexation textuelle des projets $\bullet$ Fédérateur de compilation $\bullet$ Point d'entrée outillage
+};
+
+% Middle Row: 3 Federated Projects (y = 1.0)
+\node[boxproj=cyanproj] (shared) at (-5.2, 1.0) {
+    \textbf{\normalsize FullStackCSharp.Shared}\\[2pt]
+    {\color{cyanproj}\rule{3.8cm}{0.4pt}}\\[2pt]
+    \scriptsize Type : \texttt{classlib} (.NET 8)\\[1pt]
+    \tiny GUID : \texttt{\{3F385EC1-20BC-4DD2...\}}\\
+    \tiny Rôle : Contrats \& DTOs
+};
+
+\node[boxproj=secondary] (back) at (0, 1.0) {
+    \textbf{\normalsize FullStackCSharp.Back}\\[2pt]
+    {\color{secondary}\rule{3.8cm}{0.4pt}}\\[2pt]
+    \scriptsize Type : \texttt{webapi} (.NET 8)\\[1pt]
+    \tiny GUID : \texttt{\{326CA162-2E67-430D...\}}\\
+    \tiny Rôle : Kestrel \& SQLite
+};
+
+\node[boxproj=indigo] (front) at (5.2, 1.0) {
+    \textbf{\normalsize FullStackCSharp.Front}\\[2pt]
+    {\color{indigo}\rule{3.8cm}{0.4pt}}\\[2pt]
+    \scriptsize Type : \texttt{maui} (.NET 8/10)\\[1pt]
+    \tiny GUID : \texttt{\{D25ACDE3-554B-495E...\}}\\
+    \tiny Rôle : UI Cross-Plateforme
+};
+
+% Branching arrows from SLN to projects with clean labels
+\draw[brancharrow] (-5.2, 3.0) -- (shared.north)
+    node[midway, left=4pt, font=\tiny\bfseries\color{accent!90!black}] {add project};
+
+\draw[brancharrow] (0, 3.0) -- (back.north)
+    node[midway, right=4pt, font=\tiny\bfseries\color{accent!90!black}] {add project};
+
+\draw[brancharrow] (5.2, 3.0) -- (front.north)
+    node[midway, right=4pt, font=\tiny\bfseries\color{accent!90!black}] {add project};
+
+% Bottom: Matrix of configurations (y = -1.5)
+\node[boxmatrix] (matrix) at (0, -1.5) {
+    \color{white}\textbf{\normalsize Matrice Globale de Compilation MSBuild (Debug | Release)}\\[2pt]
+    \footnotesize\color{emerald!30!white}\texttt{GlobalSection(SolutionConfigurationPlatforms)} $\bullet$ \color{cyanproj!30!white}\texttt{Any CPU / x64} $\bullet$ \color{accent!30!white}Synchronisation unifiée
+};
+
+% Connecting arrows from projects to matrix
+\draw[matrixarrow] (shared.south) -- (-5.2, -0.9);
+\draw[matrixarrow] (back.south) -- (0, -0.9);
+\draw[matrixarrow] (front.south) -- (5.2, -0.9);
+
+\end{tikzpicture}
+\end{center}
+\end{schemabox}
+
+\vspace{0.2cm}
+
+\begin{bestpracticebox}{L'Organisation en Dossiers Virtuels (Solution Folders)}
+Dans les solutions d'entreprise comportant des dizaines de projets (APIs, microservices, tests unitaires, benchmarks), il est recommandé d'organiser les projets dans des \textbf{Solution Folders} virtuels (ex : \texttt{src/}, \texttt{tests/}, \texttt{docs/}).
+Ces dossiers logiques sont créés directement via la CLI (\texttt{dotnet sln add ... --solution-folder src}) et structurent l'arborescence dans l'éditeur sans modifier l'emplacement physique des répertoires sur le disque.
+\end{bestpracticebox}
+
+\newpage
+
+\subsection*{Anatomie d'une Entrée Projet dans le Fichier .sln}
+
+Lorsque la commande \texttt{dotnet sln add} est exécutée, elle modifie le fichier texte de la solution en inscrivant deux blocs de données essentiels :
+
+\begin{description}
+    \item[\color{secondary}1. Déclaration du Projet (\texttt{Project})] : Définit le type de projet via son GUID de langage (ex : \texttt{\{FAE04EC0-...\}} pour le C\#), le nom logique du composant, son chemin relatif sur le disque, et lui attribue son propre GUID de solution.
+    \item[\color{cyanproj!90!black}2. Mappage des Configurations (\texttt{ProjectConfigurationPlatforms})] : Associe chaque projet aux configurations de la solution (\texttt{Debug|Any CPU}, \texttt{Release|Any CPU}). Cela indique à MSBuild s'il doit inclure ou ignorer le projet lors de la compilation de la solution dans un mode particulier.
+\end{description}
+
+\vspace{0.3cm}
+
+\subsection*{Questions Fréquentes du Débutant}
+
+\faqitem{Que fait concrètement la commande \texttt{dotnet sln add} dans le fichier \texttt{.sln} ?}{
+    Elle n'altère absolument pas le code de vos projets (\texttt{.csproj} ou fichiers \texttt{.cs}). Elle ajoute simplement quelques lignes de texte descriptif dans le fichier \texttt{FullStackCSharp.sln} pour enregistrer le chemin relatif du projet et déclarer qu'il participe désormais aux compilations globales déclenchées depuis la racine.
+}
+
+\faqitem{Si un projet n'est pas rattaché au fichier \texttt{.sln}, peut-on quand même le compiler ?}{
+    \textbf{Oui, absolument.} Chaque projet \texttt{.csproj} est une entité de compilation autonome. Vous pouvez vous placer dans le sous-dossier \texttt{FullStackCSharp.Back} et exécuter \texttt{dotnet build} ou \texttt{dotnet run} avec succès. Le rattachement au \texttt{.sln} devient indispensable lorsque vous souhaitez compiler ou tester l'intégralité de la solution en une seule commande depuis la racine.
+}
+
+\faqitem{Pourquoi le fichier \texttt{.sln} utilise-t-il des GUIDs hexadécimaux pour identifier les projets ?}{
+    Les GUIDs (\textit{Globally Unique Identifiers}) garantissent que chaque projet possède une identité mathématiquement unique et immuable dans tout le système, même si deux projets portent le même nom dans des répertoires différents ou si un dossier est renommé sur le disque. MSBuild s'appuie sur ces clés pour relier sans ambiguïté les configurations de compilation.
+}
 
 
 \newpage
