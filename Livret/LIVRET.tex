@@ -1,0 +1,699 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{amssymb}
+\usepackage{geometry}
+\geometry{a4paper, margin=2cm, top=2.5cm, bottom=2.5cm}
+
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{fancyhdr}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,backgrounds,calc}
+
+% Palette Professionnelle Moderne
+\definecolor{primary}{RGB}{15, 23, 42}         % Slate 900 (Titres majeurs, élégance)
+\definecolor{secondary}{RGB}{37, 99, 235}      % Royal Blue (Architecture, liens)
+\definecolor{accent}{RGB}{217, 119, 6}         % Amber 600 (Points d'attention)
+\definecolor{emerald}{RGB}{16, 185, 129}       % Emerald 500 (Bonnes pratiques)
+\definecolor{indigo}{RGB}{99, 102, 241}        % Indigo 500 (Composants UI / Front)
+\definecolor{cyanproj}{RGB}{14, 165, 233}      % Sky 500 (Contrats & DTOs)
+\definecolor{schemaframe}{RGB}{79, 70, 229}    % Violet/Indigo pour cadres schémas
+\definecolor{tableheader}{RGB}{30, 41, 59}     % Slate 800 (Entêtes de tableaux)
+\definecolor{cardbg}{RGB}{248, 250, 252}       % Slate 50 (Fonds alternés)
+\definecolor{borderlight}{RGB}{226, 232, 240}  % Slate 200 (Bordures douces)
+
+% Boîtes d'Enseignement Didactiques
+\newtcolorbox{conceptbox}[1]{
+    enhanced,
+    colback=blue!3!white,
+    colframe=secondary,
+    fonttitle=\bfseries\color{white},
+    title=$\blacktriangleright$~Concept Clé d'Architecture : #1,
+    arc=2.5mm,
+    boxrule=1pt,
+    left=4mm,right=4mm,top=3mm,bottom=3mm
+}
+
+\newtcolorbox{schemabox}[1]{
+    enhanced,
+    colback=purple!2!white,
+    colframe=schemaframe,
+    fonttitle=\bfseries\color{white},
+    title=$\blacktriangleright$~Schéma Conceptuel \& Flux : #1,
+    arc=2.5mm,
+    boxrule=1pt,
+    left=4mm,right=4mm,top=3mm,bottom=3mm
+}
+
+\newtcolorbox{bestpracticebox}[1]{
+    enhanced,
+    colback=green!3!white,
+    colframe=emerald!80!black,
+    fonttitle=\bfseries\color{white},
+    title=$\blacktriangleright$~Règle d'Ingénierie \& Bonne Pratique : #1,
+    arc=2.5mm,
+    boxrule=1pt,
+    left=4mm,right=4mm,top=3mm,bottom=3mm
+}
+
+\newtcolorbox{faqbox}[1]{
+    enhanced,
+    colback=teal!3!white,
+    colframe=teal!80!black,
+    fonttitle=\bfseries\color{white},
+    title=$\blacktriangleright$~Questions Fréquentes du Débutant : #1,
+    arc=2.5mm,
+    boxrule=1pt,
+    left=4mm,right=4mm,top=3mm,bottom=3mm
+}
+
+\newtcolorbox{notebox}{
+    enhanced,
+    colback=accent!4!white,
+    colframe=accent,
+    fonttitle=\bfseries\color{white},
+    title=$\blacktriangleright$~Directive Didactique du Livret,
+    arc=2.5mm,
+    boxrule=1pt,
+    left=4mm,right=4mm,top=3mm,bottom=3mm
+}
+
+% En-têtes et Pieds de Page
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textbf{\color{secondary}FullStackCSharp} \textit{— Guide d'Architecture}}
+\fancyhead[R]{\small\color{gray}\thepage}
+\fancyfoot[L]{\scriptsize\color{gray}Conçu \& développé par \textbf{Kevin Friart}}
+\fancyfoot[R]{\scriptsize\color{gray}.NET 8 Fullstack C\#}
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\footrulewidth}{0.3pt}
+\setlength{\headheight}{15pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=secondary,
+    filecolor=secondary,
+    urlcolor=accent,
+    pdftitle={FullStackCSharp — Guide Conceptuel d'Architecture Fullstack - Kevin Friart},
+    pdfauthor={Kevin Friart},
+    pdfpagemode=FullScreen,
+}
+
+\begin{document}
+
+% Page de Titre Haute Qualité
+\begin{titlepage}
+\begin{center}
+    \vspace*{0.5cm}
+    
+    {\Huge\bfseries\color{primary} FullStackCSharp}\\[0.4cm]
+    {\Large\bfseries\color{secondary} Guide d'Architecture \& Conception Logicielle Fullstack}\\[0.2cm]
+    {\large\color{gray!80!black} .NET MAUI + ASP.NET Core Minimal APIs (.NET 8 LTS)}\\[0.8cm]
+    
+    \begin{tcolorbox}[enhanced,colback=secondary!6!white,colframe=secondary,arc=2mm,boxrule=0.8pt,width=0.9\textwidth]
+        \centering\small\itshape
+        Comprendre les rouages d'une application professionnelle C\# à travers des schémas de flux, des diagrammes d'architecture et des fiches ultra-granulaires par action.
+    \end{tcolorbox}
+    
+    \vspace{1.5cm}
+    
+    \begin{tcolorbox}[enhanced,colback=white,colframe=borderlight,arc=3mm,boxrule=1pt,width=0.75\textwidth,drop fuzzy shadow=black!12]
+        \centering
+        \vspace{0.2cm}
+        {\footnotesize\scshape Auteur \& Concepteur du Projet}\\[0.2cm]
+        {\LARGE\bfseries\color{primary} Kevin Friart}\\[0.2cm]
+        {\small Ingénierie Logicielle \& Architecture Systèmes .NET}
+        \vspace{0.2cm}
+    \end{tcolorbox}
+    
+    \vfill
+    
+    {\footnotesize\color{gray} \today}
+\end{center}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\chapter{Jalon 1 : Socle Technique \& Initialisation}
+
+\section{Action 1.1 : Création de la Solution \& Rôle du Fichier .sln}
+
+\begin{conceptbox}{Qu'est-ce qu'une Solution .NET (.sln) ?}
+Dans l'écosystème .NET, une \textbf{Solution} n'est ni un binaire exécutable, ni une bibliothèque de code. Il s'agit d'un \textbf{conteneur d'orchestration} textuel qui référence et coordonne plusieurs projets indépendants (\texttt{.csproj}).
+
+Le fichier \texttt{.sln} remplit trois fonctions fondamentales pour les outils d'ingénierie (CLI \texttt{dotnet}, Visual Studio, Rider, serveurs de CI/CD) :
+\begin{enumerate}
+    \item \textbf{Graphe de dépendances} : Il référence l'emplacement physique de chaque projet sur le disque et permet à MSBuild de déterminer l'ordre logique de compilation.
+    \item \textbf{Configurations cibles} : Il synchronise les matrices de compilation (\texttt{Debug} ou \texttt{Release}, architectures \texttt{Any CPU}, \texttt{x64}, etc.) pour l'ensemble des projets d'un seul bloc.
+    \item \textbf{Point d'entrée unique} : Il permet au développeur d'exécuter \texttt{dotnet build} ou \texttt{dotnet test} à la racine sans avoir à parcourir chaque sous-répertoire manuellement.
+\end{enumerate}
+\end{conceptbox}
+
+\vspace{0.4cm}
+
+\begin{schemabox}{L'Orchestration par la Solution dans l'Architecture}
+\begin{center}
+\begin{tikzpicture}[
+    cardsln/.style={
+        rectangle, 
+        draw=accent, 
+        fill=accent!6!white, 
+        rounded corners=3mm, 
+        minimum width=15cm, 
+        minimum height=1.3cm, 
+        align=center, 
+        line width=1pt
+    },
+    cardshared/.style={
+        rectangle, 
+        draw=cyanproj!80!black, 
+        fill=cyanproj!6!white, 
+        rounded corners=2.5mm, 
+        minimum width=4.6cm, 
+        minimum height=1.9cm, 
+        align=center, 
+        line width=0.8pt
+    },
+    cardback/.style={
+        rectangle, 
+        draw=secondary, 
+        fill=secondary!6!white, 
+        rounded corners=2.5mm, 
+        minimum width=4.6cm, 
+        minimum height=1.9cm, 
+        align=center, 
+        line width=0.8pt
+    },
+    cardfront/.style={
+        rectangle, 
+        draw=indigo, 
+        fill=indigo!6!white, 
+        rounded corners=2.5mm, 
+        minimum width=4.6cm, 
+        minimum height=1.9cm, 
+        align=center, 
+        line width=0.8pt
+    },
+    cardbuild/.style={
+        rectangle, 
+        draw=primary, 
+        fill=primary!5!white, 
+        rounded corners=3mm, 
+        minimum width=13cm, 
+        minimum height=1.2cm, 
+        align=center, 
+        line width=0.9pt
+    },
+    arrowsln/.style={
+        -{Stealth[length=3mm]}, 
+        thick, 
+        color=accent!90!black
+    },
+    arrowbuild/.style={
+        -{Stealth[length=3mm]}, 
+        thick, 
+        dashed, 
+        color=primary!80!white
+    }
+]
+
+% Solution Container
+\node[cardsln] (sln) at (0, 4.3) {
+    \textbf{\large FullStackCSharp.sln}\\[2pt]
+    \small \textit{Solution Maître d'Orchestration — Fichier racine de coordination MSBuild}
+};
+
+% Projects (3 distinct cards with 6mm space between each)
+\node[cardshared] (shared) at (-5.2, 1.8) {
+    \textbf{\normalsize FullStackCSharp.Shared}\\[2pt]
+    {\color{cyanproj}\rule{4cm}{0.4pt}}\\[3pt]
+    \scriptsize \textbf{Contrats \& DTOs Communs}\\
+    \tiny Type : Bibliothèque (\texttt{classlib}) $\bullet$ \texttt{net8.0}
+};
+
+\node[cardback] (back) at (0, 1.8) {
+    \textbf{\normalsize FullStackCSharp.Back}\\[2pt]
+    {\color{secondary}\rule{4cm}{0.4pt}}\\[3pt]
+    \scriptsize \textbf{Serveur Kestrel \& APIs}\\
+    \tiny Type : Web API Minimal $\bullet$ \texttt{net8.0}
+};
+
+\node[cardfront] (front) at (5.2, 1.8) {
+    \textbf{\normalsize FullStackCSharp.Front}\\[2pt]
+    {\color{indigo}\rule{4cm}{0.4pt}}\\[3pt]
+    \scriptsize \textbf{Client Mobile \& Desktop}\\
+    \tiny Type : Application .NET MAUI $\bullet$ \texttt{net8.0}
+};
+
+% Links from sln to projects
+\draw[arrowsln] (-5.2, 3.65) -- (shared.north) node[midway, right, font=\tiny\bfseries\color{accent!80!black}] {référence};
+\draw[arrowsln] (0, 3.65) -- (back.north) node[midway, right, font=\tiny\bfseries\color{accent!80!black}] {référence};
+\draw[arrowsln] (5.2, 3.65) -- (front.north) node[midway, right, font=\tiny\bfseries\color{accent!80!black}] {référence};
+
+% Compilation Engine
+\node[cardbuild] (msbuild) at (0, -0.9) {
+    \textbf{\normalsize Moteur MSBuild \& Outils CLI .NET}\\[2pt]
+    \footnotesize Résolution du graphe de dépendances $\longrightarrow$ Compilation parallèle optimisée
+};
+
+% Links from projects to MSBuild
+\draw[arrowbuild] (shared.south) -- (-5.2, 0.1) -- (-3.8, -0.3);
+\draw[arrowbuild] (back.south) -- (0, -0.3);
+\draw[arrowbuild] (front.south) -- (5.2, 0.1) -- (3.8, -0.3);
+
+\end{tikzpicture}
+\end{center}
+\end{schemabox}
+
+\vspace{0.4cm}
+
+\subsection*{Distinction Conceptuelle : Solution vs Projet vs Package}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.4}
+\begin{tabularx}{\textwidth}{>{\bfseries}l p{4.2cm} p{4cm} >{\raggedright\arraybackslash}X}
+\toprule
+\rowcolor{tableheader}
+\color{white}\textbf{Niveau} & \color{white}\textbf{Rôle Principal} & \color{white}\textbf{Fichier Source} & \color{white}\textbf{Produit de Sortie} \\
+\midrule
+\rowcolor{cardbg}
+Solution & Orchestration multi-projets, point d'entrée outillage. & \texttt{FullStackCSharp.sln} & Aucun binaire (graphe logique). \\
+Projet & Unité de compilation élémentaire contenant le code C\#. & \texttt{*.csproj} & Assembly (\texttt{.dll}) ou Exécutable (\texttt{.exe}). \\
+\rowcolor{cardbg}
+Package & Composant réutilisable redistribué (dépendance). & \texttt{*.nupkg} (via NuGet) & Archive binaire versionnée. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{bestpracticebox}{Format .sln vs .slnx en .NET 8 / .NET 10}
+À partir du SDK .NET 9/10, la commande \texttt{dotnet new sln} génère par défaut un nouveau format expérimental au format XML (\texttt{.slnx}). 
+
+Cependant, dans un contexte professionnel de production ciblant \textbf{.NET 8 LTS}, il est recommandé de forcer le format standard éprouvé via le paramètre :
+\begin{center}
+\texttt{dotnet new sln -n FullStackCSharp --format sln}
+\end{center}
+Cette rigueur garantit une interopérabilité sans faille avec l'ensemble des environnements de développement (Visual Studio 2022, JetBrains Rider, VS Code et les agents d'intégration continue Linux/Windows).
+\end{bestpracticebox}
+
+\vspace{0.4cm}
+
+\begin{faqbox}{Questions Fondamentales \& Réponses Pédagogiques}
+\begin{enumerate}
+    \item \textbf{Où se trouve la console ? Pourquoi n'y a-t-il pas de projet \texttt{FullStackCSharp.Console} dans la solution ?}
+    
+    \textbf{Réponse :} En .NET moderne, une API Web ASP.NET Core (\texttt{FullStackCSharp.Back}) \textbf{est elle-même nativement une application console} (\texttt{<OutputType>Exe</OutputType>}). Lorsque vous lancez le serveur avec la commande \texttt{dotnet run}, une véritable fenêtre console s'ouvre dans votre terminal. C'est le serveur Kestrel lui-même qui agit directement comme console d'observabilité en affichant en temps réel les requêtes HTTP, le code SQL exécuté et les jetons JWT. Il n'y a donc aucun besoin d'ajouter un 4\ieme{} projet artificiel.
+    
+    \item \textbf{Pourquoi créer un fichier \texttt{.sln} au lieu de juste ouvrir le dossier dans l'éditeur ?}
+    
+    \textbf{Réponse :} Ouvrir un dossier permet d'éditer du texte brut, mais le compilateur MSBuild est incapable de deviner automatiquement l'ordre dans lequel compiler vos composants. Le fichier \texttt{.sln} fournit à l'outillage la carte officielle du système : il indique formellement que \texttt{Shared} doit être compilé avant \texttt{Back} et \texttt{Front}, et synchronise les options de compilation (\texttt{Debug}/\texttt{Release}) pour l'ensemble des projets d'un seul bloc.
+    
+    \item \textbf{Pourquoi séparer la solution en 3 projets plutôt que de tout coder dans un seul ?}
+    
+    \textbf{Réponse :} C'est la règle d'or de la \textbf{séparation des responsabilités} et de la sécurité. Le client mobile ne doit jamais charger les bibliothèques du serveur ni accéder directement à la base de données SQLite centrale. De son côté, le serveur n'a pas à charger le moteur graphique XAML. Seul le projet \texttt{Shared} (qui ne contient que des modèles de données DTOs purs et légers) sert de passerelle commune.
+\end{enumerate}
+\end{faqbox}
+
+
+\newpage
+
+\section{Action 1.2 : Le Projet de Bibliothèque de Classes (Shared)}
+
+\begin{conceptbox}{Le Rôle d'une Bibliothèque de Classes (\texttt{classlib}) Agnostique}
+Le premier projet créé dans notre solution est \textbf{\texttt{FullStackCSharp.Shared}}. 
+
+Contrairement aux applications exécutables, une bibliothèque de classes (\texttt{classlib}) ne dispose pas de méthode d'entrée \texttt{Main()} et ne produit aucun fichier \texttt{.exe} : elle est compilée sous la forme d'un assemblage binaire \textbf{\texttt{.dll}} (\textit{Dynamic Link Library}) réutilisable.
+
+Dans notre architecture, ce projet occupe une fonction stratégique :
+\begin{enumerate}
+    \item \textbf{Agnosticisme technologique} : Il est 100\% neutre. Il ne dépend ni des bibliothèques graphiques de l'application cliente (.NET MAUI, XAML), ni du serveur web (ASP.NET Core, Kestrel), ni de la base de données.
+    \item \textbf{Langage commun universel} : Il contient l'ensemble des \textbf{DTOs} (\textit{Data Transfer Objects}), des requêtes, des réponses et des énumérations échangées entre le Front et le Back.
+    \item \textbf{Sécurité à la compilation} : En partageant le même contrat immuable, si un champ est renommé dans \texttt{Shared}, le compilateur génère immédiatement une erreur de compilation dans le Front et dans le Back, empêchant tout bug de communication en production.
+\end{enumerate}
+\end{conceptbox}
+
+\vspace{0.4cm}
+
+\begin{schemabox}{Shared : L'Autorité Centrale des Contrats d'Échange}
+\begin{center}
+\begin{tikzpicture}[
+    cardshared/.style={
+        rectangle, 
+        draw=cyanproj!90!black, 
+        fill=cyanproj!7!white, 
+        rounded corners=3mm, 
+        minimum width=8.6cm, 
+        minimum height=1.9cm, 
+        align=center, 
+        line width=1.1pt
+    },
+    cardapp/.style={
+        rectangle, 
+        draw=#1, 
+        fill=#1!6!white, 
+        rounded corners=2.5mm, 
+        minimum width=4.6cm, 
+        minimum height=2.1cm, 
+        align=center, 
+        line width=0.9pt
+    },
+    pillhttp/.style={
+        rectangle,
+        draw=secondary!80!black,
+        fill=white,
+        rounded corners=2mm,
+        minimum width=3.4cm,
+        minimum height=0.95cm,
+        align=center,
+        line width=0.8pt
+    },
+    pillforbid/.style={
+        rectangle,
+        draw=red!70!black,
+        fill=red!4!white,
+        rounded corners=2mm,
+        minimum width=3.4cm,
+        minimum height=0.95cm,
+        align=center,
+        line width=0.8pt,
+        densely dashed
+    },
+    refarrow/.style={
+        -{Stealth[length=3mm]}, 
+        very thick, 
+        color=cyanproj!90!black
+    },
+    httparrow/.style={
+        {Stealth[length=2.2mm]}-{Stealth[length=2.2mm]}, 
+        thick, 
+        color=secondary
+    },
+    forbidarrow/.style={
+        thick, 
+        densely dashed, 
+        color=red!70!black
+    }
+]
+
+% Top: Shared (Centered at y = 3.5)
+\node[cardshared] (shared) at (0, 3.5) {
+    \textbf{\large FullStackCSharp.Shared}\\[3pt]
+    {\color{cyanproj!80!black}\rule{7.2cm}{0.4pt}}\\[3pt]
+    \footnotesize \textbf{Autorité Centrale des Contrats \& DTOs Communs}\\
+    \tiny Assembly binaire : \texttt{FullStackCSharp.Shared.dll} $\bullet$ Cible : \texttt{net8.0}
+};
+
+% Bottom Left: Front & Bottom Right: Back
+\node[cardapp=indigo] (front) at (-5.2, 0) {
+    \textbf{\normalsize FullStackCSharp.Front}\\[2pt]
+    {\color{indigo!70!black}\rule{3.8cm}{0.4pt}}\\[3pt]
+    \scriptsize Client Mobile \& Desktop (.NET MAUI)\\[2pt]
+    \tiny Interface Graphique XAML / C\#\\
+    \tiny Ne contient aucune logique serveur
+};
+
+\node[cardapp=secondary] (back) at (5.2, 0) {
+    \textbf{\normalsize FullStackCSharp.Back}\\[2pt]
+    {\color{secondary!70!black}\rule{3.8cm}{0.4pt}}\\[3pt]
+    \scriptsize Serveur ASP.NET Core (Kestrel)\\[2pt]
+    \tiny Web API Minimal \& Base SQLite\\
+    \tiny N'embarque aucun composant visuel
+};
+
+% Reference curves entering Shared cleanly from the sides
+\draw[refarrow] (front.north) to[out=90, in=180] 
+    node[midway, left=4pt, font=\scriptsize\bfseries\color{cyanproj!90!black}, align=right] {Référence\\\texttt{.csproj}}
+    (shared.west);
+
+\draw[refarrow] (back.north) to[out=90, in=0] 
+    node[midway, right=4pt, font=\scriptsize\bfseries\color{cyanproj!90!black}, align=left] {Référence\\\texttt{.csproj}}
+    (shared.east);
+
+% Center: Allowed HTTP Data Flow (Horizontal)
+\node[pillhttp] (http) at (0, 0.5) {
+    \scriptsize\bfseries\color{secondary!90!black} Flux Réseau HTTP / REST\\[2pt]
+    \tiny Transport JSON exclusif des DTOs
+};
+\draw[httparrow] (-2.9, 0.5) -- (http.west);
+\draw[httparrow] (http.east) -- (2.9, 0.5);
+
+% Center: Prohibited Direct Coupling (Horizontal)
+\node[pillforbid] (forbid) at (0, -0.6) {
+    \scriptsize\bfseries\color{red!80!black} $\times$~Isolation Stricte\\[2pt]
+    \tiny Référence directe interdite
+};
+\draw[forbidarrow] (-2.9, -0.6) -- (forbid.west);
+\draw[forbidarrow] (forbid.east) -- (2.9, -0.6);
+
+\end{tikzpicture}
+\end{center}
+\end{schemabox}
+
+\vspace{0.4cm}
+
+\subsection*{Comparaison des Types de Projets dans la Solution}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.4}
+\begin{tabularx}{\textwidth}{>{\bfseries}l p{3.8cm} p{3.5cm} >{\raggedright\arraybackslash}X}
+\toprule
+\rowcolor{tableheader}
+\color{white}Projet & \color{white}Type de Sortie & \color{white}Dépendances Cibles & \color{white}Rôle dans le Système \\
+\midrule
+\rowcolor{cardbg}
+Shared & \texttt{.dll} (\textit{Library}) & Aucune (pur .NET 8) & Contrats d'échange, DTOs, requêtes, enums. \\
+Back & \texttt{.exe} (\textit{Executable}) & Shared, EF Core, Kestrel & API REST, logique d'affaires, persistance. \\
+\rowcolor{cardbg}
+Front & \texttt{.exe} / Package OS & Shared, Refit, MAUI & Interface graphique, interactions, panier local. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{bestpracticebox}{Immutabilité et Pureté des Contrats}
+Pour conserver un projet \texttt{Shared} sain et durable tout au long du cycle de vie logiciel :
+\begin{itemize}
+    \item \textbf{Zéro dépendance lourde} : Ne jamais installer de package lié à la base de données (Entity Framework Core) ou à l'interface graphique dans \texttt{Shared}.
+    \item \textbf{Modélisation par \texttt{record}} : Les DTOs doivent être des types immuables (\texttt{public record ...}) garantissant qu'une donnée ne peut pas être altérée accidentellement en cours de transfert.
+\end{itemize}
+\end{bestpracticebox}
+
+\vspace{0.4cm}
+
+\begin{faqbox}{Questions Fondamentales du Débutant}
+\begin{enumerate}
+    \item \textbf{Pourquoi ce projet ne produit-il pas de fichier \texttt{.exe} ? Comment s'exécute-t-il ?}
+    
+    \textbf{Réponse :} Une bibliothèque de classes (\texttt{classlib}) produit exclusivement un fichier \texttt{.dll}. Elle ne possède pas de point d'entrée et ne peut pas être « lancée » toute seule. Elle est conçue pour être chargée en mémoire par des projets exécutables (\texttt{Back} et \texttt{Front}) lors de leur propre démarrage.
+    
+    \item \textbf{Pourquoi appelle-t-on ce projet \texttt{Shared} plutôt que \texttt{Common} ou \texttt{Core} ?}
+    
+    \textbf{Réponse :} Le nom \texttt{Shared} indique sans ambiguïté qu'il s'agit du contrat \textbf{partagé} entre deux mondes distincts (client et serveur). Le terme \texttt{Core} désigne habituellement le cœur métier (entités de domaine, logique interne du serveur), tandis que \texttt{Common} est un nom souvent déconseillé car il devient rapidement un « dossier fourre-tout » de code désorganisé.
+    
+    \item \textbf{Pourquoi ne pas mettre Entity Framework Core et les tables de base de données dans \texttt{Shared} ?}
+    
+    \textbf{Réponse :} Ce serait une \textbf{faille architecturale et de sécurité majeure}. Si \texttt{Front} référençait les entités de base de données, l'application mobile embarquerait inutilement les pilotes SQL serveur et risquerait de tenter un accès direct aux données. Dans une application Fullstack professionnelle, le client mobile ne doit \textbf{jamais} connaître la base de données centrale : il ne dialogue avec le monde extérieur que via des requêtes HTTP transportant des DTOs.
+\end{enumerate}
+\end{faqbox}
+
+
+\newpage
+
+\section{Action 1.3 : Création de l'API Backend (ASP.NET Core Minimal API)}
+
+\begin{conceptbox}{Le Serveur Web Kestrel \& le Paradigme des Minimal APIs}
+Le deuxième projet créé dans notre solution est \textbf{\texttt{FullStackCSharp.Back}}. 
+
+Contrairement aux bibliothèques de classes, ce projet est configuré avec le SDK Web (\texttt{Microsoft.NET.Sdk.Web}) et compile directement vers un exécutable autonome (\textbf{\texttt{FullStackCSharp.Back.exe}}).
+
+Dans l'écosystème .NET moderne (.NET 8 LTS), la conception du Backend repose sur deux piliers majeurs :
+\begin{enumerate}
+    \item \textbf{Serveur Kestrel intégré \& Console Native} : Kestrel est un serveur web HTTP asynchrone haute performance embarqué directement dans le binaire. L'application se lance en ligne de commande via \texttt{dotnet run} et ouvre instantanément une console d'observabilité diffusant en direct les requêtes réseau, les temps de réponse et les requêtes SQL.
+    \item \textbf{Minimal APIs} : Introduit pour éliminer la lourdeur des contrôleurs MVC traditionnels, le modèle Minimal API permet de déclarer les routes HTTP directement via des lambdas typées (\texttt{app.MapGet}, \texttt{app.MapPost}) avec une allocation mémoire minimale et des performances brutes décuplées.
+\end{enumerate}
+\end{conceptbox}
+
+\vspace{0.4cm}
+
+\begin{schemabox}{L'Anatomie du Processus Exécutable \& la Console d'Observabilité}
+\begin{center}
+\begin{tikzpicture}[
+    boxexe/.style={
+        rectangle, 
+        draw=secondary!90!black, 
+        fill=secondary!5!white, 
+        rounded corners=3mm, 
+        minimum width=15.4cm, 
+        minimum height=3.6cm, 
+        align=center, 
+        line width=1.1pt
+    },
+    boxinternal/.style={
+        rectangle, 
+        draw=#1!80!black, 
+        fill=#1!8!white, 
+        rounded corners=2mm, 
+        minimum width=3.8cm, 
+        minimum height=2.2cm, 
+        align=center, 
+        line width=0.8pt
+    },
+    boxconsole/.style={
+        rectangle, 
+        draw=primary, 
+        fill=primary!95!black, 
+        rounded corners=2.5mm, 
+        minimum width=15.4cm, 
+        minimum height=1.7cm, 
+        align=center, 
+        line width=1pt
+    },
+    flowarrow/.style={
+        -{Stealth[length=2.5mm]}, 
+        thick, 
+        color=secondary!90!black
+    },
+    streamarrow/.style={
+        -{Stealth[length=3mm]}, 
+        very thick, 
+        color=emerald!80!black
+    }
+]
+
+% Main Container: The Executable Process
+\node[boxexe] (exe) at (0, 2.2) {};
+\node[anchor=north west, font=\small\bfseries\color{secondary!90!black}] at (-7.4, 3.8) {
+    Processus Exécutable Autonome : \texttt{FullStackCSharp.Back.exe} (Cible : \texttt{net8.0})
+};
+
+% 3 Internal Components with 3.8cm width
+\node[boxinternal=secondary] (kestrel) at (-5.2, 1.8) {
+    \textbf{\normalsize Serveur Kestrel}\\[2pt]
+    {\color{secondary}\rule{3.0cm}{0.4pt}}\\[3pt]
+    \scriptsize Moteur HTTP Autonome\\
+    \tiny Écoute TCP (5000/7000)\\
+    \tiny Multiplateforme natif
+};
+
+\node[boxinternal=indigo] (pipeline) at (0, 1.8) {
+    \textbf{\normalsize Pipeline HTTP}\\[2pt]
+    {\color{indigo}\rule{3.0cm}{0.4pt}}\\[3pt]
+    \scriptsize Middlewares \& Endpoints\\
+    \tiny Swagger OpenAPI / HTTPS\\
+    \tiny Minimal API : \texttt{MapGet}
+};
+
+\node[boxinternal=cyanproj] (engine) at (5.2, 1.8) {
+    \textbf{\normalsize Logique \& Données}\\[2pt]
+    {\color{cyanproj}\rule{3.0cm}{0.4pt}}\\[3pt]
+    \scriptsize Métier \& Persistance\\
+    \tiny Entity Framework Core 8\\
+    \tiny Base SQLite relationnelle
+};
+
+% Internal Flow Arrows
+\draw[flowarrow] (-3.3, 1.8) -- (-1.9, 1.8)
+    node[midway, above=2pt, font=\tiny\bfseries\color{secondary!90!black}] {HTTP};
+
+\draw[flowarrow] (1.9, 1.8) -- (3.3, 1.8)
+    node[midway, above=2pt, font=\tiny\bfseries\color{indigo!90!black}] {Métier};
+
+% Console Output Terminal
+\node[boxconsole] (console) at (0, -1.1) {
+    \color{white}\textbf{\normalsize Console d'Observabilité Native (Flux ANSI en Temps Réel)}\\[3pt]
+    \footnotesize\color{emerald!30!white}\texttt{[INFO] HTTP GET /health --> 200 OK (3.2 ms)} $\bullet$ \color{cyanproj!30!white}\texttt{[SQL] SELECT * FROM Icecreams} $\bullet$ \color{accent!30!white}\texttt{[JWT] Token validé}
+};
+
+% Stream arrow from Back to Console
+\draw[streamarrow] (0, 0.4) -- (console.north)
+    node[midway, right=4pt, font=\scriptsize\bfseries\color{emerald!80!black}] {Télémétrie en temps réel (Console Standard stdout)};
+
+\end{tikzpicture}
+\end{center}
+\end{schemabox}
+
+\vspace{0.4cm}
+
+\subsection*{Comparatif d'Ingénierie : Minimal APIs vs Contrôleurs MVC}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.4}
+\begin{tabularx}{\textwidth}{>{\bfseries}l p{4.5cm} >{\raggedright\arraybackslash}X}
+\toprule
+\rowcolor{tableheader}
+\color{white}Critère & \color{white}Contrôleurs MVC Classiques & \color{white}Minimal APIs (.NET 8 LTS) \\
+\midrule
+\rowcolor{cardbg}
+Style de déclaration & Classes dérivées de \texttt{ControllerBase} avec attributs & Fonctions lambdas directes (\texttt{app.MapGet}, etc.) \\
+Consommation mémoire & Plus élevée (réflexion, filtres, conventions) & Minimale (zéro instanciation de contrôleur par requête) \\
+\rowcolor{cardbg}
+Vitesse de démarrage & Chargement et scan d'assemblies au démarrage & Enregistrement immédiat dans le graphe de routage \\
+Plafond de code & Fichiers souvent verbeux ($> 300$ lignes) & Fichiers modulaires ultra-compacts ($< 100$ lignes) \\
+\rowcolor{cardbg}
+Documentation OpenAPI & Nécessite de nombreux attributs décoratifs & Intégration fluide avec \texttt{.WithOpenApi()} et TypedResults \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{bestpracticebox}{Organisation Modulaire \& Règle des 300 Lignes}
+Même avec les Minimal APIs, il ne faut jamais accumuler tous les endpoints dans un seul fichier \texttt{Program.cs} sous peine de créer un fichier géant ingérable.
+
+Dans notre architecture, nous appliquons deux règles d'ingénierie strictes :
+\begin{itemize}
+    \item \textbf{Fichiers d'extensions dédiés} : Chaque domaine métier dispose de son propre fichier statique d'extension (ex : \texttt{CatalogEndpoints.cs}, \texttt{AuthEndpoints.cs}, \texttt{OrderEndpoints.cs}).
+    \item \textbf{Plafond strict de 300 lignes} : Chaque composant reste concis, lisible et focalisé sur une responsabilité unique.
+\end{itemize}
+\end{bestpracticebox}
+
+\vspace{0.4cm}
+
+\begin{faqbox}{Questions Fondamentales du Débutant}
+\begin{enumerate}
+    \item \textbf{Pourquoi une API Web produit-elle un fichier \texttt{.exe} ? Où se trouve le serveur web ?}
+    
+    \textbf{Réponse :} Contrairement aux anciennes technologies (comme ASP.NET sous IIS) où l'application était une bibliothèque hébergée dans un serveur tiers, ASP.NET Core moderne est \textbf{auto-hébergé} (\textit{self-hosted}). Le serveur Kestrel fait partie intégrante de votre application. Le fichier \texttt{.exe} est donc le serveur web lui-même : un simple double-clic ou la commande \texttt{dotnet run} démarre le serveur et commence à écouter les requêtes réseau.
+    
+    \item \textbf{Pourquoi dit-on que le Back est aussi la « console d'observabilité » ?}
+    
+    \textbf{Réponse :} En lançant \texttt{dotnet run} dans le dossier \texttt{FullStackCSharp.Back}, la console de votre terminal devient un tableau de bord vivant. Grâce à la coloration ANSI native de .NET, vous voyez défiler en temps réel :
+    \begin{itemize}
+        \item Chaque requête HTTP entrante avec sa méthode, son URL et son code de retour (ex : \texttt{200 OK}, \texttt{401 Unauthorized}).
+        \item Les requêtes SQL réelles exécutées par Entity Framework Core sur la base SQLite locale.
+        \item Les étapes de validation des jetons de sécurité JWT et les contrôles anti-fraude.
+    \end{itemize}
+    Il n'y a donc pas besoin d'un projet console supplémentaire : le serveur Kestrel offre une transparence totale pour l'apprentissage.
+    
+    \item \textbf{Pourquoi utiliser les Minimal APIs plutôt que les Contrôleurs classiques ?}
+    
+    \textbf{Réponse :} Les Minimal APIs représentent le standard moderne recommandé par Microsoft pour les microservices et les APIs REST légères. Elles réduisent drastiquement le code superflu (\textit{boilerplate}), accélèrent le temps de réponse et permettent à un développeur débutant de comprendre le flux HTTP d'un seul coup d'œil sans se perdre dans la hiérarchie complexe de contrôleurs abstraits.
+    
+    \item \textbf{À quoi servent les adresses (comme \texttt{localhost:5000} ou \texttt{localhost:7000}) ? Comment le client mobile y accèdera-t-il ?}
+    
+    \textbf{Réponse :} Ces adresses définissent les ports TCP sur lesquels Kestrel écoute sur votre machine de développement. Sur un ordinateur, l'application mobile de bureau accède directement à \texttt{localhost}. Lorsque nous testerons sur un émulateur Android (dans un jalon ultérieur), l'émulateur utilise une passerelle réseau spéciale (\texttt{10.0.2.2}) pour joindre le serveur hôte.
+\end{enumerate}
+\end{faqbox}
+
+
+\newpage
+
+
+\end{document}

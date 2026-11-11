@@ -46,9 +46,9 @@ Ce document définit les règles de développement impératives pour le projet *
 
 - Le code source demeure rigoureusement vierge de tout commentaire explicatif.
 - L'explication de l'architecture globale, des choix de conception et de la structure du projet réside dans `ARCHITECTURE.md`.
-- **Méthodologie Pédagogique Modulaire (Livret LaTeX A4)** :
-  - Le livret n'est pas rédigé d'un seul bloc, mais construit **au fur et à mesure, étape par étape**, sous la forme de **petits livrets modulaires** (`Livret/etapes/XX_nom_etape.tex`), à raison d'un fichier par étape de programmation.
-  - **Cycle de validation itératif** : À chaque étape, le petit livret explicatif correspondant est rédigé. L'utilisateur le lit, analyse les choix, demande des approfondissements si nécessaire, puis valide le passage à l'étape suivante.
-  - **Compilation automatisée** : Un script Python dédié (`Livret/compiler_livret.py`) assure l'assemblage et la compilation finale des étapes validées vers le document maître `Livret/LIVRET.tex` et son PDF associé.
-  - **Directive sur le contenu** : Aucun catalogue de syntaxe ni code dump intégral ; focalisation sur les **concepts d'ingénierie fondamentaux**, les **schémas de flux** et les **tableaux comparatifs**.
+- **Méthodologie Pédagogique Ultra-Granulaire (Une Micro-Fiche LaTeX par Action)** :
+  - Le livret n'est pas rédigé d'un seul bloc, mais construit **au fur et à mesure, micro-action par micro-action**, sous la forme de **micro-fiches modulaires ciblées** (`Livret/etapes/XX_YY_nom_action.tex`, par ex. `01_01_creation_solution.tex`).
+  - **Format d'une micro-fiche** : 1 à 2 pages A4 maximum, centrée sur **un concept fondamental unique**, illustrée d'un **schéma TikZ** de flux, d'un **tableau comparatif**, et d'une section systématique **« Questions Fréquentes du Débutant »** (FAQ maïeutique anticipant et résolvant toutes les interrogations légitimes d'un apprenant C\# / Fullstack, ex: *Où est la console ? Pourquoi un .sln ?*). Zéro catalogue de syntaxe, zéro récitation de code intégrale.
+  - **Cycle de validation itératif et immédiat** : Après la réalisation de chaque micro-action technique, sa micro-fiche `.tex` correspondante est rédigée. L'utilisateur la lit (lecture courte de 2 minutes), valide la compréhension ou demande des éclaircissements, avant de donner le feu vert pour passer à la micro-action suivante.
+  - **Compilation automatisée** : Un script Python dédié (`Livret/compiler_livret.py`) assemble dynamiquement toutes les micro-fiches validées dans l'ordre chronologique vers le document maître `Livret/LIVRET.tex` et son PDF associé.
 - Le suivi d'avancement opérationnel et les instructions d'exécution sont maintenus dans `README.md`.

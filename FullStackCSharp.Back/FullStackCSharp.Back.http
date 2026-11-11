@@ -1,0 +1,6 @@
+@FullStackCSharp.Back_HostAddress = http://localhost:5227
+
+GET {{FullStackCSharp.Back_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
