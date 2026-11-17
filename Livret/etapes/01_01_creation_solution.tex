@@ -1,0 +1,173 @@
+\chapter{Jalon 1 : Socle Technique \& Initialisation}
+
+\section{Action 1.1 : Création de la Solution \& Rôle du Fichier .sln}
+
+Dans l'écosystème .NET, une \textbf{Solution} n'est ni un binaire exécutable, ni une bibliothèque de code. Il s'agit d'un \textbf{conteneur d'orchestration} textuel qui référence et coordonne plusieurs projets indépendants (\texttt{.csproj}).
+
+Le fichier \texttt{.sln} remplit trois fonctions fondamentales pour les outils d'ingénierie (CLI \texttt{dotnet}, Visual Studio, Rider, serveurs d'intégration continue) :
+\begin{itemize}
+    \item \textbf{Graphe de dépendances} : Il référence l'emplacement physique de chaque projet sur le disque et permet à MSBuild de déterminer l'ordre logique de compilation.
+    \item \textbf{Configurations cibles} : Il synchronise les matrices de compilation (\texttt{Debug} ou \texttt{Release}, architectures matérielles) pour l'ensemble des projets d'un seul bloc.
+    \item \textbf{Point d'entrée unique} : Il permet au développeur d'exécuter \texttt{dotnet build} ou \texttt{dotnet test} à la racine sans avoir à parcourir chaque sous-répertoire manuellement.
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{schemabox}{L'Orchestration par la Solution dans l'Architecture}
+\begin{center}
+\begin{tikzpicture}[
+    cardsln/.style={
+        rectangle, 
+        draw=accent, 
+        fill=accent!6!white, 
+        rounded corners=3mm, 
+        minimum width=15cm, 
+        minimum height=1.2cm, 
+        inner ysep=2.5mm,
+        align=center, 
+        line width=1pt
+    },
+    cardshared/.style={
+        rectangle, 
+        draw=cyanproj!80!black, 
+        fill=cyanproj!6!white, 
+        rounded corners=2.5mm, 
+        minimum width=4.6cm, 
+        minimum height=1.9cm, 
+        inner ysep=3mm,
+        align=center, 
+        line width=0.8pt
+    },
+    cardback/.style={
+        rectangle, 
+        draw=secondary, 
+        fill=secondary!6!white, 
+        rounded corners=2.5mm, 
+        minimum width=4.6cm, 
+        minimum height=1.9cm, 
+        inner ysep=3mm,
+        align=center, 
+        line width=0.8pt
+    },
+    cardfront/.style={
+        rectangle, 
+        draw=indigo, 
+        fill=indigo!6!white, 
+        rounded corners=2.5mm, 
+        minimum width=4.6cm, 
+        minimum height=1.9cm, 
+        inner ysep=3mm,
+        align=center, 
+        line width=0.8pt
+    },
+    cardbuild/.style={
+        rectangle, 
+        draw=primary, 
+        fill=primary!5!white, 
+        rounded corners=3mm, 
+        minimum width=13cm, 
+        minimum height=1.1cm, 
+        inner ysep=2.5mm,
+        align=center, 
+        line width=0.9pt
+    },
+    arrowsln/.style={
+        -{Stealth[length=3mm]}, 
+        thick, 
+        color=accent!90!black
+    },
+    arrowbuild/.style={
+        -{Stealth[length=3mm]}, 
+        thick, 
+        dashed, 
+        color=primary!80!white
+    }
+]
+
+% Solution Container (y = 4.0)
+\node[cardsln] (sln) at (0, 4.0) {
+    \textbf{\large FullStackCSharp.sln}\\[2pt]
+    \small \textit{Solution Maître d'Orchestration — Fichier racine de coordination MSBuild}
+};
+
+% Projects (y = 1.7)
+\node[cardshared] (shared) at (-5.2, 1.7) {
+    \textbf{\normalsize FullStackCSharp.Shared}\\[2pt]
+    {\color{cyanproj}\rule{4cm}{0.4pt}}\\[3pt]
+    \scriptsize \textbf{Contrats \& DTOs Communs}\\
+    \tiny Type : Bibliothèque (\texttt{classlib}) $\bullet$ \texttt{net10.0}
+};
+
+\node[cardback] (back) at (0, 1.7) {
+    \textbf{\normalsize FullStackCSharp.Back}\\[2pt]
+    {\color{secondary}\rule{4cm}{0.4pt}}\\[3pt]
+    \scriptsize \textbf{Serveur Kestrel \& APIs}\\
+    \tiny Type : Web API Minimal $\bullet$ \texttt{net10.0}
+};
+
+\node[cardfront] (front) at (5.2, 1.7) {
+    \textbf{\normalsize FullStackCSharp.Front}\\[2pt]
+    {\color{indigo}\rule{4cm}{0.4pt}}\\[3pt]
+    \scriptsize \textbf{Client Mobile \& Desktop}\\
+    \tiny Type : Application .NET MAUI $\bullet$ \texttt{net10.0}
+};
+
+% Links from sln to projects
+\draw[arrowsln] (-5.2, 3.4) -- (shared.north) node[midway, right=2pt, font=\tiny\bfseries\color{accent!80!black}] {référence};
+\draw[arrowsln] (0, 3.4) -- (back.north) node[midway, right=2pt, font=\tiny\bfseries\color{accent!80!black}] {référence};
+\draw[arrowsln] (5.2, 3.4) -- (front.north) node[midway, right=2pt, font=\tiny\bfseries\color{accent!80!black}] {référence};
+
+% Compilation Engine (y = -0.9)
+\node[cardbuild] (msbuild) at (0, -0.9) {
+    \textbf{\normalsize Moteur MSBuild \& Outils CLI .NET}\\[2pt]
+    \footnotesize Résolution du graphe de dépendances $\longrightarrow$ Compilation parallèle optimisée
+};
+
+% Links from projects to MSBuild
+\draw[arrowbuild] (shared.south) -- (-5.2, 0.1) -- (-3.8, -0.3);
+\draw[arrowbuild] (back.south) -- (0, -0.3);
+\draw[arrowbuild] (front.south) -- (5.2, 0.1) -- (3.8, -0.3);
+
+\end{tikzpicture}
+\end{center}
+\end{schemabox}
+
+\vspace{0.3cm}
+
+\subsection*{Distinction Conceptuelle : Solution, Projet et Package}
+
+Pour appréhender sereinement l'outillage .NET, il convient de distinguer clairement les trois niveaux d'abstraction :
+
+\begin{description}
+    \item[\color{secondary}La Solution (\texttt{.sln})] : Conteneur purement logique et textuel. Elle ne contient aucune ligne de code C\# et ne produit aucun binaire. Son rôle unique est d'orchestrer la compilation multi-projets et de servir de point d'entrée pour les environnements de développement et les outils CLI.
+    \item[\color{cyanproj!90!black}Le Projet (\texttt{.csproj})] : Unité de compilation fondamentale contenant le code source C\#, les déclarations de dépendances et les paramètres du compilateur. Chaque projet produit un artefact binaire concret : une bibliothèque partagée (\texttt{.dll}) ou un exécutable (\texttt{.exe}).
+    \item[\color{accent}Le Package NuGet (\texttt{.nupkg})] : Archive binaire versionnée contenant une bibliothèque précompilée et ses métadonnées, distribuée via un registre de paquets pour être réutilisée entre différentes solutions.
+\end{description}
+
+\vspace{0.2cm}
+
+\begin{bestpracticebox}{Format .sln vs .slnx en .NET 10 LTS}
+À partir du SDK .NET 9/10, la commande \texttt{dotnet new sln} peut générer un nouveau format expérimental au format XML (\texttt{.slnx}). 
+
+Cependant, dans un contexte d'entreprise ciblant la stabilité maximale sous \textbf{.NET 10 LTS}, il est recommandé de forcer le format standard éprouvé via le paramètre :
+\begin{center}
+\texttt{dotnet new sln -n FullStackCSharp --format sln}
+\end{center}
+Cette rigueur garantit une interopérabilité sans faille avec l'ensemble des environnements de développement (Visual Studio 2022/2026, JetBrains Rider, VS Code et les agents d'intégration continue).
+\end{bestpracticebox}
+
+\vspace{0.3cm}
+
+\subsection*{Questions Fréquentes du Débutant}
+
+\faqitem{Où se trouve la console ? Pourquoi pas de projet Console dédié ?}{
+    En .NET moderne, une API Web ASP.NET Core (\texttt{FullStackCSharp.Back}) \textbf{est elle-même nativement une application console} (\texttt{<OutputType>Exe</OutputType>}). Lorsque vous lancez le serveur avec la commande \texttt{dotnet run}, une véritable fenêtre console s'ouvre dans votre terminal. C'est le serveur Kestrel lui-même qui agit directement comme console d'observabilité en affichant en temps réel les requêtes HTTP, le code SQL exécuté et les jetons JWT. Il n'y a donc aucun besoin d'ajouter un 4\ieme{} projet artificiel.
+}
+
+\faqitem{Pourquoi créer un fichier \texttt{.sln} au lieu de juste ouvrir le dossier dans l'éditeur ?}{
+    Ouvrir un simple dossier permet d'éditer du texte brut, mais le compilateur MSBuild est incapable de deviner automatiquement l'ordre dans lequel compiler vos composants. Le fichier \texttt{.sln} fournit à l'outillage la carte officielle du système : il indique formellement que \texttt{Shared} doit être compilé avant \texttt{Back} et \texttt{Front}, et synchronise les options de compilation (\texttt{Debug}/\texttt{Release}) pour l'ensemble des projets d'un seul bloc.
+}
+
+\faqitem{Pourquoi séparer la solution en 3 projets plutôt que de tout coder dans un seul ?}{
+    C'est la règle d'or de la \textbf{séparation des responsabilités} et de la sécurité. Le client mobile ne doit jamais charger les bibliothèques du serveur ni accéder directement à la base de données SQLite centrale. De son côté, le serveur n'a pas à charger le moteur graphique XAML. Seul le projet \texttt{Shared} (qui ne contient que des modèles de données DTOs purs et légers) sert de passerelle commune.
+}

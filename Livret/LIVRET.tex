@@ -274,17 +274,17 @@ Le cas d'usage concret servant de fil rouge applicatif est une solution complèt
     {\color{indigo!70!black}\rule{4.8cm}{0.4pt}}\\[2pt]
     \scriptsize \textbf{Application Mobile \& Desktop}\\[1pt]
     \tiny Interface XAML native (iOS, Android, Windows)\\
-    \tiny Client HTTP Refit typé $\bullet$ Architecture MVVM\\
-    \tiny Panier local persistant (SQLite mobile)
+    \tiny Client HTTP typé $\bullet$ Architecture MVVM cible (Jalon 8)\\
+    \tiny Panier local persistant SQLite (Jalon 12)
 };
 
 \node[boxback] (back) at (4.7, 0.9) {
     \textbf{\normalsize 3. API ASP.NET Core}\\[2pt]
     {\color{secondary!70!black}\rule{4.8cm}{0.4pt}}\\[2pt]
     \scriptsize \textbf{Serveur Kestrel \& Base SQLite}\\[1pt]
-    \tiny Minimal APIs performantes (.NET 8 LTS)\\
-    \tiny Authentification JWT $\bullet$ Rôles \& Anti-Fraude\\
-    \tiny Entity Framework Core 8 \& SQLite serveur
+    \tiny Minimal APIs performantes (.NET 10 LTS)\\
+    \tiny Authentification JWT (Jalon 6) $\bullet$ Rôles \& Sécurité\\
+    \tiny Entity Framework Core 10 \& SQLite (Jalon 4)
 };
 
 % Middle Center: HTTP Transport
@@ -297,12 +297,12 @@ Le cas d'usage concret servant de fil rouge applicatif est une solution complèt
 \draw[httparrow] (front.east) -- (network.west);
 \draw[httparrow] (network.east) -- (back.west);
 
-% Dependency arrows with ample vertical clearance
-\draw[deparrow] (shared.south -| front.north) -- (front.north)
-    node[midway, left=5pt, font=\scriptsize\bfseries\color{cyanproj!90!black}] {Référence binaire};
+% Dependency arrows with safe clearance preventing header collisions
+\draw[deparrow] ([xshift=-4.7cm]shared.south) -- (front.north)
+    node[pos=0.45, fill=white, inner sep=2pt, font=\scriptsize\bfseries\color{cyanproj!90!black}] {Référence binaire};
 
-\draw[deparrow] (shared.south -| back.north) -- (back.north)
-    node[midway, right=5pt, font=\scriptsize\bfseries\color{cyanproj!90!black}] {Référence binaire};
+\draw[deparrow] ([xshift=4.7cm]shared.south) -- (back.north)
+    node[pos=0.45, fill=white, inner sep=2pt, font=\scriptsize\bfseries\color{cyanproj!90!black}] {Référence binaire};
 
 % Bottom: Native Observability Console (y = -1.9)
 \node[boxconsole] (console) at (0, -1.9) {
@@ -325,9 +325,9 @@ Le cas d'usage concret servant de fil rouge applicatif est une solution complèt
 Le système est structuré autour de quatre briques coordonnées, chacune délimitée par une responsabilité unique et étanche :
 
 \begin{description}
-    \item[\color{cyanproj!90!black}1. Contrats (\texttt{FullStackCSharp.Shared})] : Bibliothèque neutre (.NET 8 \texttt{classlib}) définissant l'autorité unique des DTOs (\texttt{record}) et des requêtes d'échange, sans logique serveur ni interface utilisateur.
-    \item[\color{secondary}2. Backend (\texttt{FullStackCSharp.Back})] : Serveur web Kestrel hébergeant les Minimal APIs, la persistance relationnelle SQLite via EF Core 8 et le moteur de sécurité JWT.
-    \item[\color{indigo}3. Client (\texttt{FullStackCSharp.Front})] : Interface utilisateur riche et multiplateforme .NET MAUI (XAML / C\#) avec gestion de panier local persistant.
+    \item[\color{cyanproj!90!black}1. Contrats (\texttt{FullStackCSharp.Shared})] : Bibliothèque neutre (.NET 10 LTS \texttt{classlib}) définissant l'autorité unique des DTOs (\texttt{record}) et des requêtes d'échange, sans logique serveur ni interface utilisateur.
+    \item[\color{secondary}2. Backend (\texttt{FullStackCSharp.Back})] : Serveur web Kestrel hébergeant les Minimal APIs, la persistance relationnelle SQLite via EF Core 10 (Jalon 4) et le moteur de sécurité JWT (Jalon 6).
+    \item[\color{indigo}3. Client (\texttt{FullStackCSharp.Front})] : Interface utilisateur riche et multiplateforme .NET MAUI (XAML / C\#) avec architecture MVVM cible (Jalon 8) et panier local persistant (Jalon 12).
     \item[\color{emerald!80!black}4. Observabilité (Console Kestrel)] : Affichage en direct du trafic réseau, du SQL et de la sécurité dans la console standard, sans simulateur artificiel.
 \end{description}
 
@@ -339,28 +339,61 @@ Pour garantir un niveau d'exigence digne des standards de l'industrie, le projet
 \begin{itemize}
     \item \textbf{Plafond strict $< 300$ lignes} : Aucun fichier source ne doit dépasser 300 lignes (cible : 80 à 250 lignes).
     \item \textbf{Zéro commentaire} : Le code C\# ne contient aucun commentaire (\texttt{//}, \texttt{/*}, \texttt{///}). Il est auto-porteur.
-    \item \textbf{Zéro simulation} : Tout le code compile et s'exécute réellement (.NET 8, SQLite, JWT, MAUI).
+    \item \textbf{Zéro simulation} : Tout le code compile et s'exécute réellement sous .NET 10 LTS.
     \item \textbf{Conception Contract-First} : Les contrats d'échange (\texttt{Shared}) sont validés avant tout code client ou serveur.
 \end{itemize}
 
 \vspace{0.15cm}
 
-\subsection*{Questions Fréquentes du Débutant}
+\subsection*{Questions Fréquentes : Contrats \& Philosophie d'Échange}
 
-\faqitem{Qu'allons-nous construire concrètement de A à Z dans ce projet ?}{
-    Un système complet de commerce électronique : un serveur d'API sécurisé gérant utilisateurs, catalogue et commandes en base SQLite, accompagné d'une application client mobile et desktop dotée d'un panier d'achat local et d'un flux de commande transactionnel.
+\faqitem{C'est quoi un DTO ? Et pourquoi « sans logique serveur ni interface utilisateur » ?}{
+    Un \textbf{DTO} (\textit{Data Transfer Object}) est un conteneur passif conçu exclusivement pour transporter des données sur le réseau, comparable à un colis postal scellé.
+    Il ne contient \textbf{aucune logique serveur} (aucun calcul métier, aucune requête SQL, aucune interaction avec la base de données) et \textbf{aucune interface utilisateur} (aucun bouton, aucune couleur, aucun élément graphique XAML).
+    En C\# moderne (.NET 10 LTS), les DTOs sont modélisés par des \textbf{\texttt{record}} : ils assurent l'égalité par valeur et une \textbf{immutabilité superficielle} (\textit{shallow immutability}) grâce aux accesseurs \texttt{init} de leurs propriétés directes. \textbf{Nuance importante} : si un \texttt{record} contient une collection mutable (comme une \texttt{List<T>}), les éléments de cette liste restent modifiables ; une immutabilité profonde et stricte nécessite des collections en lecture seule telles que \texttt{IReadOnlyList<T>} ou \texttt{ImmutableArray<T>}.
 }
 
-\faqitem{Pourquoi utiliser le C\# à la fois pour le serveur et pour le client ?}{
-    L'unification technologique en C\# permet le \textbf{partage direct de modèles fortement typés}. Toute modification dans un DTO partagé est vérifiée par le compilateur des deux côtés, éliminant à la racine les erreurs d'incohérence JSON entre le client et l'API.
+\faqitem{Tout projet Fullstack a-t-il un projet ou fichier Shared ?}{
+    \textbf{Non, c'est une spécificité et un atout majeur des stacks C\# unifiées.}
+    Dans les architectures hétérogènes répandues (par exemple React en TypeScript et un backend Spring Boot en Java ou Django en Python), deux langages distincts coexistent : il est impossible de partager directement une bibliothèque compilée. Les développeurs doivent synchroniser chaque modèle manuellement, risquant des divergences silencieuses.
+    En .NET Fullstack, \texttt{Shared} est une bibliothèque compilée (\texttt{.dll}) référencée directement par les projets du monorepo : toute incohérence de type brise immédiatement la compilation locale. \textbf{Nuance en production} : dans un système distribué déployé en microservices ou avec des applications mobiles indépendantes, le partage binaire à la compilation ne dispense pas d'une gestion rigoureuse de version de contrat d'API HTTP REST (rétrocompatibilité, tolérance aux champs optionnels).
 }
 
-\faqitem{Pourquoi le Backend est-il développé et validé avant le client mobile ?}{
-    C'est la règle d'or industrielle : on ne connecte une interface graphique qu'à un serveur dont les endpoints sont déjà opérationnels, testables et stables. En validant l'API en amont, nous nous assurons de la fiabilité du réseau avant de concevoir les écrans XAML.
+\newpage
+
+\subsection*{Questions Fréquentes : Protocoles, Moteurs \& Architecture}
+
+\faqitem{Que signifie REST ? Quel est le sens profond et le fonctionnement d'une API REST ?}{
+    \textbf{REST} signifie \textit{Representational State Transfer} (Transfert d'État Représentatif).
+    Au lieu d'invoquer des fonctions distantes arbitraires (style RPC), une architecture REST modélise le système en \textbf{Ressources} identifiées par des URIs stables (ex : \texttt{/catalog/icecreams}, \texttt{/orders}).
+    On utilise les verbes HTTP standards pour manipuler ces ressources : \texttt{GET} (lecture), \texttt{POST} (création), \texttt{PUT} (remplacement), \texttt{DELETE} (suppression).
+    Le client et le serveur s'échangent une « représentation » textuelle de l'état de la ressource (généralement en JSON). Le protocole est \textbf{stateless} (sans état) : chaque requête est autonome et véhicule ses propres preuves de sécurité (comme le jeton JWT).
 }
 
-\faqitem{Comment aborder la lecture de ce livret ?}{
-    Ce livret est découpé en \textbf{micro-fiches modulaires} (une fiche par action concrète). Chaque fiche se lit en 2 minutes et aborde un concept unique, illustré d'un schéma vectoriel et de questions/réponses claires pour progresser pas à pas avec sérénité.
+\faqitem{Qu'est-ce que le serveur Kestrel et pourquoi est-il auto-hébergé ?}{
+    \textbf{Kestrel} est le serveur web HTTP asynchrone haute performance développé par Microsoft et intégré directement au cœur d'ASP.NET Core.
+    Auparavant, une application web devait obligatoirement être déployée dans un serveur tiers lourd (IIS sous Windows, Apache sous Linux). Avec Kestrel, l'application est \textbf{auto-hébergée} (\textit{self-hosted}) : l'exécutable \texttt{.exe} intègre son propre serveur web. Il écoute les ports TCP (5000/7000), traite les requêtes HTTP et diffuse sa télémétrie ANSI sur la console standard (\texttt{stdout}), sans aucun logiciel tiers à installer.
+}
+
+\faqitem{Quelle est la différence fondamentale entre SQL et SQLite ?}{
+    \textbf{SQL} (\textit{Structured Query Language}) est le \textbf{langage de requête standardisé} universel permettant de manipuler des données relationnelles (\texttt{SELECT}, \texttt{INSERT}, \texttt{UPDATE}). C'est une grammaire, pas un logiciel.
+    À l'inverse, \textbf{SQLite} est un \textbf{moteur de base de données relationnelle concret et autonome}.
+    Contrairement aux SGBD client-serveur (SQL Server, PostgreSQL, MySQL) qui nécessitent un service réseau dédié et des processus d'arrière-plan, SQLite stocke l'intégralité de la base dans un \textbf{simple fichier local sur le disque} (ex : \texttt{gelato.db}). Embarqué directement dans l'application, il est parfait pour le panier local sur mobile et pour le serveur de développement.
+}
+
+\faqitem{Qu'est-ce que l'architecture MVVM et la différence avec MVC ou le Code-Behind ?}{
+    Le patron \textbf{MVVM} (\textit{Model-View-ViewModel}) est le standard des applications riches dotées de liaison de données en temps réel (\textit{DataBinding}) :
+    \begin{itemize}
+        \item \textbf{Model} : Les données pures et contrats d'échange (\texttt{Shared}).
+        \item \textbf{View} : L'interface visuelle déclarative en XAML, vierge de tout calcul.
+        \item \textbf{ViewModel} : Le contrôleur logique en C\# qui prépare les données et expose les commandes réactives, sans connaître le rendu visuel.
+    \end{itemize}
+    \textbf{Différence avec le Code-Behind} : Dans le code-behind (\texttt{Page.xaml.cs}), le code d'interaction est directement couplé à la fenêtre graphique, ce qui complique les tests unitaires. \textbf{Précision d'avancement} : au Jalon 1 (Action 1.4), le client MAUI utilise temporairement le code-behind généré par le template de démarrage pour valider la compilation native ; la migration complète vers l'architecture MVVM (avec \texttt{CommunityToolkit.Mvvm}) interviendra au Jalon 8.
+    \textbf{Différence avec MVC} : En MVC Web, chaque interaction utilisateur déclenche généralement un cycle de requête HTTP et le rechargement de la page. En MVVM, l'écran reste actif sur l'appareil et se met à jour instantanément en mémoire par liaison de données bidirectionnelle.
+}
+
+\faqitem{Pourquoi concevoir le Backend avant le client mobile ?}{
+    C'est la règle d'or industrielle : on ne connecte un écran qu'à un serveur dont les routes sont déjà stables et éprouvées. En validant l'API en amont via la console Kestrel, nous vérifions chaque échange avant de concevoir l'interface graphique.
 }
 
 
@@ -463,21 +496,21 @@ Le fichier \texttt{.sln} remplit trois fonctions fondamentales pour les outils d
     \textbf{\normalsize FullStackCSharp.Shared}\\[2pt]
     {\color{cyanproj}\rule{4cm}{0.4pt}}\\[3pt]
     \scriptsize \textbf{Contrats \& DTOs Communs}\\
-    \tiny Type : Bibliothèque (\texttt{classlib}) $\bullet$ \texttt{net8.0}
+    \tiny Type : Bibliothèque (\texttt{classlib}) $\bullet$ \texttt{net10.0}
 };
 
 \node[cardback] (back) at (0, 1.7) {
     \textbf{\normalsize FullStackCSharp.Back}\\[2pt]
     {\color{secondary}\rule{4cm}{0.4pt}}\\[3pt]
     \scriptsize \textbf{Serveur Kestrel \& APIs}\\
-    \tiny Type : Web API Minimal $\bullet$ \texttt{net8.0}
+    \tiny Type : Web API Minimal $\bullet$ \texttt{net10.0}
 };
 
 \node[cardfront] (front) at (5.2, 1.7) {
     \textbf{\normalsize FullStackCSharp.Front}\\[2pt]
     {\color{indigo}\rule{4cm}{0.4pt}}\\[3pt]
     \scriptsize \textbf{Client Mobile \& Desktop}\\
-    \tiny Type : Application .NET MAUI $\bullet$ \texttt{net8.0}
+    \tiny Type : Application .NET MAUI $\bullet$ \texttt{net10.0}
 };
 
 % Links from sln to projects
@@ -514,21 +547,21 @@ Pour appréhender sereinement l'outillage .NET, il convient de distinguer claire
 
 \vspace{0.2cm}
 
-\begin{bestpracticebox}{Format .sln vs .slnx en .NET 8 / .NET 10}
-À partir du SDK .NET 9/10, la commande \texttt{dotnet new sln} génère par défaut un nouveau format expérimental au format XML (\texttt{.slnx}). 
+\begin{bestpracticebox}{Format .sln vs .slnx en .NET 10 LTS}
+À partir du SDK .NET 9/10, la commande \texttt{dotnet new sln} peut générer un nouveau format expérimental au format XML (\texttt{.slnx}). 
 
-Cependant, dans un contexte professionnel ciblant \textbf{.NET 8 LTS}, il est vivement recommandé de forcer le format standard éprouvé via le paramètre :
+Cependant, dans un contexte d'entreprise ciblant la stabilité maximale sous \textbf{.NET 10 LTS}, il est recommandé de forcer le format standard éprouvé via le paramètre :
 \begin{center}
 \texttt{dotnet new sln -n FullStackCSharp --format sln}
 \end{center}
-Cette rigueur garantit une interopérabilité sans faille avec l'ensemble des environnements de développement (Visual Studio 2022, JetBrains Rider, VS Code et les agents d'intégration continue).
+Cette rigueur garantit une interopérabilité sans faille avec l'ensemble des environnements de développement (Visual Studio 2022/2026, JetBrains Rider, VS Code et les agents d'intégration continue).
 \end{bestpracticebox}
 
 \vspace{0.3cm}
 
 \subsection*{Questions Fréquentes du Débutant}
 
-\faqitem{Où se trouve la console ? Pourquoi n'y a-t-il pas de projet \texttt{FullStackCSharp.Console} ?}{
+\faqitem{Où se trouve la console ? Pourquoi pas de projet Console dédié ?}{
     En .NET moderne, une API Web ASP.NET Core (\texttt{FullStackCSharp.Back}) \textbf{est elle-même nativement une application console} (\texttt{<OutputType>Exe</OutputType>}). Lorsque vous lancez le serveur avec la commande \texttt{dotnet run}, une véritable fenêtre console s'ouvre dans votre terminal. C'est le serveur Kestrel lui-même qui agit directement comme console d'observabilité en affichant en temps réel les requêtes HTTP, le code SQL exécuté et les jetons JWT. Il n'y a donc aucun besoin d'ajouter un 4\ieme{} projet artificiel.
 }
 
@@ -628,7 +661,7 @@ Dans notre architecture, ce projet occupe une fonction stratégique :
     \textbf{\large FullStackCSharp.Shared}\\[2pt]
     {\color{cyanproj!80!black}\rule{7.2cm}{0.4pt}}\\[3pt]
     \footnotesize \textbf{Autorité Centrale des Contrats \& DTOs Communs}\\
-    \tiny Assembly binaire : \texttt{FullStackCSharp.Shared.dll} $\bullet$ Cible : \texttt{net8.0}
+    \tiny Assembly binaire : \texttt{FullStackCSharp.Shared.dll} $\bullet$ Cible : \texttt{net10.0}
 };
 
 % Bottom Left: Front & Bottom Right: Back (y = 0.2)
@@ -683,7 +716,7 @@ Dans notre architecture, ce projet occupe une fonction stratégique :
 Pour conserver un projet \texttt{Shared} sain et pérenne tout au long du cycle de vie du projet :
 \begin{itemize}
     \item \textbf{Zéro dépendance d'infrastructure} : Ne jamais installer de package lié à la base de données (Entity Framework Core) ou à l'interface graphique (.NET MAUI) dans \texttt{Shared}.
-    \item \textbf{Modélisation par \texttt{record}} : Les DTOs doivent être des types immuables (\texttt{public record ...}) garantissant qu'une donnée ne peut pas être altérée de façon inattendue en transit.
+    \item \textbf{Modélisation par \texttt{record}} : Les DTOs doivent être des types \texttt{public record ...} garantissant une égalité par valeur et une immutabilité superficielle (\textit{shallow immutability}). Pour une immutabilité profonde lorsque des listes sont nécessaires, privilégier des collections en lecture seule (\texttt{IReadOnlyList<T>}).
 \end{itemize}
 \end{bestpracticebox}
 
@@ -694,8 +727,8 @@ Pour conserver un projet \texttt{Shared} sain et pérenne tout au long du cycle 
 Chaque projet de la solution répond à un rôle précis et engendre un type de binaire spécifique :
 
 \begin{description}
-    \item[\color{cyanproj!90!black}\texttt{FullStackCSharp.Shared} (\texttt{.dll})] : Bibliothèque de classes agnostique. Elle ne dépend d'aucun framework tiers et sert d'autorité de typage pour les DTOs, requêtes et réponses JSON.
-    \item[\color{secondary}\texttt{FullStackCSharp.Back} (\texttt{.exe})] : Application serveur autonome intégrant Kestrel, Entity Framework Core 8 et le moteur d'authentification JWT.
+    \item[\color{cyanproj!90!black}\texttt{FullStackCSharp.Shared} (\texttt{.dll})] : Bibliothèque de classes agnostique (.NET 10 LTS). Elle ne dépend d'aucun framework tiers et sert d'autorité de typage pour les DTOs, requêtes et réponses JSON.
+    \item[\color{secondary}\texttt{FullStackCSharp.Back} (\texttt{.exe})] : Application serveur autonome intégrant Kestrel, avec persistance relationnelle SQLite via EF Core 10 (Jalon 4) et sécurité JWT (Jalon 6).
     \item[\color{indigo}\texttt{FullStackCSharp.Front} (\texttt{.exe} / package d'application)] : Application cliente multiplateforme (.NET MAUI) consommant l'API via des contrats fortement typés et gérant l'expérience utilisateur.
 \end{description}
 
@@ -724,10 +757,10 @@ Le deuxième projet créé dans notre solution est \textbf{\texttt{FullStackCSha
 
 Contrairement aux bibliothèques de classes, ce projet est configuré avec le SDK Web (\texttt{Microsoft.NET.Sdk.Web}) et compile directement vers un exécutable autonome (\textbf{\texttt{FullStackCSharp.Back.exe}}).
 
-Dans l'écosystème .NET moderne (.NET 8 LTS), la conception du Backend repose sur deux piliers majeurs :
+Dans l'écosystème .NET moderne (.NET 10 LTS), la conception du Backend repose sur deux piliers majeurs :
 \begin{itemize}
     \item \textbf{Serveur Kestrel intégré \& Console Native} : Kestrel est un serveur web HTTP asynchrone haute performance embarqué directement dans le binaire. L'application se lance en ligne de commande via \texttt{dotnet run} et ouvre instantanément une console d'observabilité diffusant en direct les requêtes réseau, les temps de réponse et les requêtes SQL.
-    \item \textbf{Minimal APIs} : Introduit pour éliminer la lourdeur des contrôleurs MVC traditionnels, le modèle Minimal API permet de déclarer les routes HTTP directement via des lambdas typées (\texttt{app.MapGet}, \texttt{app.MapPost}) avec une allocation mémoire minimale et des performances brutes décuplées.
+    \item \textbf{Minimal APIs} : Introduit pour éliminer la surcouche des contrôleurs MVC traditionnels (absence de filtres complexes et d'action invokers par réflexion), le modèle Minimal API permet de mapper directement les routes HTTP via des délégués légers (\texttt{app.MapGet}, \texttt{app.MapPost}) avec une faible allocation mémoire.
 \end{itemize}
 
 \vspace{0.3cm}
@@ -783,7 +816,7 @@ Dans l'écosystème .NET moderne (.NET 8 LTS), la conception du Backend repose s
 % Main Container: The Executable Process (y = 1.9)
 \node[boxexe] (exe) at (0, 1.9) {};
 \node[anchor=north west, font=\small\bfseries\color{secondary!90!black}] at (-7.3, 3.6) {
-    Processus Exécutable Autonome : \texttt{FullStackCSharp.Back.exe} (Cible : \texttt{net8.0})
+    Processus Exécutable Autonome : \texttt{FullStackCSharp.Back.exe} (Cible : \texttt{net10.0})
 };
 
 % 3 Internal Components (y = 1.2 -> top is at 2.2, well clear of title at 3.6)
@@ -799,7 +832,7 @@ Dans l'écosystème .NET moderne (.NET 8 LTS), la conception du Backend repose s
     \textbf{\normalsize Pipeline HTTP}\\[2pt]
     {\color{indigo}\rule{3.0cm}{0.4pt}}\\[2pt]
     \scriptsize Middlewares \& Endpoints\\
-    \tiny Swagger OpenAPI / HTTPS\\
+    \tiny OpenAPI / HTTPS\\
     \tiny Minimal API : \texttt{MapGet}
 };
 
@@ -807,7 +840,7 @@ Dans l'écosystème .NET moderne (.NET 8 LTS), la conception du Backend repose s
     \textbf{\normalsize Logique \& Données}\\[2pt]
     {\color{cyanproj}\rule{3.0cm}{0.4pt}}\\[2pt]
     \scriptsize Métier \& Persistance\\
-    \tiny Entity Framework Core 8\\
+    \tiny Entity Framework Core 10\\
     \tiny Base SQLite relationnelle
 };
 
@@ -843,12 +876,12 @@ Chaque groupe de routes métier doit être isolé dans une classe statique d'ext
 
 \subsection*{Pourquoi Choisir les Minimal APIs Face aux Contrôleurs MVC ?}
 
-L'adoption des Minimal APIs en .NET 8 apporte trois bénéfices d'ingénierie majeurs :
+L'adoption des Minimal APIs en .NET 10 LTS apporte trois bénéfices d'ingénierie majeurs :
 
 \begin{description}
-    \item[\color{secondary}Empreinte Mémoire Minimale] : Élimine la réflexion lourde et l'instanciation récurrente d'un objet contrôleur à chaque requête HTTP. Les lambdas d'endpoints sont compilées directement en délégués ultra-rapides.
-    \item[\color{cyanproj!90!black}Démarrage Instantané] : Aucun balayage au démarrage pour localiser des attributs. Le routage s'enregistre immédiatement dans le moteur HTTP de Kestrel.
-    \item[\color{accent}Modularité \& Règle des 300 Lignes] : Au lieu d'accumuler les méthodes dans un contrôleur volumineux, les endpoints sont organisés par domaine d'activité au sein de modules d'extension dédiés (\texttt{CatalogEndpoints.cs}, \texttt{AuthEndpoints.cs}, \texttt{OrderEndpoints.cs}), restant chacun sous la barre des 100 lignes.
+    \item[\color{secondary}Empreinte Mémoire Allégée] : Élimine l'instanciation récurrente d'un objet contrôleur à chaque requête HTTP. Les lambdas d'endpoints sont compilées directement en délégués de route hautement optimisés.
+    \item[\color{cyanproj!90!black}Démarrage Rapide] : Aucun balayage d'assembly par réflexion au démarrage pour localiser des attributs. Le routage s'enregistre directement dans le moteur HTTP de Kestrel.
+    \item[\color{accent}Modularité \& Règle des 300 Lignes] : Au lieu d'accumuler les méthodes dans un contrôleur monolithique, les endpoints sont organisés par domaine d'activité au sein de modules d'extension dédiés (\texttt{CatalogEndpoints.cs}, \texttt{AuthEndpoints.cs}, \texttt{OrderEndpoints.cs}), restant chacun sous la barre des 100 lignes.
 \end{description}
 
 \vspace{0.3cm}
@@ -1026,7 +1059,13 @@ La structure d'un projet .NET MAUI unifié s'articule autour de quatre axes maje
 }
 
 \faqitem{Comment un seul projet peut-il fonctionner à la fois sur Windows, Android et iOS ?}{
-    Grâce au mécanisme de \textbf{multi-ciblage} (\textit{multi-targeting}) de MSBuild : le fichier de projet \texttt{.csproj} spécifie plusieurs frameworks cibles (ex: \texttt{net8.0-android}, \texttt{net8.0-ios}, \texttt{net8.0-windows10...}). À la compilation, le SDK compile le code commun avec les bibliothèques d'interface adaptées à la plateforme sélectionnée.
+    Grâce au mécanisme de \textbf{multi-ciblage} (\textit{multi-targeting}) de MSBuild : le fichier de projet \texttt{.csproj} spécifie plusieurs frameworks cibles (ex: \texttt{net10.0-android}, \texttt{net10.0-ios}, \texttt{net10.0-windows10...}). À la compilation, le SDK compile le code commun avec les bibliothèques d'interface adaptées à la plateforme sélectionnée.
+}
+
+\faqitem{Pourquoi MainPage.xaml.cs utilise-t-il du code-behind si nous visons MVVM ?}{
+    \textbf{C'est une étape délibérée de montée en charge pédagogique.}
+    Le template initial généré par le SDK .NET MAUI inclut un gestionnaire d'événement direct (\texttt{OnCounterClicked}) dans le fichier de code-behind \texttt{MainPage.xaml.cs}. À cette étape d'initialisation (Action 1.4), ce code sert uniquement à valider que la chaîne de compilation native et le pipeline XAML fonctionnent sans erreur.
+    Dès le \textbf{Jalon 8}, nous remplacerons intégralement cette logique sommaire par une architecture MVVM propre, pilotée par le \texttt{CommunityToolkit.Mvvm}, sans aucun événement impératif dans le code-behind.
 }
 
 \faqitem{Qu'est-ce que le patron MVVM et pourquoi est-il indispensable en MAUI ?}{
@@ -1113,7 +1152,7 @@ Loin d'être une simple commodité visuelle pour les environnements de développ
 \node[boxproj=cyanproj] (shared) at (-5.2, 1.0) {
     \textbf{\normalsize FullStackCSharp.Shared}\\[2pt]
     {\color{cyanproj}\rule{3.8cm}{0.4pt}}\\[2pt]
-    \scriptsize Type : \texttt{classlib} (.NET 8)\\[1pt]
+    \scriptsize Type : \texttt{classlib} (.NET 10 LTS)\\[1pt]
     \tiny GUID : \texttt{\{3F385EC1-20BC-4DD2...\}}\\
     \tiny Rôle : Contrats \& DTOs
 };
@@ -1121,7 +1160,7 @@ Loin d'être une simple commodité visuelle pour les environnements de développ
 \node[boxproj=secondary] (back) at (0, 1.0) {
     \textbf{\normalsize FullStackCSharp.Back}\\[2pt]
     {\color{secondary}\rule{3.8cm}{0.4pt}}\\[2pt]
-    \scriptsize Type : \texttt{webapi} (.NET 8)\\[1pt]
+    \scriptsize Type : \texttt{webapi} (.NET 10 LTS)\\[1pt]
     \tiny GUID : \texttt{\{326CA162-2E67-430D...\}}\\
     \tiny Rôle : Kestrel \& SQLite
 };
@@ -1129,7 +1168,7 @@ Loin d'être une simple commodité visuelle pour les environnements de développ
 \node[boxproj=indigo] (front) at (5.2, 1.0) {
     \textbf{\normalsize FullStackCSharp.Front}\\[2pt]
     {\color{indigo}\rule{3.8cm}{0.4pt}}\\[2pt]
-    \scriptsize Type : \texttt{maui} (.NET 8/10)\\[1pt]
+    \scriptsize Type : \texttt{maui} (.NET 10 LTS)\\[1pt]
     \tiny GUID : \texttt{\{D25ACDE3-554B-495E...\}}\\
     \tiny Rôle : UI Cross-Plateforme
 };
@@ -1189,9 +1228,16 @@ Lorsque la commande \texttt{dotnet sln add} est exécutée, elle modifie le fich
     \textbf{Oui, absolument.} Chaque projet \texttt{.csproj} est une entité de compilation autonome. Vous pouvez vous placer dans le sous-dossier \texttt{FullStackCSharp.Back} et exécuter \texttt{dotnet build} ou \texttt{dotnet run} avec succès. Le rattachement au \texttt{.sln} devient indispensable lorsque vous souhaitez compiler ou tester l'intégralité de la solution en une seule commande depuis la racine.
 }
 
+\faqitem{Est-ce que rattacher les projets à la solution crée les dépendances (Back $\rightarrow$ Shared, Front $\rightarrow$ Shared) ?}{
+    \textbf{Non, absolument pas ! C'est une confusion fréquente chez les développeurs débutants.}
+    La commande \texttt{dotnet sln add} regroupe les projets au sein d'un même espace de travail pour que MSBuild puisse les compiler ensemble en une seule commande. Cependant, elle \textbf{n'ajoute aucune référence de code ni liaison binaire} entre les projets.
+    Pour que le projet \texttt{Back} ou \texttt{Front} puisse consommer les DTOs de \texttt{Shared}, il faut explicitement ajouter une balise \texttt{<ProjectReference>} dans les fichiers \texttt{.csproj} respectifs (via \texttt{dotnet add reference}). Ce câblage précis fait l'objet de l'\textbf{Action 1.7}.
+}
+
 \faqitem{Pourquoi le fichier \texttt{.sln} utilise-t-il des GUIDs hexadécimaux pour identifier les projets ?}{
     Les GUIDs (\textit{Globally Unique Identifiers}) garantissent que chaque projet possède une identité mathématiquement unique et immuable dans tout le système, même si deux projets portent le même nom dans des répertoires différents ou si un dossier est renommé sur le disque. MSBuild s'appuie sur ces clés pour relier sans ambiguïté les configurations de compilation.
 }
+
 
 
 \newpage

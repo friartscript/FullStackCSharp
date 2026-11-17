@@ -23,7 +23,7 @@ Ce document définit les règles de développement impératives pour le projet *
 
 ## 3. Syntaxe & Qualité de Code (Clean Code)
 
-- **C# Moderne & Typage Fort** : .NET 8+, nullabilité activée (`<Nullable>enable</Nullable>`), zéro warning toléré.
+- **C# Moderne & Typage Fort** : Utiliser une version de .NET encore supportée et cohérente entre les projets, sauf exception de compatibilité explicitement expliquée. La version effective est celle déclarée par les fichiers projet ; nullabilité activée (`<Nullable>enable</Nullable>`) et zéro warning introduit par les changements.
 - **Conventions Microsoft** :
   - `PascalCase` : Classes, Interfaces (`I...`), Méthodes, Propriétés, Enums, Composants.
   - `camelCase` : Paramètres et variables locales.
@@ -34,26 +34,43 @@ Ce document définit les règles de développement impératives pour le projet *
 
 ---
 
-## 4. Zéro Commentaire (Règle Absolue)
+## 4. Commentaires & Auto-Documentation
 
-- **Aucun commentaire** : Ne jamais insérer de commentaires dans le code source (`//` ou `/* ... */`).
-- **Aucune documentation XML** : Ne pas utiliser de balises `///`.
-- **Code auto-explicatif** : Le code doit être limpide par lui-même grâce au découpage modulaire, à la rigueur de l'architecture et à la précision du nommage.
+- **Code auto-explicatif d'abord** : Préférer des noms précis, des méthodes courtes et des abstractions justifiées.
+- **Commentaires utiles uniquement** : Ajouter un commentaire concis lorsqu'il explique une intention, une contrainte ou un compromis qui ne ressort pas clairement du code. Ne pas paraphraser l'instruction suivante ni utiliser un commentaire pour masquer du code confus.
+- **Documentation XML ciblée** : Documenter les API publiques ou les contrats lorsqu'un consommateur ne peut pas comprendre leur usage à partir des signatures seules. Les explications détaillées d'un concept restent dans le livret.
 
 ---
 
 ## 5. Documentation & Supports Pédagogiques
 
-- Le code source demeure rigoureusement vierge de tout commentaire explicatif.
 - L'explication de l'architecture globale, des choix de conception et de la structure du projet réside dans `ARCHITECTURE.md`.
 - **Méthodologie Pédagogique Ultra-Granulaire (Une Micro-Fiche LaTeX par Action)** :
   - Le livret n'est pas rédigé d'un seul bloc, mais construit **au fur et à mesure, micro-action par micro-action**, sous la forme de **micro-fiches modulaires ciblées** (`Livret/etapes/XX_YY_nom_action.tex`, par ex. `01_01_creation_solution.tex`).
-  - **Mise en Page Fluide & Typographie Moderne (Interdiction du « Tout-en-Bloc » et du « Tout-en-Tableau »)** :
-    - **Fluidité de lecture** : Le contenu principal est rédigé sous forme de texte continu, élégamment aéré, avec des paragraphes naturels, des listes à puces percutantes (`itemize` / `description`) et des sous-titres clairs.
-    - **Fin des blocs rigides et des tableaux systématiques** : Il est formellement interdit d'enfermer systématiquement chaque texte dans des boîtes ou des tableaux rigides (`tabularx`) non justifiés, car ces blocs monolithiques créent de grands espaces vides inesthétiques en bas de page.
-    - **Schémas TikZ ciblés et calibrés** : Maintenir les diagrammes vectoriels d'architecture et de flux dès qu'ils apportent une valeur visuelle concrète. Veiller à ce que les flèches, étiquettes et bordures soient parfaitement espacées, sans aucune collision de texte.
-    - **Tableaux réservés aux stricts besoins comparatifs** : Un tableau n'est employé que lorsqu'une comparaison multi-critères synthétique est réellement pertinente. Ne jamais forcer un tableau là où 3 puces explicatives suffisent.
-    - **FAQ Pédagogique Fluide** : La section systématique **« Questions Fréquentes du Débutant »** est mise en page de manière typographique fluide (Q\&A aéré et sécable), permettant à LaTeX de paginer sans interruption brutale ni vide artificiel.
+  - **Règle 1 — Public Visé & Objectifs d'Apprentissage Vérifiables** :
+    - Définir explicitement le profil de l'apprenant cible (ex: développeur junior débutant en C# moderne et Fullstack .NET).
+    - Formuler pour chaque fiche au moins un **objectif d'apprentissage observable et mesurable** (ex: *« À l'issue de cette fiche, l'apprenant sera capable de... »*).
+  - **Règle 2 — Manipulations Reproductibles, Résultats Attendus & Exercices** :
+    - Chaque fiche d'action technique détaille des étapes pas-à-pas strictement reproductibles : répertoire de travail (`cd`), commande CLI exacte (ex: `dotnet new ...`), prérequis nécessaires.
+    - Présenter systématiquement le **résultat attendu** (extrait de sortie console, structure de fichier générée ou code effectif).
+    - Fournir une **méthode de vérification concrète** (compilation `dotnet build`, appel HTTP ou test).
+    - Signaler les **erreurs fréquentes du débutant** (ex: mauvaise arborescence, confusion d'outils) et proposer un **exercice de réinvestissement** avec critères d'auto-évaluation.
+  - **Règle 3 — Distinction Formelle entre État Réalisé et Cible Prévue** :
+    - Distinguer sans ambiguïté les fonctionnalités réellement écrites et opérationnelles dans le dépôt de celles qui sont planifiées pour les jalons ultérieurs.
+    - Si un composant utilise temporairement une approche basique (ex: code-behind dans `MainPage.xaml.cs` au Jalon 1), indiquer explicitement qu'il s'agit de l'état du template initial et que l'architecture cible (ex: MVVM complet via `CommunityToolkit.Mvvm` au Jalon 8) viendra remplacer cette amorce.
+    - Ne jamais décrire comme présent un élément qui n'a pas encore été implémenté (EF Core, JWT, MVVM, SQLite).
+  - **Règle 4 — Nuance Technique & Exactitude des Versions** :
+    - Bannir toute affirmation absolue ou simplificatrice :
+      - *Immutabilité des records* : préciser qu'elle est superficielle (*shallow*) et que des collections internes (comme `List<T>`) restent mutables sauf usage de types immuables dédiés.
+      - *Partage de bibliothèques* : préciser que le partage binaire de DTOs en monorepo assure la compatibilité à la compilation, mais ne dispense pas d'une gestion de version d'API HTTP dans un environnement distribué.
+      - *Minimal APIs vs Contrôleurs* : expliciter les gains (suppression du pipeline de réflection/filtres des contrôleurs) tout en rappelant que la performance globale dépend des I/O et de la logique métier.
+    - S'appuyer sur des versions de .NET actives et officiellement supportées (**actuellement .NET 10 LTS**, .NET 8 ayant atteint sa fin de support en novembre 2026). Dater et citer les versions des packages.
+  - **Règle 5 — Contrôle Visuel du PDF Compilé & Rendu Typographique** :
+    - Après chaque compilation via `Livret/compiler_livret.py`, inspecter systématiquement le document généré `LIVRET.pdf`.
+    - Vérifier l'absence d'erreurs LaTeX, d'alertes *overfull hbox*, de textes tronqués, et traquer tout chevauchement ou collision dans les diagrammes TikZ (notamment les étiquettes de flèches qui ne doivent jamais couper les titres ou bordures de boîtes).
+    - Proscrire les blocs monolithiques rigides (`tabularx` ou boîtes fermées non justifiées) générant de grands espaces blancs vides en bas de page.
+    - Privilégier une mise en page aérée, fluide et continue, avec des sections sécables (`breakable`).
   - **Cycle de validation itératif et immédiat** : Après la réalisation de chaque micro-action technique, sa micro-fiche `.tex` correspondante est rédigée. L'utilisateur la lit (lecture courte de 2 minutes), valide la compréhension ou demande des éclaircissements, avant de donner le feu vert pour passer à la micro-action suivante.
   - **Compilation automatisée** : Un script Python dédié (`Livret/compiler_livret.py`) assemble dynamiquement toutes les micro-fiches validées dans l'ordre chronologique vers le document maître `Livret/LIVRET.tex` et son PDF associé.
+- **Relecture avant assemblage** : Vérifier que la fiche correspond au code réellement livré, que ses étapes sont reproductibles et que ses exercices ont une réponse vérifiable. Après compilation, contrôler les erreurs LaTeX, les références et la mise en page du PDF ; corriger les débordements, schémas illisibles et pages inutilement vides.
 - Le suivi d'avancement opérationnel et les instructions d'exécution sont maintenus dans `README.md`.

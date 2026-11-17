@@ -1,0 +1,226 @@
+\chapter*{Introduction Générale : Vision \& Architecture du Projet}
+\addcontentsline{toc}{chapter}{Introduction Générale : Vision \& Architecture du Projet}
+
+Bienvenue dans le guide de conception et d'architecture du projet \textbf{\texttt{FullStackCSharp}}, conçu et développé par \textbf{Kevin Friart}.
+
+L'objectif de cet ouvrage et de cette réalisation logicielle est de construire un système Fullstack professionnel complet, robuste et \textbf{100\% fonctionnel}, en exploitant la puissance du langage \textbf{C\# 12} et de la plateforme unifiée \textbf{.NET 8 LTS} de bout en bout : du terminal serveur jusqu'à l'écran mobile de l'utilisateur.
+
+Le cas d'usage concret servant de fil rouge applicatif est une solution complète de commande en ligne pour une boutique artisanale de glaces (\textit{Gelato Artisan}) :
+\begin{itemize}
+    \item \textbf{Exploration du catalogue} : Produits, descriptions et options de personnalisation (parfums, nappages, formats).
+    \item \textbf{Panier d'achat local \& persistant} : Gestion autonome côté client via une base SQLite embarquée.
+    \item \textbf{Sécurité \& Authentification} : Inscription, connexion, hachage cryptographique et émission de jetons \textbf{JWT}.
+    \item \textbf{Passage de commande} : Validation des règles de cohérence monétaire et transmission transactionnelle.
+    \item \textbf{Console d'Observabilité Native} : Suivi en direct dans le terminal du trafic HTTP, SQL et anti-fraude sans simulateur.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{schemabox}{Architecture Globale du Système \& Flux d'Échange}
+\begin{center}
+\begin{tikzpicture}[
+    boxshared/.style={
+        rectangle, 
+        draw=cyanproj!90!black, 
+        fill=cyanproj!7!white, 
+        rounded corners=2.5mm, 
+        minimum width=14.8cm, 
+        minimum height=1.1cm, 
+        inner ysep=2mm,
+        align=center, 
+        line width=1.1pt
+    },
+    boxfront/.style={
+        rectangle, 
+        draw=indigo, 
+        fill=indigo!6!white, 
+        rounded corners=2.5mm, 
+        minimum width=5.6cm, 
+        minimum height=2.1cm, 
+        inner ysep=3mm,
+        align=center, 
+        line width=0.9pt
+    },
+    boxback/.style={
+        rectangle, 
+        draw=secondary, 
+        fill=secondary!6!white, 
+        rounded corners=2.5mm, 
+        minimum width=5.6cm, 
+        minimum height=2.1cm, 
+        inner ysep=3mm,
+        align=center, 
+        line width=0.9pt
+    },
+    boxmiddle/.style={
+        rectangle, 
+        draw=accent, 
+        fill=accent!6!white, 
+        rounded corners=2mm, 
+        minimum width=2.4cm, 
+        minimum height=1.1cm, 
+        inner ysep=1.5mm,
+        align=center, 
+        line width=0.8pt
+    },
+    boxconsole/.style={
+        rectangle, 
+        draw=primary, 
+        fill=primary!95!black, 
+        rounded corners=2.5mm, 
+        minimum width=14.8cm, 
+        minimum height=1.1cm, 
+        inner ysep=2mm,
+        align=center, 
+        line width=1pt
+    },
+    deparrow/.style={
+        -{Stealth[length=2.8mm]}, 
+        very thick, 
+        color=cyanproj!90!black
+    },
+    httparrow/.style={
+        {Stealth[length=2.2mm]}-{Stealth[length=2.2mm]}, 
+        thick, 
+        color=secondary
+    },
+    obsarrow/.style={
+        -{Stealth[length=3mm]}, 
+        very thick, 
+        color=emerald!80!black
+    }
+]
+
+% Top: Shared Contract Authority (y = 3.8)
+\node[boxshared] (shared) at (0, 3.8) {
+    \textbf{\normalsize 1. Contrats \& Modèles d'Échange Communs — \texttt{FullStackCSharp.Shared}}\\[1pt]
+    \footnotesize DTOs immuables (\texttt{record}) $\bullet$ Requêtes \& Réponses $\bullet$ Énumérations $\bullet$ Zéro dépendance
+};
+
+% Middle Row (y = 0.9)
+\node[boxfront] (front) at (-4.7, 0.9) {
+    \textbf{\normalsize 2. Client .NET MAUI}\\[2pt]
+    {\color{indigo!70!black}\rule{4.8cm}{0.4pt}}\\[2pt]
+    \scriptsize \textbf{Application Mobile \& Desktop}\\[1pt]
+    \tiny Interface XAML native (iOS, Android, Windows)\\
+    \tiny Client HTTP typé $\bullet$ Architecture MVVM cible (Jalon 8)\\
+    \tiny Panier local persistant SQLite (Jalon 12)
+};
+
+\node[boxback] (back) at (4.7, 0.9) {
+    \textbf{\normalsize 3. API ASP.NET Core}\\[2pt]
+    {\color{secondary!70!black}\rule{4.8cm}{0.4pt}}\\[2pt]
+    \scriptsize \textbf{Serveur Kestrel \& Base SQLite}\\[1pt]
+    \tiny Minimal APIs performantes (.NET 10 LTS)\\
+    \tiny Authentification JWT (Jalon 6) $\bullet$ Rôles \& Sécurité\\
+    \tiny Entity Framework Core 10 \& SQLite (Jalon 4)
+};
+
+% Middle Center: HTTP Transport
+\node[boxmiddle] (network) at (0, 0.9) {
+    \scriptsize\bfseries Réseau HTTP\\[1pt]
+    \tiny REST / JSON\\
+    \tiny DTOs partagés
+};
+
+\draw[httparrow] (front.east) -- (network.west);
+\draw[httparrow] (network.east) -- (back.west);
+
+% Dependency arrows with safe clearance preventing header collisions
+\draw[deparrow] ([xshift=-4.7cm]shared.south) -- (front.north)
+    node[pos=0.45, fill=white, inner sep=2pt, font=\scriptsize\bfseries\color{cyanproj!90!black}] {Référence binaire};
+
+\draw[deparrow] ([xshift=4.7cm]shared.south) -- (back.north)
+    node[pos=0.45, fill=white, inner sep=2pt, font=\scriptsize\bfseries\color{cyanproj!90!black}] {Référence binaire};
+
+% Bottom: Native Observability Console (y = -1.9)
+\node[boxconsole] (console) at (0, -1.9) {
+    \color{white}\textbf{\normalsize 4. Console d'Observabilité Native (Serveur Kestrel)}\\[1pt]
+    \footnotesize\color{emerald!30!white}\texttt{[HTTP] GET /catalog/icecreams} $\bullet$ \color{cyanproj!30!white}\texttt{[SQL] SELECT * FROM Products} $\bullet$ \color{accent!30!white}\texttt{[AUTH] JWT vérifié}
+};
+
+% Clean straight vertical arrow from back.south to console.north
+\draw[obsarrow] (back.south) -- (console.north -| back.south)
+    node[midway, left=6pt, font=\scriptsize\bfseries\color{emerald!80!black}] {Flux de télémétrie ANSI en direct};
+
+\end{tikzpicture}
+\end{center}
+\end{schemabox}
+
+\newpage
+
+\subsection*{Les 4 Piliers Fondamentaux du Système}
+
+Le système est structuré autour de quatre briques coordonnées, chacune délimitée par une responsabilité unique et étanche :
+
+\begin{description}
+    \item[\color{cyanproj!90!black}1. Contrats (\texttt{FullStackCSharp.Shared})] : Bibliothèque neutre (.NET 10 LTS \texttt{classlib}) définissant l'autorité unique des DTOs (\texttt{record}) et des requêtes d'échange, sans logique serveur ni interface utilisateur.
+    \item[\color{secondary}2. Backend (\texttt{FullStackCSharp.Back})] : Serveur web Kestrel hébergeant les Minimal APIs, la persistance relationnelle SQLite via EF Core 10 (Jalon 4) et le moteur de sécurité JWT (Jalon 6).
+    \item[\color{indigo}3. Client (\texttt{FullStackCSharp.Front})] : Interface utilisateur riche et multiplateforme .NET MAUI (XAML / C\#) avec architecture MVVM cible (Jalon 8) et panier local persistant (Jalon 12).
+    \item[\color{emerald!80!black}4. Observabilité (Console Kestrel)] : Affichage en direct du trafic réseau, du SQL et de la sécurité dans la console standard, sans simulateur artificiel.
+\end{description}
+
+\vspace{0.15cm}
+
+\subsection*{Règles d'Or d'Ingénierie du Projet}
+
+Pour garantir un niveau d'exigence digne des standards de l'industrie, le projet applique quatre règles fondamentales :
+\begin{itemize}
+    \item \textbf{Plafond strict $< 300$ lignes} : Aucun fichier source ne doit dépasser 300 lignes (cible : 80 à 250 lignes).
+    \item \textbf{Zéro commentaire} : Le code C\# ne contient aucun commentaire (\texttt{//}, \texttt{/*}, \texttt{///}). Il est auto-porteur.
+    \item \textbf{Zéro simulation} : Tout le code compile et s'exécute réellement sous .NET 10 LTS.
+    \item \textbf{Conception Contract-First} : Les contrats d'échange (\texttt{Shared}) sont validés avant tout code client ou serveur.
+\end{itemize}
+
+\vspace{0.15cm}
+
+\subsection*{Questions Fréquentes : Contrats \& Philosophie d'Échange}
+
+\faqitem{C'est quoi un DTO ? Et pourquoi « sans logique serveur ni interface utilisateur » ?}{
+    Un \textbf{DTO} (\textit{Data Transfer Object}) est un conteneur passif conçu exclusivement pour transporter des données sur le réseau, comparable à un colis postal scellé.
+    Il ne contient \textbf{aucune logique serveur} (aucun calcul métier, aucune requête SQL, aucune interaction avec la base de données) et \textbf{aucune interface utilisateur} (aucun bouton, aucune couleur, aucun élément graphique XAML).
+    En C\# moderne (.NET 10 LTS), les DTOs sont modélisés par des \textbf{\texttt{record}} : ils assurent l'égalité par valeur et une \textbf{immutabilité superficielle} (\textit{shallow immutability}) grâce aux accesseurs \texttt{init} de leurs propriétés directes. \textbf{Nuance importante} : si un \texttt{record} contient une collection mutable (comme une \texttt{List<T>}), les éléments de cette liste restent modifiables ; une immutabilité profonde et stricte nécessite des collections en lecture seule telles que \texttt{IReadOnlyList<T>} ou \texttt{ImmutableArray<T>}.
+}
+
+\faqitem{Tout projet Fullstack a-t-il un projet ou fichier Shared ?}{
+    \textbf{Non, c'est une spécificité et un atout majeur des stacks C\# unifiées.}
+    Dans les architectures hétérogènes répandues (par exemple React en TypeScript et un backend Spring Boot en Java ou Django en Python), deux langages distincts coexistent : il est impossible de partager directement une bibliothèque compilée. Les développeurs doivent synchroniser chaque modèle manuellement, risquant des divergences silencieuses.
+    En .NET Fullstack, \texttt{Shared} est une bibliothèque compilée (\texttt{.dll}) référencée directement par les projets du monorepo : toute incohérence de type brise immédiatement la compilation locale. \textbf{Nuance en production} : dans un système distribué déployé en microservices ou avec des applications mobiles indépendantes, le partage binaire à la compilation ne dispense pas d'une gestion rigoureuse de version de contrat d'API HTTP REST (rétrocompatibilité, tolérance aux champs optionnels).
+}
+
+\newpage
+
+\subsection*{Questions Fréquentes : Protocoles, Moteurs \& Architecture}
+
+\faqitem{Que signifie REST ? Quel est le sens profond et le fonctionnement d'une API REST ?}{
+    \textbf{REST} signifie \textit{Representational State Transfer} (Transfert d'État Représentatif).
+    Au lieu d'invoquer des fonctions distantes arbitraires (style RPC), une architecture REST modélise le système en \textbf{Ressources} identifiées par des URIs stables (ex : \texttt{/catalog/icecreams}, \texttt{/orders}).
+    On utilise les verbes HTTP standards pour manipuler ces ressources : \texttt{GET} (lecture), \texttt{POST} (création), \texttt{PUT} (remplacement), \texttt{DELETE} (suppression).
+    Le client et le serveur s'échangent une « représentation » textuelle de l'état de la ressource (généralement en JSON). Le protocole est \textbf{stateless} (sans état) : chaque requête est autonome et véhicule ses propres preuves de sécurité (comme le jeton JWT).
+}
+
+\faqitem{Qu'est-ce que le serveur Kestrel et pourquoi est-il auto-hébergé ?}{
+    \textbf{Kestrel} est le serveur web HTTP asynchrone haute performance développé par Microsoft et intégré directement au cœur d'ASP.NET Core.
+    Auparavant, une application web devait obligatoirement être déployée dans un serveur tiers lourd (IIS sous Windows, Apache sous Linux). Avec Kestrel, l'application est \textbf{auto-hébergée} (\textit{self-hosted}) : l'exécutable \texttt{.exe} intègre son propre serveur web. Il écoute les ports TCP (5000/7000), traite les requêtes HTTP et diffuse sa télémétrie ANSI sur la console standard (\texttt{stdout}), sans aucun logiciel tiers à installer.
+}
+
+\faqitem{Quelle est la différence fondamentale entre SQL et SQLite ?}{
+    \textbf{SQL} (\textit{Structured Query Language}) est le \textbf{langage de requête standardisé} universel permettant de manipuler des données relationnelles (\texttt{SELECT}, \texttt{INSERT}, \texttt{UPDATE}). C'est une grammaire, pas un logiciel.
+    À l'inverse, \textbf{SQLite} est un \textbf{moteur de base de données relationnelle concret et autonome}.
+    Contrairement aux SGBD client-serveur (SQL Server, PostgreSQL, MySQL) qui nécessitent un service réseau dédié et des processus d'arrière-plan, SQLite stocke l'intégralité de la base dans un \textbf{simple fichier local sur le disque} (ex : \texttt{gelato.db}). Embarqué directement dans l'application, il est parfait pour le panier local sur mobile et pour le serveur de développement.
+}
+
+\faqitem{Qu'est-ce que l'architecture MVVM et la différence avec MVC ou le Code-Behind ?}{
+    Le patron \textbf{MVVM} (\textit{Model-View-ViewModel}) est le standard des applications riches dotées de liaison de données en temps réel (\textit{DataBinding}) :
+    \begin{itemize}
+        \item \textbf{Model} : Les données pures et contrats d'échange (\texttt{Shared}).
+        \item \textbf{View} : L'interface visuelle déclarative en XAML, vierge de tout calcul.
+        \item \textbf{ViewModel} : Le contrôleur logique en C\# qui prépare les données et expose les commandes réactives, sans connaître le rendu visuel.
+    \end{itemize}
+    \textbf{Différence avec le Code-Behind} : Dans le code-behind (\texttt{Page.xaml.cs}), le code d'interaction est directement couplé à la fenêtre graphique, ce qui complique les tests unitaires. \textbf{Précision d'avancement} : au Jalon 1 (Action 1.4), le client MAUI utilise temporairement le code-behind généré par le template de démarrage pour valider la compilation native ; la migration complète vers l'architecture MVVM (avec \texttt{CommunityToolkit.Mvvm}) interviendra au Jalon 8.
+    \textbf{Différence avec MVC} : En MVC Web, chaque interaction utilisateur déclenche généralement un cycle de requête HTTP et le rechargement de la page. En MVVM, l'écran reste actif sur l'appareil et se met à jour instantanément en mémoire par liaison de données bidirectionnelle.
+}
+
+\faqitem{Pourquoi concevoir le Backend avant le client mobile ?}{
+    C'est la règle d'or industrielle : on ne connecte un écran qu'à un serveur dont les routes sont déjà stables et éprouvées. En validant l'API en amont via la console Kestrel, nous vérifions chaque échange avant de concevoir l'interface graphique.
+}

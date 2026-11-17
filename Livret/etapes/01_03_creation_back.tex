@@ -1,0 +1,158 @@
+\section{Action 1.3 : Création de l'API Backend (ASP.NET Core Minimal API)}
+
+Le deuxième projet créé dans notre solution est \textbf{\texttt{FullStackCSharp.Back}}. 
+
+Contrairement aux bibliothèques de classes, ce projet est configuré avec le SDK Web (\texttt{Microsoft.NET.Sdk.Web}) et compile directement vers un exécutable autonome (\textbf{\texttt{FullStackCSharp.Back.exe}}).
+
+Dans l'écosystème .NET moderne (.NET 10 LTS), la conception du Backend repose sur deux piliers majeurs :
+\begin{itemize}
+    \item \textbf{Serveur Kestrel intégré \& Console Native} : Kestrel est un serveur web HTTP asynchrone haute performance embarqué directement dans le binaire. L'application se lance en ligne de commande via \texttt{dotnet run} et ouvre instantanément une console d'observabilité diffusant en direct les requêtes réseau, les temps de réponse et les requêtes SQL.
+    \item \textbf{Minimal APIs} : Introduit pour éliminer la surcouche des contrôleurs MVC traditionnels (absence de filtres complexes et d'action invokers par réflexion), le modèle Minimal API permet de mapper directement les routes HTTP via des délégués légers (\texttt{app.MapGet}, \texttt{app.MapPost}) avec une faible allocation mémoire.
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{schemabox}{L'Anatomie du Processus Exécutable \& la Console d'Observabilité}
+\begin{center}
+\begin{tikzpicture}[
+    boxexe/.style={
+        rectangle, 
+        draw=secondary!90!black, 
+        fill=secondary!5!white, 
+        rounded corners=3mm, 
+        minimum width=15.4cm, 
+        minimum height=3.6cm, 
+        inner ysep=3mm,
+        align=center, 
+        line width=1.1pt
+    },
+    boxinternal/.style={
+        rectangle, 
+        draw=#1!80!black, 
+        fill=#1!8!white, 
+        rounded corners=2mm, 
+        minimum width=3.8cm, 
+        minimum height=2.0cm, 
+        inner ysep=2.5mm,
+        align=center, 
+        line width=0.8pt
+    },
+    boxconsole/.style={
+        rectangle, 
+        draw=primary, 
+        fill=primary!95!black, 
+        rounded corners=2.5mm, 
+        minimum width=15.4cm, 
+        minimum height=1.3cm, 
+        inner ysep=2.5mm,
+        align=center, 
+        line width=1pt
+    },
+    flowarrow/.style={
+        -{Stealth[length=2.5mm]}, 
+        thick, 
+        color=secondary!90!black
+    },
+    streamarrow/.style={
+        -{Stealth[length=3mm]}, 
+        very thick, 
+        color=emerald!80!black
+    }
+]
+
+% Main Container: The Executable Process (y = 1.9)
+\node[boxexe] (exe) at (0, 1.9) {};
+\node[anchor=north west, font=\small\bfseries\color{secondary!90!black}] at (-7.3, 3.6) {
+    Processus Exécutable Autonome : \texttt{FullStackCSharp.Back.exe} (Cible : \texttt{net10.0})
+};
+
+% 3 Internal Components (y = 1.2 -> top is at 2.2, well clear of title at 3.6)
+\node[boxinternal=secondary] (kestrel) at (-5.0, 1.2) {
+    \textbf{\normalsize Serveur Kestrel}\\[2pt]
+    {\color{secondary}\rule{3.0cm}{0.4pt}}\\[2pt]
+    \scriptsize Moteur HTTP Autonome\\
+    \tiny Écoute TCP (5000/7000)\\
+    \tiny Multiplateforme natif
+};
+
+\node[boxinternal=indigo] (pipeline) at (0, 1.2) {
+    \textbf{\normalsize Pipeline HTTP}\\[2pt]
+    {\color{indigo}\rule{3.0cm}{0.4pt}}\\[2pt]
+    \scriptsize Middlewares \& Endpoints\\
+    \tiny OpenAPI / HTTPS\\
+    \tiny Minimal API : \texttt{MapGet}
+};
+
+\node[boxinternal=cyanproj] (engine) at (5.0, 1.2) {
+    \textbf{\normalsize Logique \& Données}\\[2pt]
+    {\color{cyanproj}\rule{3.0cm}{0.4pt}}\\[2pt]
+    \scriptsize Métier \& Persistance\\
+    \tiny Entity Framework Core 10\\
+    \tiny Base SQLite relationnelle
+};
+
+% Internal Flow Arrows
+\draw[flowarrow] (-3.1, 1.2) -- (-1.9, 1.2)
+    node[midway, above=2pt, font=\tiny\bfseries\color{secondary!90!black}] {HTTP};
+
+\draw[flowarrow] (1.9, 1.2) -- (3.1, 1.2)
+    node[midway, above=2pt, font=\tiny\bfseries\color{indigo!90!black}] {Métier};
+
+% Console Output Terminal (y = -1.8)
+\node[boxconsole] (console) at (0, -1.8) {
+    \color{white}\textbf{\normalsize Console d'Observabilité Native (Flux ANSI en Temps Réel)}\\[2pt]
+    \footnotesize\color{emerald!30!white}\texttt{[INFO] HTTP GET /health --> 200 OK (3.2 ms)} $\bullet$ \color{cyanproj!30!white}\texttt{[SQL] SELECT * FROM Icecreams} $\bullet$ \color{accent!30!white}\texttt{[JWT] Token validé}
+};
+
+% Stream arrow from Back to Console
+\draw[streamarrow] (0, 0.05) -- (console.north)
+    node[midway, right=6pt, font=\scriptsize\bfseries\color{emerald!80!black}] {Flux de télémétrie ANSI en direct (stdout)};
+
+\end{tikzpicture}
+\end{center}
+\end{schemabox}
+
+\vspace{0.2cm}
+
+\begin{bestpracticebox}{Organisation Modulaire des Endpoints}
+Même avec les Minimal APIs, il ne faut jamais concentrer tous les endpoints dans un seul fichier \texttt{Program.cs} au risque de créer un monolithe confus. 
+Chaque groupe de routes métier doit être isolé dans une classe statique d'extension dédiée implémentant une méthode d'extension sur \texttt{IEndpointRouteBuilder} (ex: \texttt{app.MapCatalogEndpoints()}).
+\end{bestpracticebox}
+
+\newpage
+
+\subsection*{Pourquoi Choisir les Minimal APIs Face aux Contrôleurs MVC ?}
+
+L'adoption des Minimal APIs en .NET 10 LTS apporte trois bénéfices d'ingénierie majeurs :
+
+\begin{description}
+    \item[\color{secondary}Empreinte Mémoire Allégée] : Élimine l'instanciation récurrente d'un objet contrôleur à chaque requête HTTP. Les lambdas d'endpoints sont compilées directement en délégués de route hautement optimisés.
+    \item[\color{cyanproj!90!black}Démarrage Rapide] : Aucun balayage d'assembly par réflexion au démarrage pour localiser des attributs. Le routage s'enregistre directement dans le moteur HTTP de Kestrel.
+    \item[\color{accent}Modularité \& Règle des 300 Lignes] : Au lieu d'accumuler les méthodes dans un contrôleur monolithique, les endpoints sont organisés par domaine d'activité au sein de modules d'extension dédiés (\texttt{CatalogEndpoints.cs}, \texttt{AuthEndpoints.cs}, \texttt{OrderEndpoints.cs}), restant chacun sous la barre des 100 lignes.
+\end{description}
+
+\vspace{0.3cm}
+
+\subsection*{Questions Fréquentes du Débutant}
+
+\faqitem{Pourquoi une API Web produit-elle un fichier \texttt{.exe} ? Où se trouve le serveur web ?}{
+    Contrairement aux anciennes technologies (comme ASP.NET sous IIS) où l'application était une bibliothèque hébergée dans un serveur tiers, ASP.NET Core moderne est \textbf{auto-hébergé} (\textit{self-hosted}). Le serveur Kestrel fait partie intégrante de votre application. Le fichier \texttt{.exe} est donc le serveur web lui-même : un simple double-clic ou la commande \texttt{dotnet run} démarre le serveur et commence à écouter les requêtes réseau.
+}
+
+\faqitem{Pourquoi dit-on que le Back est aussi la « console d'observabilité » ?}{
+    En lançant \texttt{dotnet run} dans le dossier \texttt{FullStackCSharp.Back}, la console de votre terminal devient un tableau de bord vivant. Grâce à la coloration ANSI native de .NET, vous voyez défiler en temps réel :
+    \begin{itemize}
+        \item Chaque requête HTTP entrante avec sa méthode, son URL et son code de retour (ex : \texttt{200 OK}, \texttt{401 Unauthorized}).
+        \item Les requêtes SQL réelles exécutées par Entity Framework Core sur la base SQLite locale.
+        \item Les étapes de validation des jetons de sécurité JWT et les contrôles anti-fraude.
+    \end{itemize}
+    Il n'y a donc pas besoin d'un projet console supplémentaire : le serveur Kestrel offre une transparence totale pour l'apprentissage.
+}
+
+\faqitem{Pourquoi utiliser les Minimal APIs plutôt que les Contrôleurs classiques ?}{
+    Les Minimal APIs représentent le standard moderne recommandé par Microsoft pour les microservices et les APIs REST légères. Elles réduisent drastiquement le code superflu (\textit{boilerplate}), accélèrent le temps de réponse et permettent à un développeur débutant de comprendre le flux HTTP d'un seul coup d'œil sans se perdre dans la hiérarchie complexe de contrôleurs abstraits.
+}
+
+\faqitem{À quoi servent les adresses (comme \texttt{localhost:5000} ou \texttt{localhost:7000}) ? Comment le client mobile y accèdera-t-il ?}{
+    Ces adresses définissent les ports TCP sur lesquels Kestrel écoute sur votre machine de développement. Sur un ordinateur, l'application mobile de bureau accède directement à \texttt{localhost}. Lorsque nous testerons sur un émulateur Android (dans un jalon ultérieur), l'émulateur utilise une passerelle réseau spéciale (\texttt{10.0.2.2}) pour joindre le serveur hôte.
+}

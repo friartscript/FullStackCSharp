@@ -1,12 +1,4 @@
 # ==========================================
-# Fichiers de cadrage local / personnel
-# ==========================================
-PROJET.md
-ETAPES.md
-Livret/compiler_livret.py
-Livret/etapes/
-
-# ==========================================
 # Dossier personnalisé spécifié par l'utilisateur
 # ==========================================
 [Vv]idéos/

@@ -1,0 +1,159 @@
+\section{Action 1.4 : Création du Client Mobile \& Desktop (.NET MAUI)}
+
+Le troisième composant de notre solution est l'application cliente \textbf{\texttt{FullStackCSharp.Front}}. 
+
+Dans une architecture d'entreprise moderne, l'objectif est d'offrir une expérience utilisateur fluide, réactive et multiplateforme sans dupliquer le code métier entre les différents systèmes d'exploitation. C'est la raison d'être de \textbf{.NET MAUI} (\textit{.NET Multi-platform App UI}).
+
+Grâce au modèle moderne de projet unifié (\textit{Single Project}), une seule base de code C\# et XAML produit nativement les binaires pour chaque environnement cible :
+\begin{itemize}
+    \item \textbf{Interface utilisateur déclarative (XAML)} : Les vues sont décrites en XAML et s'appuient sur le patron de conception \textbf{MVVM} (\textit{Model-View-ViewModel}) pour séparer rigoureusement la présentation visuelle de la logique d'interaction.
+    \item \textbf{Compilation native sans compromis} : Contrairement aux technologies hybrides basées sur un navigateur web embarqué (\textit{WebView}), .NET MAUI compile vers de véritables contrôles d'interface natifs de chaque plateforme (WinUI 3 sur Windows, UIKit sur iOS/macOS, vues natives sur Android).
+    \item \textbf{Couplage étanche avec l'API} : Le client ne possède aucune connaissance de la persistance SQL serveur ; il consomme l'API de manière asynchrone en exploitant les contrats immuables du projet \texttt{Shared}.
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{schemabox}{Architecture Multiplateforme \& Modèle Unifié .NET MAUI}
+\begin{center}
+\begin{tikzpicture}[
+    boxapp/.style={
+        rectangle, 
+        draw=indigo!90!black, 
+        fill=indigo!7!white, 
+        rounded corners=2.5mm, 
+        minimum width=15.4cm, 
+        minimum height=1.2cm, 
+        inner ysep=2.5mm,
+        align=center, 
+        line width=1.1pt
+    },
+    boxcore/.style={
+        rectangle, 
+        draw=secondary!80!black, 
+        fill=secondary!5!white, 
+        rounded corners=2mm, 
+        minimum width=15.4cm, 
+        minimum height=1.3cm, 
+        inner ysep=2.5mm,
+        align=center, 
+        line width=0.9pt
+    },
+    boxtarget/.style={
+        rectangle, 
+        draw=#1!80!black, 
+        fill=#1!6!white, 
+        rounded corners=2mm, 
+        minimum width=3.5cm, 
+        minimum height=1.5cm, 
+        inner ysep=2.5mm,
+        align=center, 
+        line width=0.8pt
+    },
+    flowarrow/.style={
+        -{Stealth[length=2.8mm]}, 
+        thick, 
+        color=indigo!90!black
+    },
+    brancharrow/.style={
+        -{Stealth[length=2.5mm]}, 
+        thick, 
+        color=secondary!90!black
+    }
+]
+
+% Top: MAUI Single Project (y = 3.6)
+\node[boxapp] (app) at (0, 3.6) {
+    \textbf{\normalsize Projet Unifié Unique : \texttt{FullStackCSharp.Front}}\\[2pt]
+    \footnotesize Code C\# 12 unique $\bullet$ Vues XAML déclaratives $\bullet$ Injection de dépendances $\bullet$ Panier SQLite local
+};
+
+% Middle: MAUI Abstraction & MVVM Engine (y = 1.7)
+\node[boxcore] (core) at (0, 1.7) {
+    \textbf{\normalsize Couche d'Abstraction \& Moteur Graphique MAUI}\\[2pt]
+    \scriptsize Liaison de données bidirectionnelle (\textit{DataBinding}) $\bullet$ Navigation \texttt{AppShell} $\bullet$ DTOs fortement typés \texttt{Shared}
+};
+
+\draw[flowarrow] (0, 3.0) -- (0, 2.35)
+    node[midway, right=4pt, font=\tiny\bfseries\color{indigo!90!black}] {Compilation unifiée};
+
+% Bottom Row: 4 Native Targets (y = -0.6)
+\node[boxtarget=emerald] (android) at (-5.4, -0.6) {
+    \textbf{\scriptsize Android}\\[2pt]
+    \tiny Java / Kotlin native\\
+    \tiny Écran tactile mobile\\
+    \tiny Paquet : \texttt{.apk} / \texttt{.aab}
+};
+
+\node[boxtarget=secondary] (ios) at (-1.8, -0.6) {
+    \textbf{\scriptsize iOS (Apple)}\\[2pt]
+    \tiny Rendu UIKit natif\\
+    \tiny Interface tactile fluide\\
+    \tiny Paquet : \texttt{.ipa}
+};
+
+\node[boxtarget=indigo] (windows) at (1.8, -0.6) {
+    \textbf{\scriptsize Windows (WinUI 3)}\\[2pt]
+    \tiny Moteur Windows App SDK\\
+    \tiny Clavier / Souris / Écran large\\
+    \tiny Exécutable natif
+};
+
+\node[boxtarget=cyanproj] (macos) at (5.4, -0.6) {
+    \textbf{\scriptsize macOS (Catalyst)}\\[2pt]
+    \tiny Cocoa / AppKit natif\\
+    \tiny Expérience desktop Apple\\
+    \tiny Application universelle
+};
+
+% Branching arrows from core to targets
+\draw[brancharrow] (-5.4, 1.05) -- (android.north);
+\draw[brancharrow] (-1.8, 1.05) -- (ios.north);
+\draw[brancharrow] (1.8, 1.05) -- (windows.north);
+\draw[brancharrow] (5.4, 1.05) -- (macos.north);
+
+\end{tikzpicture}
+\end{center}
+\end{schemabox}
+
+\vspace{0.2cm}
+
+\begin{bestpracticebox}{L'Évitement des Assets Binaires Lourds}
+Dans une application moderne d'apprentissage, l'intégration d'images matricielles volumineuses (\texttt{.png}, \texttt{.jpg}) alourdit inutilement le dépôt Git et complique l'adaptation multi-résolution.
+Pour notre boutique de glaces, nous appliquons une règle stricte : \textbf{100\% vectoriel}. Les icônes et visuels s'appuient exclusivement sur des graphismes vectoriels SVG et des tracés géométriques XAML natifs, garantissant un rendu net quelle que soit la densité de pixels de l'écran.
+\end{bestpracticebox}
+
+\newpage
+
+\subsection*{Organisation des Fichiers Clés de l'Application Cliente}
+
+La structure d'un projet .NET MAUI unifié s'articule autour de quatre axes majeurs :
+
+\begin{description}
+    \item[\color{indigo}\texttt{App.xaml} \& \texttt{AppShell.xaml}] : Point d'ancrage du cycle de vie de l'application et gestionnaire global de navigation hiérarchique par onglets ou par menu volant (\textit{Flyout}).
+    \item[\color{secondary}\texttt{MauiProgram.cs}] : Configuration du constructeur d'hôte (\texttt{MauiAppBuilder}), déclaration des polices d'écriture vectorielles et enregistrement des services dans le conteneur d'injection de dépendances.
+    \item[\color{cyanproj!90!black}\texttt{Resources/}] : Répertoire centralisé hébergeant les polices, les icônes d'application (\texttt{appicon.svg}), les écrans de chargement (\texttt{splash.svg}) et les illustrations vectorielles redimensionnées dynamiquement par le compilateur.
+    \item[\color{emerald!80!black}\texttt{Platforms/}] : Répertoires ciblés permettant d'écrire, si nécessaire, du code spécifique à un système d'exploitation donné (permissions système, notifications push).
+\end{description}
+
+\vspace{0.3cm}
+
+\subsection*{Questions Fréquentes du Débutant}
+
+\faqitem{Pourquoi choisir .NET MAUI plutôt qu'une application web React ou Blazor ?}{
+    .NET MAUI produit une application \textbf{native installable} capable de fonctionner hors ligne, d'accéder au matériel du terminal (capteurs, stockage local SQLite, notifications) et d'offrir des animations à 60/120 images par seconde sans la latence d'un navigateur. Pour une boutique en ligne, cela permet une expérience utilisateur réactive où le panier est conservé même en cas de perte temporaire de réseau.
+}
+
+\faqitem{Comment un seul projet peut-il fonctionner à la fois sur Windows, Android et iOS ?}{
+    Grâce au mécanisme de \textbf{multi-ciblage} (\textit{multi-targeting}) de MSBuild : le fichier de projet \texttt{.csproj} spécifie plusieurs frameworks cibles (ex: \texttt{net10.0-android}, \texttt{net10.0-ios}, \texttt{net10.0-windows10...}). À la compilation, le SDK compile le code commun avec les bibliothèques d'interface adaptées à la plateforme sélectionnée.
+}
+
+\faqitem{Pourquoi MainPage.xaml.cs utilise-t-il du code-behind si nous visons MVVM ?}{
+    \textbf{C'est une étape délibérée de montée en charge pédagogique.}
+    Le template initial généré par le SDK .NET MAUI inclut un gestionnaire d'événement direct (\texttt{OnCounterClicked}) dans le fichier de code-behind \texttt{MainPage.xaml.cs}. À cette étape d'initialisation (Action 1.4), ce code sert uniquement à valider que la chaîne de compilation native et le pipeline XAML fonctionnent sans erreur.
+    Dès le \textbf{Jalon 8}, nous remplacerons intégralement cette logique sommaire par une architecture MVVM propre, pilotée par le \texttt{CommunityToolkit.Mvvm}, sans aucun événement impératif dans le code-behind.
+}
+
+\faqitem{Qu'est-ce que le patron MVVM et pourquoi est-il indispensable en MAUI ?}{
+    Le patron \textbf{MVVM} (\textit{Model-View-ViewModel}) découple l'écran (la Vue en XAML) de la logique métier (le ViewModel en C\#). La Vue ne sait pas comment calculer un panier : elle se contente d'afficher les propriétés du ViewModel grâce à la liaison de données (\textit{DataBinding}). Ce découpage permet de tester unitairement 100\% des flux applicatifs sans avoir à manipuler d'interface graphique.
+}
+

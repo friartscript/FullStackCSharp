@@ -1,0 +1,171 @@
+\section{Action 1.2 : Le Projet de Bibliothèque de Classes (Shared)}
+
+Le premier projet créé dans notre solution est \textbf{\texttt{FullStackCSharp.Shared}}. 
+
+Contrairement aux applications exécutables, une bibliothèque de classes (\texttt{classlib}) ne dispose pas de méthode d'entrée \texttt{Main()} et ne produit aucun fichier \texttt{.exe} : elle est compilée sous la forme d'un assemblage binaire \textbf{\texttt{.dll}} (\textit{Dynamic Link Library}) réutilisable.
+
+Dans notre architecture, ce projet occupe une fonction stratégique :
+\begin{itemize}
+    \item \textbf{Agnosticisme technologique} : Il est 100\% neutre. Il ne dépend ni des bibliothèques graphiques de l'application cliente (.NET MAUI, XAML), ni du serveur web (ASP.NET Core, Kestrel), ni de la base de données.
+    \item \textbf{Langage commun universel} : Il contient l'ensemble des \textbf{DTOs} (\textit{Data Transfer Objects}), des requêtes, des réponses et des énumérations échangées entre le Front et le Back.
+    \item \textbf{Sécurité à la compilation} : En partageant le même contrat immuable, si un champ est renommé dans \texttt{Shared}, le compilateur génère immédiatement une erreur de compilation dans le Front et dans le Back, empêchant tout bug de communication en production.
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{schemabox}{Shared : L'Autorité Centrale des Contrats d'Échange}
+\begin{center}
+\begin{tikzpicture}[
+    cardshared/.style={
+        rectangle, 
+        draw=cyanproj!90!black, 
+        fill=cyanproj!7!white, 
+        rounded corners=3mm, 
+        minimum width=8.8cm, 
+        minimum height=1.8cm, 
+        inner ysep=3mm,
+        align=center, 
+        line width=1.1pt
+    },
+    cardapp/.style={
+        rectangle, 
+        draw=#1, 
+        fill=#1!6!white, 
+        rounded corners=2.5mm, 
+        minimum width=4.8cm, 
+        minimum height=2.1cm, 
+        inner ysep=3mm,
+        align=center, 
+        line width=0.9pt
+    },
+    pillhttp/.style={
+        rectangle,
+        draw=secondary!80!black,
+        fill=white,
+        rounded corners=2mm,
+        minimum width=3.4cm,
+        minimum height=0.9cm,
+        inner ysep=2mm,
+        align=center, 
+        line width=0.8pt
+    },
+    pillforbid/.style={
+        rectangle,
+        draw=red!70!black,
+        fill=red!4!white,
+        rounded corners=2mm,
+        minimum width=3.4cm,
+        minimum height=0.9cm,
+        inner ysep=2mm,
+        align=center, 
+        line width=0.8pt,
+        densely dashed
+    },
+    refarrow/.style={
+        -{Stealth[length=3mm]}, 
+        very thick, 
+        color=cyanproj!90!black
+    },
+    httparrow/.style={
+        {Stealth[length=2.2mm]}-{Stealth[length=2.2mm]}, 
+        thick, 
+        color=secondary
+    },
+    forbidarrow/.style={
+        thick, 
+        densely dashed, 
+        color=red!70!black
+    }
+]
+
+% Top: Shared (Centered at y = 3.6)
+\node[cardshared] (shared) at (0, 3.6) {
+    \textbf{\large FullStackCSharp.Shared}\\[2pt]
+    {\color{cyanproj!80!black}\rule{7.2cm}{0.4pt}}\\[3pt]
+    \footnotesize \textbf{Autorité Centrale des Contrats \& DTOs Communs}\\
+    \tiny Assembly binaire : \texttt{FullStackCSharp.Shared.dll} $\bullet$ Cible : \texttt{net10.0}
+};
+
+% Bottom Left: Front & Bottom Right: Back (y = 0.2)
+\node[cardapp=indigo] (front) at (-5.2, 0.2) {
+    \textbf{\normalsize FullStackCSharp.Front}\\[2pt]
+    {\color{indigo!70!black}\rule{3.8cm}{0.4pt}}\\[3pt]
+    \scriptsize Client Mobile \& Desktop (.NET MAUI)\\[2pt]
+    \tiny Interface Graphique XAML / C\#\\
+    \tiny Ne contient aucune logique serveur
+};
+
+\node[cardapp=secondary] (back) at (5.2, 0.2) {
+    \textbf{\normalsize FullStackCSharp.Back}\\[2pt]
+    {\color{secondary!70!black}\rule{3.8cm}{0.4pt}}\\[3pt]
+    \scriptsize Serveur ASP.NET Core (Kestrel)\\[2pt]
+    \tiny Web API Minimal \& Base SQLite\\
+    \tiny N'embarque aucun composant visuel
+};
+
+% Reference curves entering Shared cleanly from the sides
+\draw[refarrow] (front.north) to[out=90, in=180] 
+    node[midway, left=4pt, font=\scriptsize\bfseries\color{cyanproj!90!black}, align=right] {Référence\\\texttt{.csproj}}
+    (shared.west);
+
+\draw[refarrow] (back.north) to[out=90, in=0] 
+    node[midway, right=4pt, font=\scriptsize\bfseries\color{cyanproj!90!black}, align=left] {Référence\\\texttt{.csproj}}
+    (shared.east);
+
+% Center: Allowed HTTP Data Flow (Horizontal)
+\node[pillhttp] (http) at (0, 0.7) {
+    \scriptsize\bfseries\color{secondary!90!black} Flux Réseau HTTP / REST\\[1pt]
+    \tiny Transport JSON exclusif des DTOs
+};
+\draw[httparrow] (-2.8, 0.7) -- (http.west);
+\draw[httparrow] (http.east) -- (2.8, 0.7);
+
+% Center: Prohibited Direct Coupling (Horizontal)
+\node[pillforbid] (forbid) at (0, -0.4) {
+    \scriptsize\bfseries\color{red!80!black} $\times$~Isolation Stricte\\[1pt]
+    \tiny Référence directe interdite
+};
+\draw[forbidarrow] (-2.8, -0.4) -- (forbid.west);
+\draw[forbidarrow] (forbid.east) -- (2.8, -0.4);
+
+\end{tikzpicture}
+\end{center}
+\end{schemabox}
+
+\vspace{0.2cm}
+
+\begin{bestpracticebox}{Immutabilité et Pureté des Contrats}
+Pour conserver un projet \texttt{Shared} sain et pérenne tout au long du cycle de vie du projet :
+\begin{itemize}
+    \item \textbf{Zéro dépendance d'infrastructure} : Ne jamais installer de package lié à la base de données (Entity Framework Core) ou à l'interface graphique (.NET MAUI) dans \texttt{Shared}.
+    \item \textbf{Modélisation par \texttt{record}} : Les DTOs doivent être des types \texttt{public record ...} garantissant une égalité par valeur et une immutabilité superficielle (\textit{shallow immutability}). Pour une immutabilité profonde lorsque des listes sont nécessaires, privilégier des collections en lecture seule (\texttt{IReadOnlyList<T>}).
+\end{itemize}
+\end{bestpracticebox}
+
+\newpage
+
+\subsection*{Les Trois Familles de Projets dans la Solution}
+
+Chaque projet de la solution répond à un rôle précis et engendre un type de binaire spécifique :
+
+\begin{description}
+    \item[\color{cyanproj!90!black}\texttt{FullStackCSharp.Shared} (\texttt{.dll})] : Bibliothèque de classes agnostique (.NET 10 LTS). Elle ne dépend d'aucun framework tiers et sert d'autorité de typage pour les DTOs, requêtes et réponses JSON.
+    \item[\color{secondary}\texttt{FullStackCSharp.Back} (\texttt{.exe})] : Application serveur autonome intégrant Kestrel, avec persistance relationnelle SQLite via EF Core 10 (Jalon 4) et sécurité JWT (Jalon 6).
+    \item[\color{indigo}\texttt{FullStackCSharp.Front} (\texttt{.exe} / package d'application)] : Application cliente multiplateforme (.NET MAUI) consommant l'API via des contrats fortement typés et gérant l'expérience utilisateur.
+\end{description}
+
+\vspace{0.3cm}
+
+\subsection*{Questions Fréquentes du Débutant}
+
+\faqitem{Pourquoi ce projet ne produit-il pas de fichier \texttt{.exe} ? Comment s'exécute-t-il ?}{
+    Une bibliothèque de classes (\texttt{classlib}) produit exclusivement un fichier \texttt{.dll}. Elle ne possède pas de point d'entrée et ne peut pas être « lancée » toute seule. Elle est conçue pour être chargée en mémoire par des projets exécutables (\texttt{Back} et \texttt{Front}) lors de leur propre démarrage.
+}
+
+\faqitem{Pourquoi appelle-t-on ce projet \texttt{Shared} plutôt que \texttt{Common} ou \texttt{Core} ?}{
+    Le nom \texttt{Shared} indique sans ambiguïté qu'il s'agit du contrat \textbf{partagé} entre deux mondes distincts (client et serveur). Le terme \texttt{Core} désigne habituellement le cœur métier (entités de domaine, logique interne du serveur), tandis que \texttt{Common} est un nom souvent déconseillé car il devient rapidement un « dossier fourre-tout » de code désorganisé.
+}
+
+\faqitem{Pourquoi ne pas mettre Entity Framework Core et les tables de base de données dans \texttt{Shared} ?}{
+    Ce serait une \textbf{faille architecturale et de sécurité majeure}. Si \texttt{Front} référençait les entités de base de données, l'application mobile embarquerait inutilement les pilotes SQL serveur et risquerait de tenter un accès direct aux données. Dans une application Fullstack professionnelle, le client mobile ne doit \textbf{jamais} connaître la base de données centrale : il ne dialogue avec le monde extérieur que via des requêtes HTTP transportant des DTOs.
+}
