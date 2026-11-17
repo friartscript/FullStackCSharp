@@ -1,5 +1,11 @@
 \section{Action 1.2 : Le Projet de Bibliothèque de Classes (Shared)}
 
+\begin{tcolorbox}[colback=indigo!4!white,colframe=indigo!40!white,arc=2mm,boxrule=0.8pt,top=2mm,bottom=2mm,left=3mm,right=3mm]
+    \small\textbf{\color{indigo!90!black}Objectif d'apprentissage} : À l'issue de cette fiche, l'apprenant sera capable de créer une bibliothèque de classes neutre sous .NET 10 LTS, d'expliquer pourquoi les contrats doivent être agnostiques de toute dépendance d'infrastructure, et de compiler la DLL isolément.
+\end{tcolorbox}
+
+\vspace{0.1cm}
+
 Le premier projet créé dans notre solution est \textbf{\texttt{FullStackCSharp.Shared}}. 
 
 Contrairement aux applications exécutables, une bibliothèque de classes (\texttt{classlib}) ne dispose pas de méthode d'entrée \texttt{Main()} et ne produit aucun fichier \texttt{.exe} : elle est compilée sous la forme d'un assemblage binaire \textbf{\texttt{.dll}} (\textit{Dynamic Link Library}) réutilisable.
@@ -153,6 +159,32 @@ Chaque projet de la solution répond à un rôle précis et engendre un type de 
     \item[\color{secondary}\texttt{FullStackCSharp.Back} (\texttt{.exe})] : Application serveur autonome intégrant Kestrel, avec persistance relationnelle SQLite via EF Core 10 (Jalon 4) et sécurité JWT (Jalon 6).
     \item[\color{indigo}\texttt{FullStackCSharp.Front} (\texttt{.exe} / package d'application)] : Application cliente multiplateforme (.NET MAUI) consommant l'API via des contrats fortement typés et gérant l'expérience utilisateur.
 \end{description}
+
+\vspace{0.3cm}
+
+\begin{bestpracticebox}{Manipulation Reproductible : Création de la Bibliothèque}
+\textbf{Répertoire de travail} : Racine du dépôt (\texttt{DEV/FullStackCSharp}).\\[2pt]
+\textbf{Commande CLI} : \texttt{dotnet new classlib -n FullStackCSharp.Shared -o FullStackCSharp.Shared -f net10.0}\\[2pt]
+\textbf{Résultat attendu} : Création du sous-dossier avec \texttt{FullStackCSharp.Shared.csproj} ciblant \texttt{net10.0}.\\[2pt]
+\textbf{Vérification concrète} : Exécuter \texttt{dotnet build FullStackCSharp.Shared} $\longrightarrow$ affiche \textit{« Échec du build : 0 avertissement(s), 0 erreur(s) »} et génère l'assembly \texttt{bin/Debug/net10.0/FullStackCSharp.Shared.dll}.
+\end{bestpracticebox}
+
+\vspace{0.2cm}
+
+\subsection*{Erreurs Fréquentes du Débutant}
+
+\begin{itemize}
+    \item \textbf{Tenter un \texttt{dotnet run} sur \texttt{Shared}} : Une bibliothèque de classes n'a pas de méthode d'entrée \texttt{Main()}. La CLI signale qu'aucun point d'entrée exécutable n'est trouvé.
+    \item \textbf{Ajouter des packages d'infrastructure (EF Core, MAUI)} : Polluer le projet neutre de contrats avec des pilotes SQL ou des vues XAML, brisant son indépendance universelle.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{tcolorbox}[colback=emerald!4!white,colframe=emerald!40!white,arc=2mm,boxrule=0.8pt,top=2.5mm,bottom=2.5mm,left=3mm,right=3mm]
+    \small\textbf{\color{emerald!80!black}Exercice de réinvestissement} :
+    Créez temporairement un fichier \texttt{FullStackCSharp.Shared/PingDto.cs} contenant \texttt{public record PingDto(string Message);}. Lancez la compilation avec \texttt{dotnet build FullStackCSharp.Shared}. Supprimez ensuite ce fichier.\\
+    \textbf{Critère d'auto-évaluation} : Le build doit réussir avec 0 erreur et 0 avertissement.
+\end{tcolorbox}
 
 \vspace{0.3cm}
 

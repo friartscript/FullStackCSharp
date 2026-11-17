@@ -1,5 +1,11 @@
 \section{Action 1.4 : Création du Client Mobile \& Desktop (.NET MAUI)}
 
+\begin{tcolorbox}[colback=indigo!4!white,colframe=indigo!40!white,arc=2mm,boxrule=0.8pt,top=2mm,bottom=2mm,left=3mm,right=3mm]
+    \small\textbf{\color{indigo!90!black}Objectif d'apprentissage} : À l'issue de cette fiche, l'apprenant sera capable d'initialiser un projet client .NET MAUI sous .NET 10 LTS, de comprendre le principe du projet unifié (\textit{Single Project}) et de réaliser un build ciblé sur une plateforme spécifique.
+\end{tcolorbox}
+
+\vspace{0.1cm}
+
 Le troisième composant de notre solution est l'application cliente \textbf{\texttt{FullStackCSharp.Front}}. 
 
 Dans une architecture d'entreprise moderne, l'objectif est d'offrir une expérience utilisateur fluide, réactive et multiplateforme sans dupliquer le code métier entre les différents systèmes d'exploitation. C'est la raison d'être de \textbf{.NET MAUI} (\textit{.NET Multi-platform App UI}).
@@ -64,7 +70,7 @@ Grâce au modèle moderne de projet unifié (\textit{Single Project}), une seule
 % Top: MAUI Single Project (y = 3.6)
 \node[boxapp] (app) at (0, 3.6) {
     \textbf{\normalsize Projet Unifié Unique : \texttt{FullStackCSharp.Front}}\\[2pt]
-    \footnotesize Code C\# 12 unique $\bullet$ Vues XAML déclaratives $\bullet$ Injection de dépendances $\bullet$ Panier SQLite local
+    \footnotesize Code C\# moderne unique $\bullet$ Vues XAML déclaratives $\bullet$ Injection de dépendances $\bullet$ Panier SQLite
 };
 
 % Middle: MAUI Abstraction & MVVM Engine (y = 1.7)
@@ -134,6 +140,33 @@ La structure d'un projet .NET MAUI unifié s'articule autour de quatre axes maje
     \item[\color{cyanproj!90!black}\texttt{Resources/}] : Répertoire centralisé hébergeant les polices, les icônes d'application (\texttt{appicon.svg}), les écrans de chargement (\texttt{splash.svg}) et les illustrations vectorielles redimensionnées dynamiquement par le compilateur.
     \item[\color{emerald!80!black}\texttt{Platforms/}] : Répertoires ciblés permettant d'écrire, si nécessaire, du code spécifique à un système d'exploitation donné (permissions système, notifications push).
 \end{description}
+
+\vspace{0.3cm}
+
+\begin{bestpracticebox}{Manipulation Reproductible : Création du Client MAUI}
+\textbf{Répertoire de travail} : Racine du dépôt (\texttt{DEV/FullStackCSharp}).\\[2pt]
+\textbf{Commande CLI} : \texttt{dotnet new maui -n FullStackCSharp.Front -o FullStackCSharp.Front -f net10.0}\\[2pt]
+\textbf{Résultat attendu} : Création du projet unifié avec \texttt{FullStackCSharp.Front.csproj}, \texttt{App.xaml} et \texttt{Resources/}.\\[2pt]
+\textbf{Vérification concrète (Build ciblé rapide)} :\\
+\texttt{dotnet build FullStackCSharp.Front -f net10.0-windows10.0.19041.0} $\longrightarrow$ affiche \textit{« 0 avertissement(s), 0 erreur(s) »} en quelques secondes (évitant la compilation simultanée des 4 OS).
+\end{bestpracticebox}
+
+\vspace{0.2cm}
+
+\subsection*{Erreurs Fréquentes du Débutant}
+
+\begin{itemize}
+    \item \textbf{Lancer un build complet sans ciblage sous Windows} : Compiler l'intégralité des plateformes (Android, iOS, macOS, Windows) prend plusieurs minutes. Spécifier \texttt{-f net10.0-windows10...} accélère considérablement l'itération quotidienne.
+    \item \textbf{Introduire des images PNG/JPG matricielles} : Violer la règle de sobriété vectorielle du projet en important des images lourdes au lieu de SVG adaptables.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{tcolorbox}[colback=emerald!4!white,colframe=emerald!40!white,arc=2mm,boxrule=0.8pt,top=2.5mm,bottom=2.5mm,left=3mm,right=3mm]
+    \small\textbf{\color{emerald!80!black}Exercice de réinvestissement} :
+    Ouvrez \texttt{FullStackCSharp.Front.csproj} et repérez la balise \texttt{<SupportedOSPlatformVersion>}. Notez les versions de plateforme minimale requises pour Android et Windows.\\
+    \textbf{Critère d'auto-évaluation} : Vous devez identifier Android 21.0 (Lollipop minimum) et Windows 10.0.17763.0.
+\end{tcolorbox}
 
 \vspace{0.3cm}
 

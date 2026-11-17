@@ -1,5 +1,11 @@
 \section{Action 1.5 : Rattachement des Projets à la Solution (dotnet sln add)}
 
+\begin{tcolorbox}[colback=indigo!4!white,colframe=indigo!40!white,arc=2mm,boxrule=0.8pt,top=2mm,bottom=2mm,left=3mm,right=3mm]
+    \small\textbf{\color{indigo!90!black}Objectif d'apprentissage} : À l'issue de cette fiche, l'apprenant sera capable de fédérer des projets disparates au sein d'une solution .NET via la CLI, d'inspecter les entrées de projets dans le fichier \texttt{.sln} et de distinguer formellement le regroupement de solution du câblage de \texttt{<ProjectReference>}.
+\end{tcolorbox}
+
+\vspace{0.1cm}
+
 Après avoir initialisé indépendamment les trois briques du système (\texttt{Shared}, \texttt{Back} et \texttt{Front}), l'étape d'ingénierie consiste à les fédérer officiellement sous l'autorité de la solution racine \textbf{\texttt{FullStackCSharp.sln}}.
 
 Cette opération s'effectue via la commande en ligne de commande :
@@ -137,6 +143,32 @@ Lorsque la commande \texttt{dotnet sln add} est exécutée, elle modifie le fich
     \item[\color{secondary}1. Déclaration du Projet (\texttt{Project})] : Définit le type de projet via son GUID de langage (ex : \texttt{\{FAE04EC0-...\}} pour le C\#), le nom logique du composant, son chemin relatif sur le disque, et lui attribue son propre GUID de solution.
     \item[\color{cyanproj!90!black}2. Mappage des Configurations (\texttt{ProjectConfigurationPlatforms})] : Associe chaque projet aux configurations de la solution (\texttt{Debug|Any CPU}, \texttt{Release|Any CPU}). Cela indique à MSBuild s'il doit inclure ou ignorer le projet lors de la compilation de la solution dans un mode particulier.
 \end{description}
+
+\vspace{0.3cm}
+
+\begin{bestpracticebox}{Manipulation Reproductible : Rattachement à la Solution}
+\textbf{Répertoire de travail} : Racine du dépôt (\texttt{DEV/FullStackCSharp}).\\[2pt]
+\textbf{Commande CLI} : \texttt{dotnet sln FullStackCSharp.sln add FullStackCSharp.Shared FullStackCSharp.Back FullStackCSharp.Front}\\[2pt]
+\textbf{Résultat attendu} : Messages de confirmation \textit{« Projet ... ajouté à la solution »}.\\[2pt]
+\textbf{Vérification concrète} : Exécuter \texttt{dotnet sln FullStackCSharp.sln list} $\longrightarrow$ affiche les 3 chemins relatifs vers les fichiers \texttt{.csproj}.
+\end{bestpracticebox}
+
+\vspace{0.2cm}
+
+\subsection*{Erreurs Fréquentes du Débutant}
+
+\begin{itemize}
+    \item \textbf{Croire que \texttt{sln add} relie les projets entre eux} : Le \texttt{.sln} orchestre le build de la solution, mais n'ajoute pas de balise \texttt{<ProjectReference>} (Action 1.7).
+    \item \textbf{Ajouter des projets avec des chemins absolus} : Utiliser des chemins complets avec lettre de lecteur (\texttt{C:\textbackslash...}), ce qui casse le projet dès qu'il est cloné sur une autre machine.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{tcolorbox}[colback=emerald!4!white,colframe=emerald!40!white,arc=2mm,boxrule=0.8pt,top=2.5mm,bottom=2.5mm,left=3mm,right=3mm]
+    \small\textbf{\color{emerald!80!black}Exercice de réinvestissement} :
+    Exécutez \texttt{dotnet sln FullStackCSharp.sln list} dans votre terminal.\\
+    \textbf{Critère d'auto-évaluation} : Vérifiez que la liste renvoie exactement les 3 sous-projets : \texttt{FullStackCSharp.Shared}, \texttt{FullStackCSharp.Back} et \texttt{FullStackCSharp.Front}.
+\end{tcolorbox}
 
 \vspace{0.3cm}
 

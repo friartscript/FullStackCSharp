@@ -34,11 +34,11 @@ Ce document définit les règles de développement impératives pour le projet *
 
 ---
 
-## 4. Commentaires & Auto-Documentation
+## 4. Commentaires & Auto-Documentation (Règle d'Or : Zéro Commentaire C#)
 
-- **Code auto-explicatif d'abord** : Préférer des noms précis, des méthodes courtes et des abstractions justifiées.
-- **Commentaires utiles uniquement** : Ajouter un commentaire concis lorsqu'il explique une intention, une contrainte ou un compromis qui ne ressort pas clairement du code. Ne pas paraphraser l'instruction suivante ni utiliser un commentaire pour masquer du code confus.
-- **Documentation XML ciblée** : Documenter les API publiques ou les contrats lorsqu'un consommateur ne peut pas comprendre leur usage à partir des signatures seules. Les explications détaillées d'un concept restent dans le livret.
+- **Zéro commentaire dans le code source C#** : Le code source C# (`.cs`) ne contient strictement aucun commentaire (`//`, `/*`, `///`).
+- **Code 100% auto-documenté** : La lisibilité, la clarté et l'intention sont portées exclusivement par un nommage explicite, des identifiants parlants, des méthodes courtes, des abstractions étanches et le typage fort.
+- **Déportation documentaire totale** : Toute l'explication conceptuelle, les schémas d'architecture, la justification des choix et la pédagogie didactique sont déportés dans les supports d'ingénierie dédiés (`ARCHITECTURE.md`, `ETAPES.md` et les micro-fiches du livret LaTeX `Livret/`).
 
 ---
 

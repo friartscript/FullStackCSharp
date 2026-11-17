@@ -1,5 +1,11 @@
 \section{Action 1.3 : Création de l'API Backend (ASP.NET Core Minimal API)}
 
+\begin{tcolorbox}[colback=indigo!4!white,colframe=indigo!40!white,arc=2mm,boxrule=0.8pt,top=2mm,bottom=2mm,left=3mm,right=3mm]
+    \small\textbf{\color{indigo!90!black}Objectif d'apprentissage} : À l'issue de cette fiche, l'apprenant sera capable de créer une application web ASP.NET Core Minimal API sous .NET 10 LTS, d'expliquer le fonctionnement du serveur Kestrel auto-hébergé et de vérifier le fonctionnement de la route \texttt{/health} via la console d'observabilité.
+\end{tcolorbox}
+
+\vspace{0.1cm}
+
 Le deuxième projet créé dans notre solution est \textbf{\texttt{FullStackCSharp.Back}}. 
 
 Contrairement aux bibliothèques de classes, ce projet est configuré avec le SDK Web (\texttt{Microsoft.NET.Sdk.Web}) et compile directement vers un exécutable autonome (\textbf{\texttt{FullStackCSharp.Back.exe}}).
@@ -100,8 +106,8 @@ Dans l'écosystème .NET moderne (.NET 10 LTS), la conception du Backend repose 
 
 % Console Output Terminal (y = -1.8)
 \node[boxconsole] (console) at (0, -1.8) {
-    \color{white}\textbf{\normalsize Console d'Observabilité Native (Flux ANSI en Temps Réel)}\\[2pt]
-    \footnotesize\color{emerald!30!white}\texttt{[INFO] HTTP GET /health --> 200 OK (3.2 ms)} $\bullet$ \color{cyanproj!30!white}\texttt{[SQL] SELECT * FROM Icecreams} $\bullet$ \color{accent!30!white}\texttt{[JWT] Token validé}
+    \color{white}\textbf{\normalsize Console d'Observabilité Native (Aperçu de l'objectif final)}\\[2pt]
+    \footnotesize\color{emerald!30!white}\texttt{[INFO] HTTP GET /health --> 200 OK} $\bullet$ \color{cyanproj!30!white}\texttt{[SQL] SELECT (Jalon 4)} $\bullet$ \color{accent!30!white}\texttt{[JWT] Validé (Jalon 6)}
 };
 
 % Stream arrow from Back to Console
@@ -130,6 +136,32 @@ L'adoption des Minimal APIs en .NET 10 LTS apporte trois bénéfices d'ingénier
     \item[\color{cyanproj!90!black}Démarrage Rapide] : Aucun balayage d'assembly par réflexion au démarrage pour localiser des attributs. Le routage s'enregistre directement dans le moteur HTTP de Kestrel.
     \item[\color{accent}Modularité \& Règle des 300 Lignes] : Au lieu d'accumuler les méthodes dans un contrôleur monolithique, les endpoints sont organisés par domaine d'activité au sein de modules d'extension dédiés (\texttt{CatalogEndpoints.cs}, \texttt{AuthEndpoints.cs}, \texttt{OrderEndpoints.cs}), restant chacun sous la barre des 100 lignes.
 \end{description}
+
+\vspace{0.3cm}
+
+\begin{bestpracticebox}{Manipulation Reproductible : Création du Serveur Web}
+\textbf{Répertoire de travail} : Racine du dépôt (\texttt{DEV/FullStackCSharp}).\\[2pt]
+\textbf{Commande CLI} : \texttt{dotnet new webapi -n FullStackCSharp.Back -o FullStackCSharp.Back -f net10.0}\\[2pt]
+\textbf{Résultat attendu} : Création du projet exécutable configuré avec \texttt{Microsoft.NET.Sdk.Web}.\\[2pt]
+\textbf{Vérification concrète} : Exécuter \texttt{dotnet build FullStackCSharp.Back} $\longrightarrow$ affiche \textit{« 0 avertissement(s), 0 erreur(s) »}. Lors d'un \texttt{dotnet run}, la requête \texttt{GET /health} renvoie \texttt{\{"status":"Healthy","service":"FullStackCSharp.Back"\}}.
+\end{bestpracticebox}
+
+\vspace{0.2cm}
+
+\subsection*{Erreurs Fréquentes du Débutant}
+
+\begin{itemize}
+    \item \textbf{Conflit de port TCP} : Tenter de démarrer deux fois le serveur Kestrel simultanément sur le port 5227, ce qui génère une exception \texttt{IOException: Failed to bind to address}.
+    \item \textbf{Mauvaise route testée} : Appeler l'ancienne route du template (\texttt{/weatherforecast}) au lieu de la route officielle \texttt{/health} définie dans notre architecture.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{tcolorbox}[colback=emerald!4!white,colframe=emerald!40!white,arc=2mm,boxrule=0.8pt,top=2.5mm,bottom=2.5mm,left=3mm,right=3mm]
+    \small\textbf{\color{emerald!80!black}Exercice de réinvestissement} :
+    Exécutez le serveur en ligne de commande via \texttt{dotnet run --project FullStackCSharp.Back}. Dans un second terminal, lancez \texttt{curl -i http://localhost:5227/health}.\\
+    \textbf{Critère d'auto-évaluation} : Vous devez recevoir une réponse HTTP avec l'en-tête \texttt{HTTP/1.1 200 OK} et le corps JSON confirmant l'état \texttt{Healthy}.
+\end{tcolorbox}
 
 \vspace{0.3cm}
 

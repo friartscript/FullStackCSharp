@@ -7,11 +7,17 @@
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
-            <Image
-                Source="dotnet_bot.png"
-                HeightRequest="185"
-                Aspect="AspectFit"
-                SemanticProperties.Description="dot net bot in a submarine number ten" />
+            <Label
+                Text="FullStackCSharp"
+                FontSize="32"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <Label
+                Text="Gelato Artisan"
+                FontSize="18"
+                TextColor="#6C5CE7"
+                HorizontalOptions="Center" />
 
             <Label
                 Text="Hello, World!"

@@ -1,6 +1,7 @@
 import os
 import glob
 import subprocess
+import sys
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ETAPES_DIR = os.path.join(SCRIPT_DIR, "etapes")
@@ -146,7 +147,7 @@ PREAMBLE = r"""\documentclass[a4paper,11pt]{report}
     {\fontsize{40}{48}\selectfont\bfseries\color{primary} FullStackCSharp}\\[0.4cm]
     {\color{secondary}\rule{9cm}{1.5pt}}\\[0.6cm]
     {\LARGE\bfseries\color{secondary} Guide de Conception \& d'Ingénierie Fullstack}\\[0.3cm]
-    {\large\color{gray!85!black} C\# 12 $\bullet$ .NET MAUI $\bullet$ ASP.NET Core Minimal APIs (.NET 8 LTS)}
+    {\large\color{gray!85!black} C\# moderne $\bullet$ .NET MAUI $\bullet$ ASP.NET Core Minimal APIs (.NET 10 LTS)}
     
     \vfill
     
@@ -168,7 +169,7 @@ PREAMBLE = r"""\documentclass[a4paper,11pt]{report}
     
     \vfill
     
-    {\small\color{gray} .NET 8 LTS $\bullet$ Architecture 3 Tiers $\bullet$ \today}
+    {\small\color{gray} .NET 10 LTS $\bullet$ Architecture 3 Tiers $\bullet$ \today}
     
     \vspace*{0.8cm}
 \end{center}
@@ -209,7 +210,7 @@ def assemble_livret():
 
 def compile_pdf():
     if not assemble_livret():
-        return
+        sys.exit(1)
     print("[INFO] Compilation avec pdflatex...")
     try:
         subprocess.run(["pdflatex", "-interaction=nonstopmode", "LIVRET.tex"], cwd=SCRIPT_DIR, check=True)
@@ -217,6 +218,7 @@ def compile_pdf():
         print("[OK] Compilation réussie : Livret/LIVRET.pdf")
     except Exception as e:
         print(f"[ERREUR] Échec de la compilation : {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     compile_pdf()

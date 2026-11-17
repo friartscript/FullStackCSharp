@@ -138,7 +138,7 @@
     {\fontsize{40}{48}\selectfont\bfseries\color{primary} FullStackCSharp}\\[0.4cm]
     {\color{secondary}\rule{9cm}{1.5pt}}\\[0.6cm]
     {\LARGE\bfseries\color{secondary} Guide de Conception \& d'Ingénierie Fullstack}\\[0.3cm]
-    {\large\color{gray!85!black} C\# 12 $\bullet$ .NET MAUI $\bullet$ ASP.NET Core Minimal APIs (.NET 8 LTS)}
+    {\large\color{gray!85!black} C\# moderne $\bullet$ .NET MAUI $\bullet$ ASP.NET Core Minimal APIs (.NET 10 LTS)}
     
     \vfill
     
@@ -160,7 +160,7 @@
     
     \vfill
     
-    {\small\color{gray} .NET 8 LTS $\bullet$ Architecture 3 Tiers $\bullet$ \today}
+    {\small\color{gray} .NET 10 LTS $\bullet$ Architecture 3 Tiers $\bullet$ \today}
     
     \vspace*{0.8cm}
 \end{center}
@@ -172,9 +172,15 @@
 \chapter*{Introduction Générale : Vision \& Architecture du Projet}
 \addcontentsline{toc}{chapter}{Introduction Générale : Vision \& Architecture du Projet}
 
+\begin{tcolorbox}[colback=indigo!4!white,colframe=indigo!40!white,arc=2mm,boxrule=0.8pt,top=2mm,bottom=2mm,left=3mm,right=3mm]
+    \small\textbf{\color{indigo!90!black}Objectif d'apprentissage} : À l'issue de cette introduction, l'apprenant sera capable de schématiser l'architecture 3 tiers d'un système Fullstack C\# moderne, d'identifier le rôle des 4 piliers du projet et de formuler les principes directeurs (Contract-First, zéro simulation, fichiers $< 300$ lignes).
+\end{tcolorbox}
+
+\vspace{0.1cm}
+
 Bienvenue dans le guide de conception et d'architecture du projet \textbf{\texttt{FullStackCSharp}}, conçu et développé par \textbf{Kevin Friart}.
 
-L'objectif de cet ouvrage et de cette réalisation logicielle est de construire un système Fullstack professionnel complet, robuste et \textbf{100\% fonctionnel}, en exploitant la puissance du langage \textbf{C\# 12} et de la plateforme unifiée \textbf{.NET 8 LTS} de bout en bout : du terminal serveur jusqu'à l'écran mobile de l'utilisateur.
+L'objectif de cet ouvrage et de cette réalisation logicielle est d'aboutir à un système Fullstack professionnel complet, robuste et entièrement fonctionnel, en exploitant la puissance de \textbf{C\# moderne} et de la plateforme unifiée \textbf{.NET 10 LTS} de bout en bout : du terminal serveur jusqu'à l'écran mobile de l'utilisateur. À ce stade initial (Jalon 1), les fondations techniques sont posées, et chaque brique fonctionnelle sera construite et validée étape par étape.
 
 Le cas d'usage concret servant de fil rouge applicatif est une solution complète de commande en ligne pour une boutique artisanale de glaces (\textit{Gelato Artisan}) :
 \begin{itemize}
@@ -306,8 +312,8 @@ Le cas d'usage concret servant de fil rouge applicatif est une solution complèt
 
 % Bottom: Native Observability Console (y = -1.9)
 \node[boxconsole] (console) at (0, -1.9) {
-    \color{white}\textbf{\normalsize 4. Console d'Observabilité Native (Serveur Kestrel)}\\[1pt]
-    \footnotesize\color{emerald!30!white}\texttt{[HTTP] GET /catalog/icecreams} $\bullet$ \color{cyanproj!30!white}\texttt{[SQL] SELECT * FROM Products} $\bullet$ \color{accent!30!white}\texttt{[AUTH] JWT vérifié}
+    \color{white}\textbf{\normalsize 4. Console d'Observabilité Native (Aperçu de l'objectif final)}\\[1pt]
+    \footnotesize\color{emerald!30!white}\texttt{[HTTP] GET /catalog/icecreams} $\bullet$ \color{cyanproj!30!white}\texttt{[SQL] SELECT * FROM Products (Jalon 4)} $\bullet$ \color{accent!30!white}\texttt{[AUTH] JWT validé (Jalon 6)}
 };
 
 % Clean straight vertical arrow from back.south to console.north
@@ -402,6 +408,12 @@ Pour garantir un niveau d'exigence digne des standards de l'industrie, le projet
 \chapter{Jalon 1 : Socle Technique \& Initialisation}
 
 \section{Action 1.1 : Création de la Solution \& Rôle du Fichier .sln}
+
+\begin{tcolorbox}[colback=indigo!4!white,colframe=indigo!40!white,arc=2mm,boxrule=0.8pt,top=2mm,bottom=2mm,left=3mm,right=3mm]
+    \small\textbf{\color{indigo!90!black}Objectif d'apprentissage} : À l'issue de cette fiche, l'apprenant sera capable d'initialiser une solution .NET standard via la CLI, d'expliquer le rôle d'orchestration d'un fichier \texttt{.sln} et de distinguer formellement une solution, un projet et un package NuGet.
+\end{tcolorbox}
+
+\vspace{0.1cm}
 
 Dans l'écosystème .NET, une \textbf{Solution} n'est ni un binaire exécutable, ni une bibliothèque de code. Il s'agit d'un \textbf{conteneur d'orchestration} textuel qui référence et coordonne plusieurs projets indépendants (\texttt{.csproj}).
 
@@ -547,15 +559,29 @@ Pour appréhender sereinement l'outillage .NET, il convient de distinguer claire
 
 \vspace{0.2cm}
 
-\begin{bestpracticebox}{Format .sln vs .slnx en .NET 10 LTS}
-À partir du SDK .NET 9/10, la commande \texttt{dotnet new sln} peut générer un nouveau format expérimental au format XML (\texttt{.slnx}). 
-
-Cependant, dans un contexte d'entreprise ciblant la stabilité maximale sous \textbf{.NET 10 LTS}, il est recommandé de forcer le format standard éprouvé via le paramètre :
-\begin{center}
-\texttt{dotnet new sln -n FullStackCSharp --format sln}
-\end{center}
-Cette rigueur garantit une interopérabilité sans faille avec l'ensemble des environnements de développement (Visual Studio 2022/2026, JetBrains Rider, VS Code et les agents d'intégration continue).
+\begin{bestpracticebox}{Manipulation Reproductible : Création de la Solution}
+\textbf{Répertoire de travail} : Racine du dépôt (\texttt{DEV/FullStackCSharp}).\\[2pt]
+\textbf{Commande CLI} : \texttt{dotnet new sln -n FullStackCSharp --format sln}\\[2pt]
+\textbf{Résultat attendu} : Création du fichier \texttt{FullStackCSharp.sln}.\\[2pt]
+\textbf{Vérification concrète} : Exécuter \texttt{dotnet sln FullStackCSharp.sln list} $\longrightarrow$ retourne \textit{« Aucun projet trouvé dans la solution »} (comportement normal avant rattachement).
 \end{bestpracticebox}
+
+\vspace{0.2cm}
+
+\subsection*{Erreurs Fréquentes du Débutant}
+
+\begin{itemize}
+    \item \textbf{Tenter d'exécuter la solution directement} : Taper \texttt{dotnet run} à la racine alors que la solution ne contient que des descripteurs textuels. La commande échoue car un fichier \texttt{.sln} n'est pas un exécutable.
+    \item \textbf{Créer la solution dans un sous-répertoire} : Exécuter la commande dans un sous-dossier de projet au lieu de la racine, brisant ainsi les chemins relatifs d'orchestration.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{tcolorbox}[colback=emerald!4!white,colframe=emerald!40!white,arc=2mm,boxrule=0.8pt,top=2.5mm,bottom=2.5mm,left=3mm,right=3mm]
+    \small\textbf{\color{emerald!80!black}Exercice de réinvestissement} :
+    Ouvrez le fichier \texttt{FullStackCSharp.sln} dans un éditeur de texte. Identifiez la ligne déclarant le format de fichier et le format de solution.\\
+    \textbf{Critère d'auto-évaluation} : Vous devez repérer la mention \texttt{Microsoft Visual Studio Solution File, Format Version 12.00}.
+\end{tcolorbox}
 
 \vspace{0.3cm}
 
@@ -577,6 +603,12 @@ Cette rigueur garantit une interopérabilité sans faille avec l'ensemble des en
 \newpage
 
 \section{Action 1.2 : Le Projet de Bibliothèque de Classes (Shared)}
+
+\begin{tcolorbox}[colback=indigo!4!white,colframe=indigo!40!white,arc=2mm,boxrule=0.8pt,top=2mm,bottom=2mm,left=3mm,right=3mm]
+    \small\textbf{\color{indigo!90!black}Objectif d'apprentissage} : À l'issue de cette fiche, l'apprenant sera capable de créer une bibliothèque de classes neutre sous .NET 10 LTS, d'expliquer pourquoi les contrats doivent être agnostiques de toute dépendance d'infrastructure, et de compiler la DLL isolément.
+\end{tcolorbox}
+
+\vspace{0.1cm}
 
 Le premier projet créé dans notre solution est \textbf{\texttt{FullStackCSharp.Shared}}. 
 
@@ -734,6 +766,32 @@ Chaque projet de la solution répond à un rôle précis et engendre un type de 
 
 \vspace{0.3cm}
 
+\begin{bestpracticebox}{Manipulation Reproductible : Création de la Bibliothèque}
+\textbf{Répertoire de travail} : Racine du dépôt (\texttt{DEV/FullStackCSharp}).\\[2pt]
+\textbf{Commande CLI} : \texttt{dotnet new classlib -n FullStackCSharp.Shared -o FullStackCSharp.Shared -f net10.0}\\[2pt]
+\textbf{Résultat attendu} : Création du sous-dossier avec \texttt{FullStackCSharp.Shared.csproj} ciblant \texttt{net10.0}.\\[2pt]
+\textbf{Vérification concrète} : Exécuter \texttt{dotnet build FullStackCSharp.Shared} $\longrightarrow$ affiche \textit{« Échec du build : 0 avertissement(s), 0 erreur(s) »} et génère l'assembly \texttt{bin/Debug/net10.0/FullStackCSharp.Shared.dll}.
+\end{bestpracticebox}
+
+\vspace{0.2cm}
+
+\subsection*{Erreurs Fréquentes du Débutant}
+
+\begin{itemize}
+    \item \textbf{Tenter un \texttt{dotnet run} sur \texttt{Shared}} : Une bibliothèque de classes n'a pas de méthode d'entrée \texttt{Main()}. La CLI signale qu'aucun point d'entrée exécutable n'est trouvé.
+    \item \textbf{Ajouter des packages d'infrastructure (EF Core, MAUI)} : Polluer le projet neutre de contrats avec des pilotes SQL ou des vues XAML, brisant son indépendance universelle.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{tcolorbox}[colback=emerald!4!white,colframe=emerald!40!white,arc=2mm,boxrule=0.8pt,top=2.5mm,bottom=2.5mm,left=3mm,right=3mm]
+    \small\textbf{\color{emerald!80!black}Exercice de réinvestissement} :
+    Créez temporairement un fichier \texttt{FullStackCSharp.Shared/PingDto.cs} contenant \texttt{public record PingDto(string Message);}. Lancez la compilation avec \texttt{dotnet build FullStackCSharp.Shared}. Supprimez ensuite ce fichier.\\
+    \textbf{Critère d'auto-évaluation} : Le build doit réussir avec 0 erreur et 0 avertissement.
+\end{tcolorbox}
+
+\vspace{0.3cm}
+
 \subsection*{Questions Fréquentes du Débutant}
 
 \faqitem{Pourquoi ce projet ne produit-il pas de fichier \texttt{.exe} ? Comment s'exécute-t-il ?}{
@@ -752,6 +810,12 @@ Chaque projet de la solution répond à un rôle précis et engendre un type de 
 \newpage
 
 \section{Action 1.3 : Création de l'API Backend (ASP.NET Core Minimal API)}
+
+\begin{tcolorbox}[colback=indigo!4!white,colframe=indigo!40!white,arc=2mm,boxrule=0.8pt,top=2mm,bottom=2mm,left=3mm,right=3mm]
+    \small\textbf{\color{indigo!90!black}Objectif d'apprentissage} : À l'issue de cette fiche, l'apprenant sera capable de créer une application web ASP.NET Core Minimal API sous .NET 10 LTS, d'expliquer le fonctionnement du serveur Kestrel auto-hébergé et de vérifier le fonctionnement de la route \texttt{/health} via la console d'observabilité.
+\end{tcolorbox}
+
+\vspace{0.1cm}
 
 Le deuxième projet créé dans notre solution est \textbf{\texttt{FullStackCSharp.Back}}. 
 
@@ -853,8 +917,8 @@ Dans l'écosystème .NET moderne (.NET 10 LTS), la conception du Backend repose 
 
 % Console Output Terminal (y = -1.8)
 \node[boxconsole] (console) at (0, -1.8) {
-    \color{white}\textbf{\normalsize Console d'Observabilité Native (Flux ANSI en Temps Réel)}\\[2pt]
-    \footnotesize\color{emerald!30!white}\texttt{[INFO] HTTP GET /health --> 200 OK (3.2 ms)} $\bullet$ \color{cyanproj!30!white}\texttt{[SQL] SELECT * FROM Icecreams} $\bullet$ \color{accent!30!white}\texttt{[JWT] Token validé}
+    \color{white}\textbf{\normalsize Console d'Observabilité Native (Aperçu de l'objectif final)}\\[2pt]
+    \footnotesize\color{emerald!30!white}\texttt{[INFO] HTTP GET /health --> 200 OK} $\bullet$ \color{cyanproj!30!white}\texttt{[SQL] SELECT (Jalon 4)} $\bullet$ \color{accent!30!white}\texttt{[JWT] Validé (Jalon 6)}
 };
 
 % Stream arrow from Back to Console
@@ -886,6 +950,32 @@ L'adoption des Minimal APIs en .NET 10 LTS apporte trois bénéfices d'ingénier
 
 \vspace{0.3cm}
 
+\begin{bestpracticebox}{Manipulation Reproductible : Création du Serveur Web}
+\textbf{Répertoire de travail} : Racine du dépôt (\texttt{DEV/FullStackCSharp}).\\[2pt]
+\textbf{Commande CLI} : \texttt{dotnet new webapi -n FullStackCSharp.Back -o FullStackCSharp.Back -f net10.0}\\[2pt]
+\textbf{Résultat attendu} : Création du projet exécutable configuré avec \texttt{Microsoft.NET.Sdk.Web}.\\[2pt]
+\textbf{Vérification concrète} : Exécuter \texttt{dotnet build FullStackCSharp.Back} $\longrightarrow$ affiche \textit{« 0 avertissement(s), 0 erreur(s) »}. Lors d'un \texttt{dotnet run}, la requête \texttt{GET /health} renvoie \texttt{\{"status":"Healthy","service":"FullStackCSharp.Back"\}}.
+\end{bestpracticebox}
+
+\vspace{0.2cm}
+
+\subsection*{Erreurs Fréquentes du Débutant}
+
+\begin{itemize}
+    \item \textbf{Conflit de port TCP} : Tenter de démarrer deux fois le serveur Kestrel simultanément sur le port 5227, ce qui génère une exception \texttt{IOException: Failed to bind to address}.
+    \item \textbf{Mauvaise route testée} : Appeler l'ancienne route du template (\texttt{/weatherforecast}) au lieu de la route officielle \texttt{/health} définie dans notre architecture.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{tcolorbox}[colback=emerald!4!white,colframe=emerald!40!white,arc=2mm,boxrule=0.8pt,top=2.5mm,bottom=2.5mm,left=3mm,right=3mm]
+    \small\textbf{\color{emerald!80!black}Exercice de réinvestissement} :
+    Exécutez le serveur en ligne de commande via \texttt{dotnet run --project FullStackCSharp.Back}. Dans un second terminal, lancez \texttt{curl -i http://localhost:5227/health}.\\
+    \textbf{Critère d'auto-évaluation} : Vous devez recevoir une réponse HTTP avec l'en-tête \texttt{HTTP/1.1 200 OK} et le corps JSON confirmant l'état \texttt{Healthy}.
+\end{tcolorbox}
+
+\vspace{0.3cm}
+
 \subsection*{Questions Fréquentes du Débutant}
 
 \faqitem{Pourquoi une API Web produit-elle un fichier \texttt{.exe} ? Où se trouve le serveur web ?}{
@@ -914,6 +1004,12 @@ L'adoption des Minimal APIs en .NET 10 LTS apporte trois bénéfices d'ingénier
 \newpage
 
 \section{Action 1.4 : Création du Client Mobile \& Desktop (.NET MAUI)}
+
+\begin{tcolorbox}[colback=indigo!4!white,colframe=indigo!40!white,arc=2mm,boxrule=0.8pt,top=2mm,bottom=2mm,left=3mm,right=3mm]
+    \small\textbf{\color{indigo!90!black}Objectif d'apprentissage} : À l'issue de cette fiche, l'apprenant sera capable d'initialiser un projet client .NET MAUI sous .NET 10 LTS, de comprendre le principe du projet unifié (\textit{Single Project}) et de réaliser un build ciblé sur une plateforme spécifique.
+\end{tcolorbox}
+
+\vspace{0.1cm}
 
 Le troisième composant de notre solution est l'application cliente \textbf{\texttt{FullStackCSharp.Front}}. 
 
@@ -979,7 +1075,7 @@ Grâce au modèle moderne de projet unifié (\textit{Single Project}), une seule
 % Top: MAUI Single Project (y = 3.6)
 \node[boxapp] (app) at (0, 3.6) {
     \textbf{\normalsize Projet Unifié Unique : \texttt{FullStackCSharp.Front}}\\[2pt]
-    \footnotesize Code C\# 12 unique $\bullet$ Vues XAML déclaratives $\bullet$ Injection de dépendances $\bullet$ Panier SQLite local
+    \footnotesize Code C\# moderne unique $\bullet$ Vues XAML déclaratives $\bullet$ Injection de dépendances $\bullet$ Panier SQLite
 };
 
 % Middle: MAUI Abstraction & MVVM Engine (y = 1.7)
@@ -1052,6 +1148,33 @@ La structure d'un projet .NET MAUI unifié s'articule autour de quatre axes maje
 
 \vspace{0.3cm}
 
+\begin{bestpracticebox}{Manipulation Reproductible : Création du Client MAUI}
+\textbf{Répertoire de travail} : Racine du dépôt (\texttt{DEV/FullStackCSharp}).\\[2pt]
+\textbf{Commande CLI} : \texttt{dotnet new maui -n FullStackCSharp.Front -o FullStackCSharp.Front -f net10.0}\\[2pt]
+\textbf{Résultat attendu} : Création du projet unifié avec \texttt{FullStackCSharp.Front.csproj}, \texttt{App.xaml} et \texttt{Resources/}.\\[2pt]
+\textbf{Vérification concrète (Build ciblé rapide)} :\\
+\texttt{dotnet build FullStackCSharp.Front -f net10.0-windows10.0.19041.0} $\longrightarrow$ affiche \textit{« 0 avertissement(s), 0 erreur(s) »} en quelques secondes (évitant la compilation simultanée des 4 OS).
+\end{bestpracticebox}
+
+\vspace{0.2cm}
+
+\subsection*{Erreurs Fréquentes du Débutant}
+
+\begin{itemize}
+    \item \textbf{Lancer un build complet sans ciblage sous Windows} : Compiler l'intégralité des plateformes (Android, iOS, macOS, Windows) prend plusieurs minutes. Spécifier \texttt{-f net10.0-windows10...} accélère considérablement l'itération quotidienne.
+    \item \textbf{Introduire des images PNG/JPG matricielles} : Violer la règle de sobriété vectorielle du projet en important des images lourdes au lieu de SVG adaptables.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{tcolorbox}[colback=emerald!4!white,colframe=emerald!40!white,arc=2mm,boxrule=0.8pt,top=2.5mm,bottom=2.5mm,left=3mm,right=3mm]
+    \small\textbf{\color{emerald!80!black}Exercice de réinvestissement} :
+    Ouvrez \texttt{FullStackCSharp.Front.csproj} et repérez la balise \texttt{<SupportedOSPlatformVersion>}. Notez les versions de plateforme minimale requises pour Android et Windows.\\
+    \textbf{Critère d'auto-évaluation} : Vous devez identifier Android 21.0 (Lollipop minimum) et Windows 10.0.17763.0.
+\end{tcolorbox}
+
+\vspace{0.3cm}
+
 \subsection*{Questions Fréquentes du Débutant}
 
 \faqitem{Pourquoi choisir .NET MAUI plutôt qu'une application web React ou Blazor ?}{
@@ -1077,6 +1200,12 @@ La structure d'un projet .NET MAUI unifié s'articule autour de quatre axes maje
 \newpage
 
 \section{Action 1.5 : Rattachement des Projets à la Solution (dotnet sln add)}
+
+\begin{tcolorbox}[colback=indigo!4!white,colframe=indigo!40!white,arc=2mm,boxrule=0.8pt,top=2mm,bottom=2mm,left=3mm,right=3mm]
+    \small\textbf{\color{indigo!90!black}Objectif d'apprentissage} : À l'issue de cette fiche, l'apprenant sera capable de fédérer des projets disparates au sein d'une solution .NET via la CLI, d'inspecter les entrées de projets dans le fichier \texttt{.sln} et de distinguer formellement le regroupement de solution du câblage de \texttt{<ProjectReference>}.
+\end{tcolorbox}
+
+\vspace{0.1cm}
 
 Après avoir initialisé indépendamment les trois briques du système (\texttt{Shared}, \texttt{Back} et \texttt{Front}), l'étape d'ingénierie consiste à les fédérer officiellement sous l'autorité de la solution racine \textbf{\texttt{FullStackCSharp.sln}}.
 
@@ -1215,6 +1344,32 @@ Lorsque la commande \texttt{dotnet sln add} est exécutée, elle modifie le fich
     \item[\color{secondary}1. Déclaration du Projet (\texttt{Project})] : Définit le type de projet via son GUID de langage (ex : \texttt{\{FAE04EC0-...\}} pour le C\#), le nom logique du composant, son chemin relatif sur le disque, et lui attribue son propre GUID de solution.
     \item[\color{cyanproj!90!black}2. Mappage des Configurations (\texttt{ProjectConfigurationPlatforms})] : Associe chaque projet aux configurations de la solution (\texttt{Debug|Any CPU}, \texttt{Release|Any CPU}). Cela indique à MSBuild s'il doit inclure ou ignorer le projet lors de la compilation de la solution dans un mode particulier.
 \end{description}
+
+\vspace{0.3cm}
+
+\begin{bestpracticebox}{Manipulation Reproductible : Rattachement à la Solution}
+\textbf{Répertoire de travail} : Racine du dépôt (\texttt{DEV/FullStackCSharp}).\\[2pt]
+\textbf{Commande CLI} : \texttt{dotnet sln FullStackCSharp.sln add FullStackCSharp.Shared FullStackCSharp.Back FullStackCSharp.Front}\\[2pt]
+\textbf{Résultat attendu} : Messages de confirmation \textit{« Projet ... ajouté à la solution »}.\\[2pt]
+\textbf{Vérification concrète} : Exécuter \texttt{dotnet sln FullStackCSharp.sln list} $\longrightarrow$ affiche les 3 chemins relatifs vers les fichiers \texttt{.csproj}.
+\end{bestpracticebox}
+
+\vspace{0.2cm}
+
+\subsection*{Erreurs Fréquentes du Débutant}
+
+\begin{itemize}
+    \item \textbf{Croire que \texttt{sln add} relie les projets entre eux} : Le \texttt{.sln} orchestre le build de la solution, mais n'ajoute pas de balise \texttt{<ProjectReference>} (Action 1.7).
+    \item \textbf{Ajouter des projets avec des chemins absolus} : Utiliser des chemins complets avec lettre de lecteur (\texttt{C:\textbackslash...}), ce qui casse le projet dès qu'il est cloné sur une autre machine.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{tcolorbox}[colback=emerald!4!white,colframe=emerald!40!white,arc=2mm,boxrule=0.8pt,top=2.5mm,bottom=2.5mm,left=3mm,right=3mm]
+    \small\textbf{\color{emerald!80!black}Exercice de réinvestissement} :
+    Exécutez \texttt{dotnet sln FullStackCSharp.sln list} dans votre terminal.\\
+    \textbf{Critère d'auto-évaluation} : Vérifiez que la liste renvoie exactement les 3 sous-projets : \texttt{FullStackCSharp.Shared}, \texttt{FullStackCSharp.Back} et \texttt{FullStackCSharp.Front}.
+\end{tcolorbox}
 
 \vspace{0.3cm}
 

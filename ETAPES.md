@@ -61,16 +61,17 @@ Cette phase met en place les fondations indispensables avant toute logique méti
 **Périmètre** : Backend + Frontend + Shared  
 **Concept clé** : *Pourquoi structurer une solution en plusieurs projets ?*
 
-#### Ce qui est construit
+#### Éléments du Jalon 1 (État d'Avancement)
 
-| Élément | Détail Technique |
-| :--- | :--- |
-| **Solution** | `FullStackCSharp.sln` regroupant 3 projets via `dotnet new sln` |
-| **`FullStackCSharp.Shared`** | Bibliothèque de classes (`classlib` .NET 10 LTS) — aucune dépendance, autorité des contrats |
-| **`FullStackCSharp.Back`** | Application web ASP.NET Core (`webapi` .NET 10 LTS) avec template Minimal API |
-| **`FullStackCSharp.Front`** | Application .NET MAUI (`maui` .NET 10 LTS multiplateforme) |
-| **Références inter-projets** | `Back → Shared` et `Front → Shared` via `<ProjectReference>` (Action 1.7) |
-| **Configuration globale** | `Directory.Build.props` à la racine : `<Nullable>enable</Nullable>`, `<ImplicitUsings>enable</ImplicitUsings>`, `<LangVersion>12</LangVersion>` (Action 1.6) |
+| Élément | Détail Technique | Statut Actuel |
+| :--- | :--- | :--- |
+| **Solution** | `FullStackCSharp.sln` regroupant les projets | **Réalisé** (Action 1.1) |
+| **`FullStackCSharp.Shared`** | Bibliothèque de classes (`classlib` .NET 10 LTS) — autorité des contrats | **Réalisé** (Action 1.2) |
+| **`FullStackCSharp.Back`** | Application web ASP.NET Core (`webapi` .NET 10 LTS) Minimal API | **Réalisé** (Action 1.3) |
+| **`FullStackCSharp.Front`** | Application .NET MAUI (`maui` .NET 10 LTS multiplateforme) | **Réalisé** (Action 1.4) |
+| **Rattachement Solution** | `dotnet sln add ...` pour coordonner le build global | **Réalisé** (Action 1.5) |
+| **Configuration globale** | `Directory.Build.props` à la racine : `<Nullable>enable</Nullable>`, `<ImplicitUsings>enable</ImplicitUsings>` | **À faire** (Action 1.6) |
+| **Références inter-projets** | `Back → Shared` et `Front → Shared` via `<ProjectReference>` | **À faire** (Action 1.7) |
 
 #### Pourquoi c'est fondamental
 
@@ -127,7 +128,7 @@ Rien de visible encore — le serveur ne démarre pas à cette étape.
 
 #### Pourquoi c'est fondamental
 
-- Les DTOs sont des **`record`** C# 12 : immuables, égalité structurelle, déconstructibles — exactement ce qu'on attend d'un objet de transport de données.
+- Les DTOs sont des **`record`** en C# moderne : égalité par valeur, immutabilité superficielle via accesseurs `init`, déconstructibles — exactement ce qu'on attend d'un objet de transport de données.
 - **Les DTOs ne sont PAS les entités de la base de données.** C'est une erreur fréquente dans les tutoriels. Les entités `Icecream` (côté Back) contiennent des champs internes (date de création, clés de navigation EF Core) que le client n'a pas besoin de connaître.
 - En définissant les contrats en premier, le Frontend et le Backend peuvent être développés en parallèle dans une équipe réelle.
 
@@ -560,7 +561,7 @@ curl -X POST http://localhost:5000/api/change-password \
 → 200 OK
 ```
 
-**→ À ce stade, l'API Backend est 100% fonctionnelle et testable de manière autonome.**
+**→ À ce stade (à la fin de la Phase 2), l'API Backend devient entièrement opérationnelle et testable de manière autonome.**
 
 ---
 
@@ -1063,7 +1064,7 @@ Pour garantir une assimilation pas-à-pas et un contrôle continu de l'apprentis
 
 1. **Une micro-fiche `.tex` par micro-action** :
    - À chaque micro-action technique réalisée, un fichier LaTeX modulaire dédié est créé dans `Livret/etapes/` sous le format `XX_YY_nom_action.tex` (ex: `01_01_creation_solution.tex`, `01_02_creation_shared.tex`, etc.).
-   - Ce document ciblé (1 à 2 pages A4 maximum) détaille le concept fondamental unique abordé, avec schéma TikZ, tableau comparatif et rubrique systématique de FAQ débutant.
+   - Ce document ciblé (1 à 2 pages A4) détaille le concept fondamental unique abordé, avec schéma vectoriel TikZ percutant, texte continu fluide et aéré (tableaux strictement réservés aux synthèses comparatives utiles), objectifs observables, erreurs fréquentes et exercice pratique.
 2. **Cycle de lecture et validation humaine immédiate** :
    - L'utilisateur lit et analyse la micro-fiche (lecture de 2 minutes).
    - En cas de besoin d'éclaircissement ou d'approfondissement, la micro-fiche est enrichie.
@@ -1071,4 +1072,4 @@ Pour garantir une assimilation pas-à-pas et un contrôle continu de l'apprentis
 3. **Compilation automatisée via script Python (`Livret/compiler_livret.py`)** :
    - Un script Python assemble au fur et à mesure l'ensemble des micro-fiches validées pour générer le livret complet `Livret/LIVRET.tex` et son rendu compilé `Livret/LIVRET.pdf`.
 
-> **Rappel** : Les micro-fiches ne sont jamais une récitation de code ou de syntaxe. Elles se concentrent sur les **concepts d'ingénierie fondamentaux**, illustrés par des **schémas de flux TikZ**, des **diagrammes d'architecture**, des **tableaux comparatifs** et des **réponses complètes aux questions d'un débutant en C# Fullstack**.
+> **Rappel** : Les micro-fiches ne sont jamais une récitation passive de code. Elles se concentrent sur les **concepts d'ingénierie fondamentaux**, illustrés par des **schémas de flux TikZ**, une **mise en page aérée et non rigide**, des **vérifications concrètes**, des **erreurs fréquentes signalées** et un **exercice de réinvestissement** pour chaque étape.

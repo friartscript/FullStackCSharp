@@ -6,11 +6,11 @@ Ce document détaille l'architecture logicielle globale, les patrons de concepti
 
 ## 1. Vue d'Ensemble du Système
 
-Le projet est conçu selon une architecture découplée Fullstack 100% C# .NET 8 :
+Le projet est conçu selon une architecture découplée Fullstack 100% C# .NET 10 LTS :
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│             Client : .NET MAUI (.NET 8)               │
+│             Client : .NET MAUI (.NET 10 LTS)           │
 │                                                        │
 │  [ Vues XAML (100% SVG) ] ── (Binding) ── [ ViewModels ]│
 │                                                │       │
@@ -19,7 +19,7 @@ Le projet est conçu selon une architecture découplée Fullstack 100% C# .NET 8
                                                  │ JSON / REST
                                                  ▼
 ┌────────────────────────────────────────────────────────┐
-│       Serveur : ASP.NET Core Minimal API (.NET 8)       │
+│     Serveur : ASP.NET Core Minimal API (.NET 10 LTS)    │
 │                                                        │
 │   [ Modules d'Endpoints ] ──► [ Services Métier ]      │
 │            │                         │                 │
@@ -52,8 +52,8 @@ Le projet est conçu selon une architecture découplée Fullstack 100% C# .NET 8
 
 | Projet / Dossier | Rôle & Responsabilité |
 | :--- | :--- |
-| **`FullStackCSharp.Front`** | Application cliente multiplateforme développée avec **.NET MAUI** (.NET 8). Présentation visuelle, composants XAML, gestion d'état MVVM avec `CommunityToolkit.Mvvm`. |
-| **`FullStackCSharp.Back`** | API Web légère et performante développée avec **ASP.NET Core Minimal APIs** (.NET 8). Validation, logique d'affaires, persistance SQLite via EF Core. |
+| **`FullStackCSharp.Front`** | Application cliente multiplateforme développée avec **.NET MAUI** (.NET 10 LTS). Présentation visuelle, composants XAML, gestion d'état MVVM avec `CommunityToolkit.Mvvm`. |
+| **`FullStackCSharp.Back`** | API Web légère et performante développée avec **ASP.NET Core Minimal APIs** (.NET 10 LTS). Validation, logique d'affaires, persistance SQLite via EF Core. |
 | **`FullStackCSharp.Shared`** | Bibliothèque de classes contenant les DTOs (*Data Transfer Objects*), interfaces de contrats et énumérations communes au Front et au Back. |
 | **`Livret/`** | Supports d'apprentissage modulaires rédigés par étape (`Livret/etapes/`) et assemblés via un script Python vers l'ouvrage de référence consolidé (`LIVRET.tex`). |
 

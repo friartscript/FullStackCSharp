@@ -2,6 +2,12 @@
 
 \section{Action 1.1 : Création de la Solution \& Rôle du Fichier .sln}
 
+\begin{tcolorbox}[colback=indigo!4!white,colframe=indigo!40!white,arc=2mm,boxrule=0.8pt,top=2mm,bottom=2mm,left=3mm,right=3mm]
+    \small\textbf{\color{indigo!90!black}Objectif d'apprentissage} : À l'issue de cette fiche, l'apprenant sera capable d'initialiser une solution .NET standard via la CLI, d'expliquer le rôle d'orchestration d'un fichier \texttt{.sln} et de distinguer formellement une solution, un projet et un package NuGet.
+\end{tcolorbox}
+
+\vspace{0.1cm}
+
 Dans l'écosystème .NET, une \textbf{Solution} n'est ni un binaire exécutable, ni une bibliothèque de code. Il s'agit d'un \textbf{conteneur d'orchestration} textuel qui référence et coordonne plusieurs projets indépendants (\texttt{.csproj}).
 
 Le fichier \texttt{.sln} remplit trois fonctions fondamentales pour les outils d'ingénierie (CLI \texttt{dotnet}, Visual Studio, Rider, serveurs d'intégration continue) :
@@ -146,15 +152,29 @@ Pour appréhender sereinement l'outillage .NET, il convient de distinguer claire
 
 \vspace{0.2cm}
 
-\begin{bestpracticebox}{Format .sln vs .slnx en .NET 10 LTS}
-À partir du SDK .NET 9/10, la commande \texttt{dotnet new sln} peut générer un nouveau format expérimental au format XML (\texttt{.slnx}). 
-
-Cependant, dans un contexte d'entreprise ciblant la stabilité maximale sous \textbf{.NET 10 LTS}, il est recommandé de forcer le format standard éprouvé via le paramètre :
-\begin{center}
-\texttt{dotnet new sln -n FullStackCSharp --format sln}
-\end{center}
-Cette rigueur garantit une interopérabilité sans faille avec l'ensemble des environnements de développement (Visual Studio 2022/2026, JetBrains Rider, VS Code et les agents d'intégration continue).
+\begin{bestpracticebox}{Manipulation Reproductible : Création de la Solution}
+\textbf{Répertoire de travail} : Racine du dépôt (\texttt{DEV/FullStackCSharp}).\\[2pt]
+\textbf{Commande CLI} : \texttt{dotnet new sln -n FullStackCSharp --format sln}\\[2pt]
+\textbf{Résultat attendu} : Création du fichier \texttt{FullStackCSharp.sln}.\\[2pt]
+\textbf{Vérification concrète} : Exécuter \texttt{dotnet sln FullStackCSharp.sln list} $\longrightarrow$ retourne \textit{« Aucun projet trouvé dans la solution »} (comportement normal avant rattachement).
 \end{bestpracticebox}
+
+\vspace{0.2cm}
+
+\subsection*{Erreurs Fréquentes du Débutant}
+
+\begin{itemize}
+    \item \textbf{Tenter d'exécuter la solution directement} : Taper \texttt{dotnet run} à la racine alors que la solution ne contient que des descripteurs textuels. La commande échoue car un fichier \texttt{.sln} n'est pas un exécutable.
+    \item \textbf{Créer la solution dans un sous-répertoire} : Exécuter la commande dans un sous-dossier de projet au lieu de la racine, brisant ainsi les chemins relatifs d'orchestration.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{tcolorbox}[colback=emerald!4!white,colframe=emerald!40!white,arc=2mm,boxrule=0.8pt,top=2.5mm,bottom=2.5mm,left=3mm,right=3mm]
+    \small\textbf{\color{emerald!80!black}Exercice de réinvestissement} :
+    Ouvrez le fichier \texttt{FullStackCSharp.sln} dans un éditeur de texte. Identifiez la ligne déclarant le format de fichier et le format de solution.\\
+    \textbf{Critère d'auto-évaluation} : Vous devez repérer la mention \texttt{Microsoft Visual Studio Solution File, Format Version 12.00}.
+\end{tcolorbox}
 
 \vspace{0.3cm}
 

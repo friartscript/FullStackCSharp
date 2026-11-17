@@ -1,9 +1,15 @@
 \chapter*{Introduction Générale : Vision \& Architecture du Projet}
 \addcontentsline{toc}{chapter}{Introduction Générale : Vision \& Architecture du Projet}
 
+\begin{tcolorbox}[colback=indigo!4!white,colframe=indigo!40!white,arc=2mm,boxrule=0.8pt,top=2mm,bottom=2mm,left=3mm,right=3mm]
+    \small\textbf{\color{indigo!90!black}Objectif d'apprentissage} : À l'issue de cette introduction, l'apprenant sera capable de schématiser l'architecture 3 tiers d'un système Fullstack C\# moderne, d'identifier le rôle des 4 piliers du projet et de formuler les principes directeurs (Contract-First, zéro simulation, fichiers $< 300$ lignes).
+\end{tcolorbox}
+
+\vspace{0.1cm}
+
 Bienvenue dans le guide de conception et d'architecture du projet \textbf{\texttt{FullStackCSharp}}, conçu et développé par \textbf{Kevin Friart}.
 
-L'objectif de cet ouvrage et de cette réalisation logicielle est de construire un système Fullstack professionnel complet, robuste et \textbf{100\% fonctionnel}, en exploitant la puissance du langage \textbf{C\# 12} et de la plateforme unifiée \textbf{.NET 8 LTS} de bout en bout : du terminal serveur jusqu'à l'écran mobile de l'utilisateur.
+L'objectif de cet ouvrage et de cette réalisation logicielle est d'aboutir à un système Fullstack professionnel complet, robuste et entièrement fonctionnel, en exploitant la puissance de \textbf{C\# moderne} et de la plateforme unifiée \textbf{.NET 10 LTS} de bout en bout : du terminal serveur jusqu'à l'écran mobile de l'utilisateur. À ce stade initial (Jalon 1), les fondations techniques sont posées, et chaque brique fonctionnelle sera construite et validée étape par étape.
 
 Le cas d'usage concret servant de fil rouge applicatif est une solution complète de commande en ligne pour une boutique artisanale de glaces (\textit{Gelato Artisan}) :
 \begin{itemize}
@@ -135,8 +141,8 @@ Le cas d'usage concret servant de fil rouge applicatif est une solution complèt
 
 % Bottom: Native Observability Console (y = -1.9)
 \node[boxconsole] (console) at (0, -1.9) {
-    \color{white}\textbf{\normalsize 4. Console d'Observabilité Native (Serveur Kestrel)}\\[1pt]
-    \footnotesize\color{emerald!30!white}\texttt{[HTTP] GET /catalog/icecreams} $\bullet$ \color{cyanproj!30!white}\texttt{[SQL] SELECT * FROM Products} $\bullet$ \color{accent!30!white}\texttt{[AUTH] JWT vérifié}
+    \color{white}\textbf{\normalsize 4. Console d'Observabilité Native (Aperçu de l'objectif final)}\\[1pt]
+    \footnotesize\color{emerald!30!white}\texttt{[HTTP] GET /catalog/icecreams} $\bullet$ \color{cyanproj!30!white}\texttt{[SQL] SELECT * FROM Products (Jalon 4)} $\bullet$ \color{accent!30!white}\texttt{[AUTH] JWT validé (Jalon 6)}
 };
 
 % Clean straight vertical arrow from back.south to console.north
