@@ -1,0 +1,113 @@
+\section{Bilan du Jalon 1 : Socle Technique Prêt pour les Contrats Métier}
+
+\begin{tcolorbox}[colback=emerald!4!white,colframe=emerald!40!white,arc=2mm,boxrule=0.8pt,top=2mm,bottom=2mm,left=3mm,right=3mm]
+    \small\textbf{\color{emerald!80!black}Synthèse d'Étape} : À l'issue du Jalon 1, l'ensemble des fondations d'ingénierie logicielle est posé. La solution est prête à accueillir les contrats de domaine du Jalon 2.
+\end{tcolorbox}
+
+\vspace{0.1cm}
+
+Dans tout apprentissage rigoureux d'un système Fullstack, il est capital pour l'apprenant de faire un arrêt sur image pour mesurer avec exactitude **ce qui est d'ores et déjà opérationnel** et **ce qui relève des jalons ultérieurs**.
+
+\vspace{0.2cm}
+
+\subsection*{État Actuel du Système vs Objectifs Cibles}
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l p{5.5cm} X}
+\toprule
+\textbf{Composant} & \textbf{État Réalisé (Jalon 1)} & \textbf{Cible Planifiée (Jalons 2 à 15)} \\
+\midrule
+\textbf{\texttt{FullStackCSharp.Shared}} & Bibliothèque \texttt{net10.0} compilable & Hébergera tous les DTOs \texttt{record} (Jalon 2) \\
+\textbf{\texttt{FullStackCSharp.Back}} & Kestrel autonome + Sonde \texttt{/health} & Pipeline HTTP, SQLite, EF Core 10, JWT (Jalons 3--7) \\
+\textbf{\texttt{FullStackCSharp.Front}} & Application .NET MAUI compilable & MVVM, Shell, Refit, Panier local (Jalons 8--15) \\
+\textbf{Configuration} & \texttt{Directory.Build.props} à la racine & Règle universelle de nullabilité active \\
+\textbf{Liaisons} & Références \texttt{ProjectReference} câblées & Typage fort de bout en bout sur le réseau \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\vspace{0.2cm}
+
+\begin{schemabox}{Vue Consolidée de la Solution au Terme du Jalon 1}
+\begin{center}
+\begin{tikzpicture}[
+    boxsln/.style={
+        rectangle, 
+        draw=accent!90!black, 
+        fill=accent!6!white, 
+        rounded corners=2.5mm, 
+        minimum width=15.2cm, 
+        minimum height=1.1cm, 
+        inner ysep=2mm,
+        align=center, 
+        line width=1pt
+    },
+    boxproj/.style={
+        rectangle, 
+        draw=#1!80!black, 
+        fill=#1!6!white, 
+        rounded corners=2mm, 
+        minimum width=4.7cm, 
+        minimum height=2.0cm, 
+        inner ysep=2.5mm,
+        align=center, 
+        line width=0.85pt
+    },
+    checkarrow/.style={
+        -{Stealth[length=2.5mm]}, 
+        thick, 
+        color=emerald!80!black
+    }
+]
+
+% Master Solution
+\node[boxsln] (sln) at (0, 3.4) {
+    \textbf{\large FullStackCSharp.sln} \textit{(Orchestrateur MSBuild unifié)}\\[1pt]
+    \footnotesize Configuration globale : \texttt{Directory.Build.props} $\bullet$ Zéro avertissement $\bullet$ .NET 10 LTS
+};
+
+% 3 projects
+\node[boxproj=cyanproj] (shared) at (-5.2, 0.8) {
+    \textbf{\normalsize 1. Shared}\\[2pt]
+    {\color{cyanproj}\rule{3.8cm}{0.4pt}}\\[2pt]
+    \scriptsize Contrats d'échange\\
+    \tiny Type : \texttt{classlib}\\
+    \tiny \color{emerald!80!black}\textbf{\checkmark~Prêt pour les DTOs}
+};
+
+\node[boxproj=secondary] (back) at (0, 0.8) {
+    \textbf{\normalsize 2. Back}\\[2pt]
+    {\color{secondary}\rule{3.8cm}{0.4pt}}\\[2pt]
+    \scriptsize Serveur HTTP Kestrel\\
+    \tiny Route : \texttt{GET /health}\\
+    \tiny \color{emerald!80!black}\textbf{\checkmark~Port 5227 validé}
+};
+
+\node[boxproj=indigo] (front) at (5.2, 0.8) {
+    \textbf{\normalsize 3. Front}\\[2pt]
+    {\color{indigo}\rule{3.8cm}{0.4pt}}\\[2pt]
+    \scriptsize Client .NET MAUI\\
+    \tiny Accueil : \textit{Gelato Artisan}\\
+    \tiny \color{emerald!80!black}\textbf{\checkmark~Moteur XAML validé}
+};
+
+\draw[checkarrow] (-5.2, 2.8) -- (shared.north) node[midway, left=2pt, font=\tiny\bfseries\color{emerald!80!black}] {Compilé};
+\draw[checkarrow] (0, 2.8) -- (back.north) node[midway, right=2pt, font=\tiny\bfseries\color{emerald!80!black}] {Compilé};
+\draw[checkarrow] (5.2, 2.8) -- (front.north) node[midway, right=2pt, font=\tiny\bfseries\color{emerald!80!black}] {Compilé};
+
+\end{tikzpicture}
+\end{center}
+\end{schemabox}
+
+\vspace{0.2cm}
+
+\begin{bestpracticebox}{Check-list de Validation Finale du Jalon 1}
+Avant d'aborder le Jalon 2, l'apprenant doit pouvoir valider les 3 points suivants :
+\begin{enumerate}
+    \item La commande \texttt{dotnet build FullStackCSharp.sln} s'exécute avec succès en retournant \textbf{0 avertissement et 0 erreur}.
+    \item L'exécution de \texttt{dotnet run --project FullStackCSharp.Back} ouvre le serveur sur le port \texttt{5227} et l'appel de \texttt{/health} retourne le statut JSON \texttt{"Healthy"}.
+    \item Les fichiers \texttt{.csproj} du Back et du Front intègrent chacun leur référence vers \texttt{Shared}, préfigurant l'autorité centrale des types partagés.
+\end{enumerate}
+\end{bestpracticebox}

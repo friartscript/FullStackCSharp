@@ -207,7 +207,7 @@ Pour garantir un niveau d'exigence digne des standards de l'industrie, le projet
 
 \faqitem{Qu'est-ce que le serveur Kestrel et pourquoi est-il auto-hébergé ?}{
     \textbf{Kestrel} est le serveur web HTTP asynchrone haute performance développé par Microsoft et intégré directement au cœur d'ASP.NET Core.
-    Auparavant, une application web devait obligatoirement être déployée dans un serveur tiers lourd (IIS sous Windows, Apache sous Linux). Avec Kestrel, l'application est \textbf{auto-hébergée} (\textit{self-hosted}) : l'exécutable \texttt{.exe} intègre son propre serveur web. Il écoute les ports TCP (5000/7000), traite les requêtes HTTP et diffuse sa télémétrie ANSI sur la console standard (\texttt{stdout}), sans aucun logiciel tiers à installer.
+    Auparavant, une application web devait obligatoirement être déployée dans un serveur tiers lourd (IIS sous Windows, Apache sous Linux). Avec Kestrel, l'application est \textbf{auto-hébergée} (\textit{self-hosted}) : l'exécutable \texttt{.exe} intègre son propre serveur web. Il écoute les ports TCP (notamment le port \texttt{5227} configuré pour notre backend), traite les requêtes HTTP et diffuse sa télémétrie ANSI sur la console standard (\texttt{stdout}), sans aucun logiciel tiers à installer.
 }
 
 \faqitem{Quelle est la différence fondamentale entre SQL et SQLite ?}{

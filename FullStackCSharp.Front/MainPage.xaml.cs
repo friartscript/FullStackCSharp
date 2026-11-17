@@ -1,4 +1,4 @@
-﻿namespace FullStackCSharp.Front;
+namespace FullStackCSharp.Front;
 
 public partial class MainPage : ContentPage
 {
@@ -14,9 +14,9 @@ public partial class MainPage : ContentPage
 		count++;
 
 		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
+		CounterBtn.Text = $"Interaction validée : {count} clic";
 		else
-			CounterBtn.Text = $"Clicked {count} times";
+		CounterBtn.Text = $"Interaction validée : {count} clics";
 
 		SemanticScreenReader.Announce(CounterBtn.Text);
 	}

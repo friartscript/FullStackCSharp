@@ -75,7 +75,19 @@ Le fichier compilé est généré à l'emplacement : `Livret/LIVRET.pdf`.
 
 ---
 
-## 4. Règles d'Or d'Ingénierie & Conventions
+## 4. Parcours d'Apprentissage & Lecture Conseillé
+
+Pour appréhender le système avec un maximum de clarté, nous recommandons le parcours suivant au débutant :
+
+1. **[`README.md`](file:///E:/Documents%20perso/0000Site%20internet/DEV/FullStackCSharp/README.md)** : Vue d'ensemble, prérequis et prise en main de l'environnement.
+2. **[`ARCHITECTURE.md`](file:///E:/Documents%20perso/0000Site%20internet/DEV/FullStackCSharp/ARCHITECTURE.md)** : Comprendre la topologie 3 tiers et les flux d'échange.
+3. **[`GLOSSAIRE.md`](file:///E:/Documents%20perso/0000Site%20internet/DEV/FullStackCSharp/GLOSSAIRE.md)** : Dictionnaire de tous les termes techniques (DTO, JWT, MVVM, Kestrel...).
+4. **`Livret/LIVRET.pdf`** : Le manuel pas-à-pas complet (assemblé via `python Livret/compiler_livret.py`).
+5. **[`ETAPES.md`](file:///E:/Documents%20perso/0000Site%20internet/DEV/FullStackCSharp/ETAPES.md)** : Feuille de route d'ingénierie détaillée des 15 jalons.
+
+---
+
+## 5. Règles d'Or d'Ingénierie & Conventions
 
 - **Plafond strict $< 300$ lignes** : Aucun fichier source ne dépasse 300 lignes (zone cible : 80 à 250 lignes).
 - **Zéro commentaire dans le code C#** : Le code est propre, auto-porteur et documenté par ses abstractions. Toute la pédagogie est déportée dans le livret LaTeX.
@@ -84,7 +96,7 @@ Le fichier compilé est généré à l'emplacement : `Livret/LIVRET.pdf`.
 
 ---
 
-## 5. Suivi d'Avancement du Projet
+## 6. Suivi d'Avancement du Projet
 
 - **Phase 1 : Socle Technique**
   - [x] Action 1.1 : Création de la solution `FullStackCSharp.sln`
@@ -92,9 +104,9 @@ Le fichier compilé est généré à l'emplacement : `Livret/LIVRET.pdf`.
   - [x] Action 1.3 : Création de l'API `FullStackCSharp.Back`
   - [x] Action 1.4 : Création du client .NET MAUI `FullStackCSharp.Front`
   - [x] Action 1.5 : Rattachement des 3 projets à la solution
-  - [ ] Action 1.6 : Configuration globale Roslyn (`Directory.Build.props`)
-  - [ ] Action 1.7 : Câblage des références inter-projets (`<ProjectReference>`)
-  - [ ] Action 1.8 : Test de compilation de contrôle
+  - [x] Action 1.6 : Configuration globale Roslyn (`Directory.Build.props`)
+  - [x] Action 1.7 : Câblage des références inter-projets (`<ProjectReference>`)
+  - [x] Action 1.8 : Test de compilation et validation globale
 - **Phase 2 : API Backend Complète (Jalons 4 à 7)**
 - **Phase 3 : Client Mobile .NET MAUI (Jalons 8 à 11)**
 - **Phase 4 : Fonctionnalités Transversales (Jalons 12 à 15)**

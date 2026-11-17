@@ -1,0 +1,148 @@
+\section{Action 1.6 : Configuration Globale Roslyn (Directory.Build.props)}
+
+\begin{tcolorbox}[colback=indigo!4!white,colframe=indigo!40!white,arc=2mm,boxrule=0.8pt,top=2mm,bottom=2mm,left=3mm,right=3mm]
+    \small\textbf{\color{indigo!90!black}Objectif d'apprentissage} : À l'issue de cette fiche, l'apprenant sera capable d'expliquer le mécanisme d'héritage en cascade de MSBuild via \texttt{Directory.Build.props}, de centraliser la configuration du compilateur C\# pour tous les projets de la solution et de vérifier l'application des règles sans duplication dans les fichiers \texttt{.csproj}.
+\end{tcolorbox}
+
+\vspace{0.1cm}
+
+Dans une solution multi-projets, dupliquer manuellement les mêmes balises de configuration (comme l'activation des types références nullables ou les directives d'import implicites) dans chaque fichier \texttt{.csproj} constitue une violation directe du principe \textbf{DRY} (\textit{Don't Repeat Yourself}).
+
+MSBuild propose un mécanisme de factorisation élégant et automatique : le fichier racine \textbf{\texttt{Directory.Build.props}}.
+
+Lorsque le moteur de compilation analyse n'importe quel projet d'un sous-dossier, il remonte l'arborescence du disque jusqu'à trouver ce fichier et en importe automatiquement les propriétés \textbf{avant} d'évaluer le projet lui-même.
+
+\vspace{0.3cm}
+
+\begin{schemabox}{Héritage en Cascade de la Configuration Globale MSBuild}
+\begin{center}
+\begin{tikzpicture}[
+    boxroot/.style={
+        rectangle, 
+        draw=primary, 
+        fill=primary!8!white, 
+        rounded corners=3mm, 
+        minimum width=15.2cm, 
+        minimum height=1.3cm, 
+        inner ysep=2.5mm,
+        align=center, 
+        line width=1.1pt
+    },
+    boxchild/.style={
+        rectangle, 
+        draw=#1!80!black, 
+        fill=#1!6!white, 
+        rounded corners=2mm, 
+        minimum width=4.6cm, 
+        minimum height=2.0cm, 
+        inner ysep=3mm,
+        align=center, 
+        line width=0.85pt
+    },
+    inheritarrow/.style={
+        -{Stealth[length=2.8mm]}, 
+        thick, 
+        color=primary!80!black
+    }
+]
+
+% Root Hub: Directory.Build.props (y = 3.6)
+\node[boxroot] (props) at (0, 3.6) {
+    \textbf{\large Racine de la Solution : \texttt{Directory.Build.props}}\\[2pt]
+    \small\color{primary!90!black}\texttt{<Nullable>enable</Nullable>} $\bullet$ \texttt{<ImplicitUsings>enable</ImplicitUsings>} $\bullet$ Appliqué universellement
+};
+
+% Child Projects (y = 1.0)
+\node[boxchild=cyanproj] (shared) at (-5.2, 1.0) {
+    \textbf{\normalsize FullStackCSharp.Shared}\\[2pt]
+    {\color{cyanproj}\rule{3.8cm}{0.4pt}}\\[2pt]
+    \scriptsize Propriétés héritées automatiquement\\
+    \tiny Nullable : Activé $\bullet$ Usings : Implicites\\
+    \tiny \textbf{Fichier .csproj allégé}
+};
+
+\node[boxchild=secondary] (back) at (0, 1.0) {
+    \textbf{\normalsize FullStackCSharp.Back}\\[2pt]
+    {\color{secondary}\rule{3.8cm}{0.4pt}}\\[2pt]
+    \scriptsize Propriétés héritées automatiquement\\
+    \tiny Nullable : Activé $\bullet$ Usings : Implicites\\
+    \tiny \textbf{Zéro duplication de balises}
+};
+
+\node[boxchild=indigo] (front) at (5.2, 1.0) {
+    \textbf{\normalsize FullStackCSharp.Front}\\[2pt]
+    {\color{indigo}\rule{3.8cm}{0.4pt}}\\[2pt]
+    \scriptsize Propriétés héritées automatiquement\\
+    \tiny Nullable : Activé $\bullet$ Usings : Implicites\\
+    \tiny \textbf{Cohérence garantie à 100\%}
+};
+
+% Inhertance arrows
+\draw[inheritarrow] (-5.2, 2.95) -- (shared.north)
+    node[midway, left=4pt, font=\tiny\bfseries\color{primary}] {Héritage cascade};
+\draw[inheritarrow] (0, 2.95) -- (back.north)
+    node[midway, right=4pt, font=\tiny\bfseries\color{primary}] {Héritage cascade};
+\draw[inheritarrow] (5.2, 2.95) -- (front.north)
+    node[midway, right=4pt, font=\tiny\bfseries\color{primary}] {Héritage cascade};
+
+\end{tikzpicture}
+\end{center}
+\end{schemabox}
+
+\vspace{0.2cm}
+
+\begin{bestpracticebox}{Propriétés Clés Centralisées pour un Code Propre}
+\begin{itemize}
+    \item \textbf{\texttt{<Nullable>enable</Nullable>}} : Active le vérificateur de nullabilité de C\# à la compilation. Tout déréférencement potentiellement nul génère un avertissement de compilation, éradiquant les redoutées \texttt{NullReferenceException} dès la conception.
+    \item \textbf{\texttt{<ImplicitUsings>enable</ImplicitUsings>}} : Active l'inclusion automatique des espaces de noms fondamentaux (\texttt{System}, \texttt{System.Collections.Generic}, \texttt{System.Threading.Tasks}) selon le type de SDK, allégeant le haut de chaque fichier C\#.
+\end{itemize}
+\end{bestpracticebox}
+
+\newpage
+
+\subsection*{Manipulation Reproductible : Création du Fichier Global}
+
+\begin{bestpracticebox}{Création et Allégement des Projets}
+\textbf{Répertoire de travail} : Racine du dépôt (\texttt{DEV/FullStackCSharp}).\\[2pt]
+\textbf{Action 1} : Créer le fichier \texttt{Directory.Build.props} à la racine avec le contenu :
+\begin{verbatim}
+<Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+</Project>
+\end{verbatim}
+\textbf{Action 2} : Supprimer les balises \texttt{<Nullable>} et \texttt{<ImplicitUsings>} des trois fichiers \texttt{.csproj}.\\[2pt]
+\textbf{Vérification concrète} : Lancer la compilation de la solution :\\
+\texttt{dotnet build FullStackCSharp.sln} $\longrightarrow$ Le compilateur applique toujours la nullabilité et compile avec 0 avertissement.
+\end{bestpracticebox}
+
+\vspace{0.2cm}
+
+\subsection*{Erreurs Fréquentes du Débutant}
+
+\begin{itemize}
+    \item \textbf{Placer le fichier dans un sous-dossier de projet} : Si \texttt{Directory.Build.props} est placé dans \texttt{FullStackCSharp.Back/}, seuls les projets de ce sous-dossier en bénéficieront ; il doit résider à la racine de la solution.
+    \item \textbf{Redéfinir une valeur contradictoire dans un .csproj} : Les propriétés définies localement dans un \texttt{.csproj} écrasent celles de \texttt{Directory.Build.props}. Il faut veiller à supprimer les balises redondantes pour conserver une autorité unique.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{tcolorbox}[colback=emerald!4!white,colframe=emerald!40!white,arc=2mm,boxrule=0.8pt,top=2.5mm,bottom=2.5mm,left=3mm,right=3mm]
+    \small\textbf{\color{emerald!80!black}Exercice de réinvestissement} :
+    Ouvrez le fichier \texttt{FullStackCSharp.Shared/FullStackCSharp.Shared.csproj}. Vérifiez qu'il ne contient plus de balises \texttt{<Nullable>} ni \texttt{<ImplicitUsings>}. Lancez ensuite \texttt{dotnet build FullStackCSharp.Shared}.\\
+    \textbf{Critère d'auto-évaluation} : Le build doit réussir avec 0 avertissement et 0 erreur.
+\end{tcolorbox}
+
+\vspace{0.3cm}
+
+\subsection*{Questions Fréquentes du Débutant}
+
+\faqitem{Pourquoi utiliser \texttt{Directory.Build.props} plutôt que de répéter les balises ?}{
+    Dans une solution professionnelle appelée à grandir (ajout de projets de tests unitaires, d'outils de benchmark, de microservices), maintenir la cohérence devient complexe. Si vous décidez d'activer une nouvelle règle de compilation (ex : traiter les avertissements comme des erreurs avec \texttt{<TreatWarningsAsErrors>true</TreatWarningsAsErrors>}), vous la modifiez en une seule ligne pour toute l'équipe.
+}
+
+\faqitem{Quelle est la différence entre \texttt{Directory.Build.props} et \texttt{Directory.Build.targets} ?}{
+    Dans MSBuild, les fichiers \texttt{.props} sont importés au \textbf{tout début} du processus de build (avant les propriétés des projets), permettant de définir des valeurs par défaut. Les fichiers \texttt{.targets} sont importés à la \textbf{toute fin} (après l'évaluation des projets), ce qui permet de surcharger des cibles de compilation complexes ou d'ajouter des tâches post-build.
+}

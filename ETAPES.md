@@ -70,8 +70,8 @@ Cette phase met en place les fondations indispensables avant toute logique méti
 | **`FullStackCSharp.Back`** | Application web ASP.NET Core (`webapi` .NET 10 LTS) Minimal API | **Réalisé** (Action 1.3) |
 | **`FullStackCSharp.Front`** | Application .NET MAUI (`maui` .NET 10 LTS multiplateforme) | **Réalisé** (Action 1.4) |
 | **Rattachement Solution** | `dotnet sln add ...` pour coordonner le build global | **Réalisé** (Action 1.5) |
-| **Configuration globale** | `Directory.Build.props` à la racine : `<Nullable>enable</Nullable>`, `<ImplicitUsings>enable</ImplicitUsings>` | **À faire** (Action 1.6) |
-| **Références inter-projets** | `Back → Shared` et `Front → Shared` via `<ProjectReference>` | **À faire** (Action 1.7) |
+| **Configuration globale** | `Directory.Build.props` à la racine : `<Nullable>enable</Nullable>`, `<ImplicitUsings>enable</ImplicitUsings>` | **Réalisé** (Action 1.6) |
+| **Références inter-projets** | `Back → Shared` et `Front → Shared` via `<ProjectReference>` | **Réalisé** (Action 1.7) |
 
 #### Pourquoi c'est fondamental
 
@@ -87,7 +87,7 @@ Le découpage en 3 projets applique le **principe de séparation des responsabil
 - **Action 1.3** : Création du projet API backend `FullStackCSharp.Back` (`dotnet new webapi -f net10.0`).
 - **Action 1.4** : Création du projet client mobile `FullStackCSharp.Front` (`dotnet new maui -f net10.0`).
 - **Action 1.5** : Rattachement des 3 projets à la solution (`dotnet sln add ...`).
-- **Action 1.6** : Configuration globale du compilateur via `Directory.Build.props` (C# 12, Nullable activé, Usings implicites).
+- **Action 1.6** : Configuration globale du compilateur via `Directory.Build.props` (Nullable activé, Usings implicites centralisés sous .NET 10 LTS).
 - **Action 1.7** : Câblage des références de dépendances inter-projets (`Back → Shared`, `Front → Shared`).
 - **Action 1.8** : Test de compilation réelle de contrôle (`dotnet build FullStackCSharp.sln`).
 - **Action 1.9** : Consolidation et revue du livret pédagogique du Jalon 1.
@@ -361,10 +361,10 @@ app.MapHealthEndpoints();
 #### Vérification
 
 ```bash
-curl http://localhost:5000/health                  →  {"status":"healthy"}
-curl http://localhost:5000/api/icecreams            →  JSON array de 18 glaces
-curl http://localhost:5000/api/icecreams/1          →  JSON détail avec options
-curl http://localhost:5000/api/icecreams/999        →  404 Not Found
+curl http://localhost:5227/health                  →  {"status":"healthy"}
+curl http://localhost:5227/api/icecreams            →  JSON array de 18 glaces
+curl http://localhost:5227/api/icecreams/1          →  JSON détail avec options
+curl http://localhost:5227/api/icecreams/999        →  404 Not Found
 ```
 
 ---
@@ -450,19 +450,19 @@ curl http://localhost:5000/api/icecreams/999        →  404 Not Found
 
 ```bash
 # Inscription
-curl -X POST http://localhost:5000/api/signup \
+curl -X POST http://localhost:5227/api/signup \
   -H "Content-Type: application/json" \
   -d '{"name":"Alice","email":"alice@test.com","address":"12 rue des Lilas","password":"Test123"}'
 → {"token":"eyJhbG...","name":"Alice","email":"alice@test.com"}
 
 # Connexion
-curl -X POST http://localhost:5000/api/signin \
+curl -X POST http://localhost:5227/api/signin \
   -H "Content-Type: application/json" \
   -d '{"email":"alice@test.com","password":"Test123"}'
 → {"token":"eyJhbG...","name":"Alice","email":"alice@test.com"}
 
 # Accès protégé SANS token
-curl http://localhost:5000/api/orders/my-orders
+curl http://localhost:5227/api/orders/my-orders
 → 401 Unauthorized
 ```
 
@@ -542,19 +542,19 @@ curl http://localhost:5000/api/orders/my-orders
 
 ```bash
 # Passage de commande (avec token JWT obtenu au Jalon 6)
-curl -X POST http://localhost:5000/api/orders \
+curl -X POST http://localhost:5227/api/orders \
   -H "Authorization: Bearer eyJhbG..." \
   -H "Content-Type: application/json" \
   -d '{"items":[{"icecreamId":1,"name":"Vanille","unitPrice":2.99,"quantity":2,"options":["Choco Sauce"]}],"totalAmount":7.48}'
 → 201 Created
 
 # Historique
-curl http://localhost:5000/api/orders/my-orders \
+curl http://localhost:5227/api/orders/my-orders \
   -H "Authorization: Bearer eyJhbG..."
 → [{"id":1,"orderedAt":"2026-11-11T...","totalAmount":7.48,"itemCount":1}]
 
 # Changement de mot de passe
-curl -X POST http://localhost:5000/api/change-password \
+curl -X POST http://localhost:5227/api/change-password \
   -H "Authorization: Bearer eyJhbG..." \
   -H "Content-Type: application/json" \
   -d '{"oldPassword":"Test123","newPassword":"NewPass456"}'

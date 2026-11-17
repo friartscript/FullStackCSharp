@@ -77,7 +77,7 @@ Pour garantir un confort de lecture optimal et une mise en page digne d'un manue
 
 ## 5. Feuille de Route d'Exécution & Méthodologie
 
-> **État Actuel** : **Phase 1 : Socle Technique (En cours)** — Les actions 1.1 à 1.5 sont réalisées et compilables sous .NET 10 LTS. Les actions 1.6 à 1.8 (configuration globale et liaisons de références) sont en cours.
+> **État Actuel** : **Jalon 1 Validé (Actions 1.1 à 1.8 Réalisées)** — Solution .NET 10 LTS, 3 projets, `Directory.Build.props`, `<ProjectReference>` câblées et micro-fiches rédigées. Prêt pour le Jalon 2 (Contrats Partagés dans `Shared`).
 
 1. [x] Cadrage initial et configuration de `PROMPT.md` (FullStackCSharp, règles strictes et pédagogiques).
 2. [x] Gestion des supports pédagogiques dans Git (fichiers `PROJET.md`, `ETAPES.md` et `Livret/` versionnés pour garantir la reproductibilité aux apprenants).
